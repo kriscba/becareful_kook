@@ -6,8 +6,8 @@ export const SPEED_STEP_SECONDS = 10;
 export const MIN_X = -5.2;
 export const MAX_X = 5.2;
 
-export const MIN_TIME_SPEED = 32;
-export const MAX_TIME_SPEED = 64;
+export const MIN_TIME_SPEED = 38.4;
+export const MAX_TIME_SPEED = 76.8;
 export const BRAKE_FACTOR = 0.4;
 export const LIFE_BOOST = [0, 0.72, 0.86, 1, 1.2, 1.4];
 
@@ -46,36 +46,74 @@ export function getLevel(feet) {
 }
 
 export const WAVE_SVG = `
-<svg viewBox="0 0 72 48" aria-hidden="true">
-  <path d="M6 36c7.5 0 9.5-14 17-14 7.5 0 9 11 15.5 11 7.2 0 9.2-16 17.5-16 5.8 0 8.2 7 10 9v12H6z" fill="#7be7ff" opacity=".4"/>
-  <path d="M5 30c8 0 10.5-15 18.5-15S34 26 41 26s10.5-17 19-17c6 0 8.5 8 11 10" fill="none" stroke="#f4fbff" stroke-width="4.2" stroke-linecap="round"/>
-  <path d="M50 13c1.8-6.5 8.5-8.5 13-3.2-1.2 5.2-6 7.8-11.5 7.2" fill="#eefbff" stroke="#fff" stroke-width="1.6"/>
-  <circle cx="58.5" cy="11" r="1.5" fill="#fff"/>
+<svg viewBox="0 0 64 40" aria-hidden="true">
+  <defs>
+    <linearGradient id="wvDeep" x1="4" y1="38" x2="52" y2="4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#053044"/>
+      <stop offset=".5" stop-color="#1390b0"/>
+      <stop offset="1" stop-color="#d7f6ff"/>
+    </linearGradient>
+  </defs>
+  <path fill="#073a5a" d="M2 34c10-3 18 2 30-1 12-3 20 3 30 0v7H2z"/>
+  <path fill="url(#wvDeep)" d="M4 33c3-8 8-18 18-22 7-3 11 4 19 2 5-8 16-10 22-2-1 6-7 10-13 12-8 4-20 6-32 8-6 1-11 2-14 2z"/>
+  <path fill="#fff" d="M36 6c6-5 18-5 24 5 2 4 0 8-4 9-7-1-13 3-18 8-1-6-3-14-2-22z"/>
+  <path fill="#f4fbff" d="M42 5c4-3 12-3 16 3 1 3-1 5-4 5-5-1-9 1-12 5 0-5-1-10 0-13z"/>
+  <path fill="#fff" d="M54 12c2 0 4 2 4 4-2 1-4 0-5-1 0-1 0-3 1-3zM58 18c1.5 0 3 1 3 2.5-1.5.5-3 0-4-1 .2-1 .4-1.5 1-1.5z"/>
 </svg>
 `;
 
 export const TOOTH_SVG = `
-<svg viewBox="0 0 64 88" aria-hidden="true">
-  <path d="M32 5c-10.5 1.2-18 12.5-16.8 28.5 1.1 14 6.8 34.5 15.4 50.8 1.2 2.2 3.4 2.2 4.6 0 8.6-16.3 14.3-36.8 15.4-50.8C52 17.5 44.5 6.2 32 5z" fill="#f6efe2" stroke="#c4a57a" stroke-width="2.4" stroke-linejoin="round"/>
-  <path d="M23 24c4.8-8 13.2-8 18 0" fill="none" stroke="#e2d2b6" stroke-width="2.2" stroke-linecap="round"/>
-  <ellipse cx="32" cy="20" rx="8" ry="5.5" fill="#fff" opacity=".5"/>
-  <path d="M29 62c1.4 6 2.4 11 3 16" fill="none" stroke="#d9c7a6" stroke-width="1.6" stroke-linecap="round"/>
+<svg viewBox="0 0 56 84" aria-hidden="true">
+  <defs>
+    <linearGradient id="thEnamel" x1="16" y1="20" x2="40" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff8e8"/>
+      <stop offset=".55" stop-color="#edd5a3"/>
+      <stop offset="1" stop-color="#c9a05a"/>
+    </linearGradient>
+  </defs>
+  <path fill="#3e2414" d="M15 5c-1 9 1 17 6 21h14c5-4 7-12 6-21-2-5-24-5-26 0z"/>
+  <path fill="#6b4423" d="M18 4c3-3 8-4 10-4s7 1 10 4c-2 5-7 7-10 7s-8-2-10-7z"/>
+  <path fill="#7a5a20" d="M16 24h24c-3 7-10 10-12 10s-9-3-12-10z"/>
+  <path fill="url(#thEnamel)" d="M18 26c-2 12-1 28 4 44 2 8 4 14 6 14s4-6 6-14c5-16 6-32 4-44C34 24 22 24 18 26z"/>
+  <path fill="#d4b07a" d="M16 30l-5 4 5 2zM15 38l-5 4 6 2zM15 47l-5 4 6 2zM16 56l-4 4 6 2zM18 64l-3 4 5 1z"/>
+  <path fill="#d4b07a" d="M40 30l5 4-5 2zM41 38l5 4-6 2zM41 47l5 4-6 2zM40 56l4 4-6 2zM38 64l3 4-5 1z"/>
+  <path fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.8" opacity=".5" d="M22 34c4-8 12-8 16 0"/>
+  <path fill="none" stroke="#b88948" stroke-linecap="round" stroke-width="2" opacity=".55" d="M28 46v28"/>
 </svg>
 `;
 
 export const BOARD_SVG = `
-<svg viewBox="0 0 48 48" aria-hidden="true">
-  <path d="M24 4c7.2 2.2 11.4 12.5 11.4 20S31.2 41.6 24 44C16.8 41.6 12.6 31.4 12.6 24S16.8 6.2 24 4z" fill="#ffd166" stroke="#c45a22" stroke-width="2"/>
-  <path d="M24 9.5v27" fill="none" stroke="#ef476f" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M20.2 37.5 24 44l3.8-6.5" fill="#ffd166" stroke="#c45a22" stroke-width="1.6" stroke-linejoin="round"/>
+<svg viewBox="0 0 56 64" aria-hidden="true">
+  <defs>
+    <linearGradient id="bdDeck" x1="16" y1="6" x2="44" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe58a"/>
+      <stop offset="1" stop-color="#e09220"/>
+    </linearGradient>
+  </defs>
+  <path fill="#06283a" opacity=".3" d="M20 50c8 6 20 6 28 0 0 5-8 10-16 10s-16-5-12-10z"/>
+  <path fill="#c45a22" d="M28 3c9 2 16 14 17 27 1 12-4 24-13 29l4 6-7-2-6 3 3-7C17 53 12 41 13 28 14 14 20 5 28 3z"/>
+  <path fill="url(#bdDeck)" d="M28 6c7 2 13 13 14 24 1 11-3 22-11 26l3 5-6-2-5 2 2-5C16 51 12 40 13 29 14 17 21 8 28 6z"/>
+  <path fill="none" stroke="#ef476f" stroke-linecap="round" stroke-width="2.2" d="M28 11v32"/>
+  <path fill="#fff" opacity=".4" d="M24 12c3-4 10-4 12 1-3 4-8 5-12-1z"/>
+  <path fill="#1d3557" d="M23 47c-1 3-1 6 1 7 2 0 3-2 3-5 0-2-2-3-4-2z"/>
+  <path fill="#1d3557" d="M33 47c1 3 3 6 5 6 2-1 1-4-1-7-2-1-4-1-4 1z"/>
 </svg>
 `;
 
 export const TUBE_SVG = `
-<svg viewBox="0 0 48 48" aria-hidden="true">
-  <path d="M7 38c2-16 14-28 28-26 4.5.6 8 3.2 10 7.2-7.5-1-16.5 3-20.5 13.5 6.5-3.5 15.5-2.8 22 3.2-3.2 7.8-15 12.5-26.5 8.6C11.2 41.6 7.4 39.2 7 38z" fill="#1287a8"/>
-  <path d="M14 35c2.2-11.5 11-18 22-15.5" fill="none" stroke="#7be7ff" stroke-width="3.2" stroke-linecap="round"/>
-  <path d="M30 11.5c6.5-2.8 13.5 1.4 15.5 8.2-4.6-1.4-10.2.6-13.8 5.8-1.8-6.2-2.4-11.4-1.7-14z" fill="#f4fbff"/>
-  <path d="M18 30c5-2 11-1 16 3" fill="none" stroke="#0b4f78" stroke-width="1.6" stroke-linecap="round" opacity=".35"/>
+<svg viewBox="0 0 64 56" aria-hidden="true">
+  <defs>
+    <linearGradient id="tbWall" x1="6" y1="50" x2="58" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#04283c"/>
+      <stop offset=".45" stop-color="#0e86a4"/>
+      <stop offset="1" stop-color="#e8fbff"/>
+    </linearGradient>
+  </defs>
+  <path fill="#073a5a" d="M4 44c12-4 22 2 34-2 12-4 18 2 22 0v14H4z"/>
+  <path fill="url(#tbWall)" d="M6 42c2-14 12-28 28-32 12-3 20 4 24 12 2 6-4 10-10 11-7 2-11 10-20 14-8 4-18 3-22 1-2-1 0-5 0-6z"/>
+  <path fill="#02181c" d="M20 34c1-9 9-15 18-14 8 1 13 7 13 14-1 8-9 13-17 12-8-1-15-4-14-12z"/>
+  <path fill="#0a5c4c" d="M24 34c1-6 6-10 12-9 6 1 9 5 9 10-1 6-6 9-12 8-6-1-10-3-9-9z"/>
+  <path fill="#fff" d="M32 8c9-4 22-2 28 10 2 4-1 8-6 8-8-3-14 2-20 9-1-8-3-18-2-27z"/>
+  <path fill="#fff" d="M54 16c3 0 6 3 6 6-3 1-6 0-8-2 0-2 1-4 2-4zM58 24c2 0 4 2 4 3-2 1-4 0-5-1 0-1 0-2 1-2z"/>
 </svg>
 `;

@@ -9,12 +9,22 @@ export const STRINGS = {
     controlsPause: "Click — pause / resume",
     paused: "PAUSED",
     clickResume: "Click to keep riding",
-    hakaSurf: "🤙 HAKA SURF!!",
     lives: "Lives",
     feet: "ft",
+    meters: "m",
     teeth: "Teeth",
     tubes: "Tubes",
     cycle: "Set",
+    level: "Level",
+    level1: "Whitewater",
+    level2: "Inside",
+    level3: "Lineup",
+    level4: "The Barrel",
+    level5: "Outer Reef",
+    levelUp: "LEVEL",
+    extraLife: "+1",
+    bonusLife: "+800 ft",
+    hakaSurf: "🤙 HAKA SURF!!",
     gameOver: "Wiped out!",
     restart: "PADDLE BACK",
     kookSpeech: "Becareful kook!!",
@@ -36,12 +46,22 @@ export const STRINGS = {
     controlsPause: "Click — pausa / seguir",
     paused: "PAUSA",
     clickResume: "Click para seguir surfeando",
-    hakaSurf: "🤙 HAKA SURF!!",
     lives: "Vidas",
     feet: "ft",
+    meters: "m",
     teeth: "Dientes",
     tubes: "Tubos",
     cycle: "Serie",
+    level: "Nivel",
+    level1: "Espuma",
+    level2: "Adentro",
+    level3: "Peak",
+    level4: "El Tubo",
+    level5: "Afuera",
+    levelUp: "NIVEL",
+    extraLife: "+1",
+    bonusLife: "+244 m",
+    hakaSurf: "🤙 HAKA SURF!!",
     gameOver: "¡Te comió la ola!",
     restart: "REMA DE NUEVO",
     kookSpeech: "¡Cuidado kook!!",
@@ -63,12 +83,22 @@ export const STRINGS = {
     controlsPause: "Clique — pausa / continuar",
     paused: "PAUSA",
     clickResume: "Clique para continuar",
-    hakaSurf: "🤙 HAKA SURF!!",
     lives: "Vidas",
     feet: "ft",
+    meters: "m",
     teeth: "Dentes",
     tubes: "Tubos",
     cycle: "Série",
+    level: "Nível",
+    level1: "Espuma",
+    level2: "Inside",
+    level3: "Peak",
+    level4: "O Barril",
+    level5: "Outside",
+    levelUp: "NÍVEL",
+    extraLife: "+1",
+    bonusLife: "+244 m",
+    hakaSurf: "🤙 HAKA SURF!!",
     gameOver: "Engolido pela onda!",
     restart: "REMA DE VOLTA",
     kookSpeech: "Cuidado haole!!",
@@ -84,4 +114,20 @@ export const STRINGS = {
 
 export function t(lang, key) {
   return STRINGS[lang]?.[key] ?? STRINGS.en[key] ?? key;
+}
+
+export function isMetric(lang) {
+  return lang === "es" || lang === "pt";
+}
+
+export function unitLabel(lang) {
+  return isMetric(lang) ? "m" : "ft";
+}
+
+export function toDisplayDistance(lang, feet) {
+  return isMetric(lang) ? feet * 0.3048 : feet;
+}
+
+export function formatDistance(lang, feet, digits = 0) {
+  return `${toDisplayDistance(lang, feet).toFixed(digits)} ${unitLabel(lang)}`;
 }

@@ -66,8 +66,8 @@ body,
 }
 
 .wave-life {
-  width: 42px;
-  height: 28px;
+  width: 48px;
+  height: 32px;
   opacity: 0.28;
   filter: grayscale(0.4);
   transition: opacity 0.2s, transform 0.2s;
@@ -108,10 +108,11 @@ body,
 }
 
 .stat small {
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 10px;
   opacity: 0.75;
+  white-space: nowrap;
 }
 
 .brake-hint {
@@ -158,33 +159,28 @@ body,
   font-weight: 900;
   font-size: 18px;
   padding: 10px 14px;
-  border-radius: 18px 18px 18px 4px;
+  border-radius: 22px 22px 22px 6px;
   box-shadow: 0 10px 0 rgba(0, 0, 0, 0.12);
   pointer-events: none;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speech-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.speech-icon svg {
+  width: 28px;
+  height: 34px;
+  display: block;
 }
 
 .tooth-popup {
-  position: absolute;
-  right: 7%;
-  top: 28%;
-  width: 120px;
-  text-align: center;
-  pointer-events: none;
-  animation: pop 0.7s ease;
-}
-
-.tooth-popup svg {
-  width: 72px;
-  height: 90px;
-  filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.12));
-}
-
-.tooth-popup span {
-  display: block;
-  font-family: "Bungee", sans-serif;
-  font-size: 20px;
-  margin-top: 4px;
+  display: none;
 }
 
 .banner {

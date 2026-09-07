@@ -40,8 +40,8 @@ export class ObstacleSpawner {
     this.#spawn(type, x);
   }
 
-  update(dt, scrollSpeed, distance, player, events) {
-    this.#maybeSpawn(distance);
+  update(dt, scrollSpeed, distance, player, events, spawnMul = 1) {
+    this.#maybeSpawn(distance, spawnMul);
     const leftover = [];
     for (const item of this.items) {
       item.z += scrollSpeed * dt;
@@ -64,9 +64,9 @@ export class ObstacleSpawner {
     this.items = leftover;
   }
 
-  #maybeSpawn(distance) {
+  #maybeSpawn(distance, spawnMul = 1) {
     if (distance < this.nextAt) return;
-    const gap = 16 + Math.random() * 10;
+    const gap = (16 + Math.random() * 10) * spawnMul;
     this.nextAt = distance + gap;
 
     const pack = Math.random() < 0.28 ? 2 : 1;

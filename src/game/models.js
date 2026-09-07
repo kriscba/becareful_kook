@@ -28,7 +28,7 @@ function createFishBoard(deckColor, stripeColor) {
     bevelEnabled: true,
     bevelThickness: 0.016,
     bevelSize: 0.018,
-    bevelSegments: 1,
+    bevelSegments: 3,
   });
   geo.center();
   const deck = new THREE.Mesh(geo, toon(deckColor));
@@ -37,11 +37,15 @@ function createFishBoard(deckColor, stripeColor) {
   deck.name = "deck";
   addShadow(deck);
 
-  const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.02, 1.7), toon(stripeColor));
+  const stripe = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.045, 1.55, 6, 10),
+    toon(stripeColor)
+  );
+  stripe.rotation.x = Math.PI / 2;
   stripe.position.y = 0.12;
 
   const finMat = toon("#1d3557");
-  const finL = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.22, 0.2), finMat);
+  const finL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.26, 8), finMat);
   finL.position.set(-0.12, -0.02, 0.78);
   finL.rotation.z = 0.18;
   const finR = finL.clone();
@@ -73,7 +77,7 @@ function createShakaHand() {
   const pinky = new THREE.Mesh(new THREE.CapsuleGeometry(0.028, 0.24, 3, 6), skin);
   pinky.position.set(0.11, 0.14, 0.03);
   pinky.rotation.z = -0.7;
-  const mid = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.1, 0.06), skin);
+  const mid = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 8), skin);
   mid.position.set(0.01, -0.02, 0);
   hand.add(palm, thumb, pinky, mid);
   hand.position.set(0, 0.48, 0);
@@ -88,15 +92,15 @@ export function createPlayerMesh() {
 
   const boardGroup = createFishBoard("#ffd166", "#ef476f");
 
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.55, 4, 8), toon("#06d6a0"));
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.55, 8, 16), toon("#06d6a0"));
   body.position.y = 0.72;
   addShadow(body);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 10), toon("#f4a261"));
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.23, 20, 16), toon("#f4a261"));
   head.position.y = 1.22;
   addShadow(head);
-  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), toon("#3d2914"));
-  hair.position.set(0, 1.34, -0.02);
-  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), toon("#1b1b1b"));
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.21, 16, 12), toon("#3d2914"));
+  hair.position.set(0, 1.35, -0.02);
+  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10), toon("#1b1b1b"));
   eyeL.position.set(-0.08, 1.26, 0.18);
   const eyeR = eyeL.clone();
   eyeR.position.x = 0.08;
@@ -104,7 +108,7 @@ export function createPlayerMesh() {
   const armL = new THREE.Group();
   armL.name = "armL";
   armL.position.set(-0.32, 0.95, 0);
-  const armLMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 3, 6), toon("#f4a261"));
+  const armLMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 6, 12), toon("#f4a261"));
   armLMesh.position.y = -0.18;
   armL.rotation.z = 0.45;
   armL.add(armLMesh);
@@ -112,7 +116,7 @@ export function createPlayerMesh() {
   const armR = new THREE.Group();
   armR.name = "armR";
   armR.position.set(0.32, 0.95, 0);
-  const armRMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 3, 6), toon("#f4a261"));
+  const armRMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 6, 12), toon("#f4a261"));
   armRMesh.position.y = -0.18;
   armR.rotation.z = -0.45;
   armR.add(armRMesh, createShakaHand());
@@ -149,10 +153,10 @@ export function createKookMesh() {
 export function createRockMesh() {
   const root = new THREE.Group();
   const mat = toon("#8d6e63");
-  const a = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 0), mat);
-  a.scale.set(1.1, 0.7, 0.9);
-  const b = new THREE.Mesh(new THREE.DodecahedronGeometry(0.42, 0), toon("#6d4c41"));
-  b.position.set(0.35, 0.1, 0.1);
+  const a = new THREE.Mesh(new THREE.IcosahedronGeometry(0.68, 1), mat);
+  a.scale.set(1.15, 0.78, 0.95);
+  const b = new THREE.Mesh(new THREE.IcosahedronGeometry(0.4, 1), toon("#6d4c41"));
+  b.position.set(0.32, 0.12, 0.08);
   addShadow(a);
   addShadow(b);
   root.add(a, b);
@@ -163,13 +167,13 @@ export function createRockMesh() {
 export function createSharkMesh() {
   const root = new THREE.Group();
   const bodyMat = toon("#5d737e");
-  const body = new THREE.Mesh(new THREE.SphereGeometry(0.55, 10, 8), bodyMat);
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.55, 18, 14), bodyMat);
   body.scale.set(0.7, 0.7, 2.2);
   body.position.y = 0.55;
   addShadow(body);
-  const fin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.7, 6), toon("#4a5d66"));
+  const fin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.7, 10), toon("#4a5d66"));
   fin.position.set(0, 1.15, 0.1);
-  const tail = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.7, 5), bodyMat);
+  const tail = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.7, 10), bodyMat);
   tail.rotation.x = Math.PI / 2;
   tail.position.set(0, 0.55, 1.35);
   const eye = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), toon("#111"));
@@ -184,7 +188,7 @@ export function createSharkMesh() {
     toon("#2a1014")
   );
   cavity.scale.set(1.05, 0.7, 0.85);
-  const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.06, 0.28), toon("#4a5d66"));
+  const jaw = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.18, 6, 10), toon("#4a5d66"));
   jaw.position.set(0, -0.16, -0.02);
   jaw.rotation.x = 0.35;
   const tongue = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 6), toon("#ff4d6d"));
@@ -272,7 +276,7 @@ export function createTubeMesh() {
   waveMat.name = "waveBodyMat";
 
   const curl = new THREE.Mesh(
-    new THREE.TorusGeometry(2.15, 0.82, 14, 36, Math.PI * 1.48),
+    new THREE.TorusGeometry(2.15, 0.82, 20, 48, Math.PI * 1.48),
     waveMat
   );
   curl.rotation.z = -0.18;
@@ -405,7 +409,7 @@ export function createWaveWall() {
 export function createSun() {
   const group = new THREE.Group();
   const sun = new THREE.Mesh(
-    new THREE.SphereGeometry(3.2, 16, 12),
+    new THREE.SphereGeometry(3.2, 24, 18),
     new THREE.MeshBasicMaterial({ color: "#ffd56a" })
   );
   sun.position.set(-18, 16, -70);
@@ -418,8 +422,8 @@ export function createClouds() {
   const mat = new THREE.MeshBasicMaterial({ color: "#f4fbff" });
   for (let i = 0; i < 8; i += 1) {
     const puff = new THREE.Group();
-    const a = new THREE.Mesh(new THREE.SphereGeometry(1.6, 8, 6), mat);
-    const b = new THREE.Mesh(new THREE.SphereGeometry(1.2, 8, 6), mat);
+    const a = new THREE.Mesh(new THREE.SphereGeometry(1.6, 14, 12), mat);
+    const b = new THREE.Mesh(new THREE.SphereGeometry(1.2, 14, 12), mat);
     b.position.set(1.4, 0.25, 0.15);
     puff.add(a, b);
     puff.position.set(-18 + (i % 4) * 11, 12 + (i % 3) * 1.4, -36 - i * 14);

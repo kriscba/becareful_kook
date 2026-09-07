@@ -1,19 +1,21 @@
 import { MAX_LIVES, WAVE_SVG } from "./constants.js";
-import { t } from "../i18n.js";
+import { formatDistance, t, unitLabel } from "../i18n.js";
 
 export class HUD {
   constructor() {
     this.lives = document.getElementById("lives");
     this.feet = document.getElementById("feet");
+    this.unit = document.getElementById("unit");
     this.teeth = document.getElementById("teeth");
-    this.cycle = document.getElementById("cycle");
+    this.levelNum = document.getElementById("level-num");
+    this.levelName = document.getElementById("level-name");
     this.hud = document.getElementById("hud");
     this.menu = document.getElementById("menu");
     this.gameover = document.getElementById("gameover");
     this.pause = document.getElementById("pause");
     this.speech = document.getElementById("speech");
-    this.tooth = document.getElementById("tooth-popup");
-    this.toothFt = document.getElementById("tooth-ft");
+    this.speechIcon = document.getElementById("speech-icon");
+    this.speechText = document.getElementById("speech-text");
     this.banner = document.getElementById("banner");
     this.brake = document.getElementById("brake-hint");
     this.buffs = document.getElementById("buffs");
@@ -32,6 +34,7 @@ export class HUD {
       btn.classList.toggle("on", btn.dataset.lang === lang);
     });
     this.lang = lang;
+    if (this.unit) this.unit.textContent = unitLabel(lang);
   }
 
   showMenu() {
@@ -60,41 +63,37 @@ export class HUD {
     this.hud.classList.add("hidden");
     this.pause.classList.add("hidden");
     this.gameover.classList.remove("hidden");
-    this.goFeet.textContent = `${Math.floor(stats.feet)} ft`;
+    this.goFeet.textContent = formatDistance(this.lang, stats.feet, 0);
     this.goTeeth.textContent = String(stats.teeth);
     this.goTubes.textContent = String(stats.tubes);
   }
 
   update(state) {
-    this.feet.textContent = String(Math.floor(state.feet));
+    this.feet.textContent = String(Math.floor(state.displayDistance));
+    this.unit.textContent = unitLabel(this.lang);
     this.teeth.textContent = String(state.teeth);
-    const left = Math.max(0, state.cycleLeft);
-    const m = Math.floor(left / 60);
-    const s = Math.floor(left % 60).toString().padStart(2, "0");
-    this.cycle.textContent = `${m}:${s}`;
+    this.levelNum.textContent = String(state.levelId);
+    this.levelName.textContent = t(this.lang, state.levelNameKey);
     this.#renderLives(state.lives);
     this.brake.classList.toggle("hidden", !state.braking);
     this.brake.textContent = t(this.lang, "braking");
     this.#buffs(state);
   }
 
-  placeSpeech(x, y, text, ms = 1100) {
-    this.speech.textContent = text;
+  placeSpeech(x, y, text, ms = 1100, iconHtml = "") {
+    this.speechText.textContent = text;
+    if (iconHtml) {
+      this.speechIcon.innerHTML = iconHtml;
+      this.speechIcon.classList.remove("hidden");
+    } else {
+      this.speechIcon.innerHTML = "";
+      this.speechIcon.classList.add("hidden");
+    }
     this.speech.classList.remove("hidden");
     this.speech.style.left = `${x}px`;
     this.speech.style.top = `${y}px`;
     clearTimeout(this._speechTimer);
     this._speechTimer = setTimeout(() => this.speech.classList.add("hidden"), ms);
-  }
-
-  showTooth(feet) {
-    this.toothFt.textContent = `${feet.toFixed(1)} ft`;
-    this.tooth.classList.remove("hidden");
-    this.tooth.style.animation = "none";
-    this.tooth.offsetHeight;
-    this.tooth.style.animation = "";
-    clearTimeout(this._toothTimer);
-    this._toothTimer = setTimeout(() => this.tooth.classList.add("hidden"), 900);
   }
 
   showBanner(text) {

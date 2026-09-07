@@ -28,15 +28,15 @@
           <div class="hud-stats">
             <div class="stat">
               <span id="feet">0</span>
-              <small data-i18n="feet">ft</small>
+              <small id="unit">ft</small>
             </div>
             <div class="stat">
               <span id="teeth">0</span>
-              <small data-i18n="teeth">Megalodon</small>
+              <small data-i18n="teeth">Teeth</small>
             </div>
             <div class="stat">
-              <span id="cycle">5:00</span>
-              <small data-i18n="cycle">Set</small>
+              <span id="level-num">1</span>
+              <small id="level-name" data-i18n="level1">Whitewater</small>
             </div>
           </div>
         </div>
@@ -44,18 +44,9 @@
         <div id="buffs" class="buffs"></div>
       </div>
 
-      <div id="speech" class="speech hidden">Becareful kook!!</div>
-      <div id="tooth-popup" class="tooth-popup hidden">
-        <svg viewBox="0 0 64 80" aria-hidden="true">
-          <path
-            d="M32 6 C18 6 10 20 12 36 L32 76 L52 36 C54 20 46 6 32 6Z"
-            fill="#f4f0e6"
-            stroke="#c8b48a"
-            stroke-width="3"
-          />
-          <path d="M24 28 Q32 22 40 28" fill="none" stroke="#d9c9a0" stroke-width="2" />
-        </svg>
-        <span id="tooth-ft">2.4 ft</span>
+      <div id="speech" class="speech hidden">
+        <span id="speech-icon" class="speech-icon hidden"></span>
+        <span id="speech-text">Becareful kook!!</span>
       </div>
       <div id="banner" class="banner hidden">TUBE RIDE</div>
 

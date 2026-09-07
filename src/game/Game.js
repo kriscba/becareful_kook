@@ -5,6 +5,7 @@ import {
   FEET_PER_UNIT,
   FLOW_SCALE,
   FLOW_SECONDS,
+  HAKA_SECONDS,
   INVULN_SECONDS,
   LIFE_BOOST,
   MAX_LIVES,
@@ -13,9 +14,12 @@ import {
   START_LIVES,
   SPEED_STEP_SECONDS,
   STOKE_SECONDS,
+  TOOTH_SVG,
   TUBE_BONUS_FEET,
+  WAVE_SVG,
+  getLevel,
 } from "./constants.js";
-import { t } from "../i18n.js";
+import { formatDistance, t, toDisplayDistance } from "../i18n.js";
 import { HUD } from "./hud.js";
 import { Input } from "./input.js";
 import { ObstacleSpawner } from "./obstacles.js";
@@ -46,6 +50,8 @@ export class Game {
     this.spawner = new ObstacleSpawner(this.scene);
 
     this._shake = 0;
+    this.level = getLevel(0);
+    this.pendingLife = 0;
     this.#resize();
     window.addEventListener("resize", () => this.#resize());
   }
@@ -70,6 +76,8 @@ export class Game {
     this.flow = 0;
     this.timeScale = 1;
     this.travel = 0;
+    this.level = getLevel(0);
+    this.pendingLife = 0;
     this.player.reset();
     this.spawner.reset();
     this.hud.hidePause();
@@ -126,6 +134,14 @@ export class Game {
     }
     if (this.stoke > 0) this.stoke = Math.max(0, this.stoke - rawDt);
 
+    if (this.pendingLife > 0) {
+      this.pendingLife -= rawDt;
+      if (this.pendingLife <= 0) {
+        this.pendingLife = 0;
+        this.#grantTubeLife();
+      }
+    }
+
     const dt = rawDt * this.timeScale;
     this.input.beginFrame();
     this.cycleElapsed += rawDt;
@@ -135,6 +151,7 @@ export class Game {
     const stokeMul = this.stoke > 0 ? 2 : 1;
     this.feet += scroll * dt * FEET_PER_UNIT * stokeMul;
     this.travel += scroll * dt;
+    this.#checkLevel();
 
     this.player.update(dt, this.input, this.time);
     this.world.update(this.time, scroll, dt);
@@ -144,7 +161,7 @@ export class Game {
       onKookDodge: () => this.#kookSpeech(),
       onSharkDodge: (ft) => this.#sharkDodge(ft),
       onTube: (ok) => this.#tube(ok),
-    });
+    }, this.level.spawn);
 
     if (this._shake > 0) this._shake = Math.max(0, this._shake - dt * 8);
     this.hud.update(this.#hudState());
@@ -156,8 +173,9 @@ export class Game {
     const tCycle = Math.min(steps, maxSteps) / maxSteps;
     const timeSpeed = MIN_TIME_SPEED + (MAX_TIME_SPEED - MIN_TIME_SPEED) * tCycle;
     const lifeBoost = LIFE_BOOST[this.lives] ?? 1;
+    const levelBoost = this.level?.speed ?? 1;
     const brake = this.player.braking ? BRAKE_FACTOR : 1;
-    return timeSpeed * lifeBoost * brake;
+    return timeSpeed * lifeBoost * levelBoost * brake;
   }
 
   #pause() {
@@ -182,38 +200,50 @@ export class Game {
     if (this.lives <= 0) this.#gameOver();
   }
 
-  #kookSpeech() {
+  #speechAtPlayer(text, ms = 1100, iconHtml = "") {
     const pos = this.player.headWorld();
     pos.project(this.camera);
     const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
     const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
-    this.hud.placeSpeech(x, y, t(this.lang, "kookSpeech"));
+    this.hud.placeSpeech(x, y, text, ms, iconHtml);
+  }
+
+  #kookSpeech() {
+    this.#speechAtPlayer(t(this.lang, "kookSpeech"));
   }
 
   #sharkDodge(ft) {
     this.teeth += 1;
-    this.hud.showTooth(ft);
+    this.#speechAtPlayer(formatDistance(this.lang, ft, 1), 1400, TOOTH_SVG);
   }
 
   #tube(ok) {
     if (!ok) return;
     this.tubes += 1;
     this.hud.showBanner(t(this.lang, "tubeRide"));
-    this.player.celebrateHaka();
-    this.#hakaSpeech();
-    if (this.lives < MAX_LIVES) this.lives += 1;
-    else this.feet += TUBE_BONUS_FEET;
+    this.player.celebrateHaka(HAKA_SECONDS);
+    this.#speechAtPlayer(t(this.lang, "hakaSurf"), HAKA_SECONDS * 1000);
+    this.pendingLife = HAKA_SECONDS;
     this.stoke = STOKE_SECONDS;
     this.flow = FLOW_SECONDS;
     this.timeScale = FLOW_SCALE;
   }
 
-  #hakaSpeech() {
-    const pos = this.player.headWorld();
-    pos.project(this.camera);
-    const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
-    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
-    this.hud.placeSpeech(x, y, t(this.lang, "hakaSurf"), 1800);
+  #grantTubeLife() {
+    if (this.lives < MAX_LIVES) {
+      this.lives += 1;
+      this.#speechAtPlayer(t(this.lang, "extraLife"), 1200, WAVE_SVG);
+    } else {
+      this.feet += TUBE_BONUS_FEET;
+      this.#speechAtPlayer(t(this.lang, "bonusLife"), 1200, WAVE_SVG);
+    }
+  }
+
+  #checkLevel() {
+    const next = getLevel(this.feet);
+    if (next.id === this.level.id) return;
+    this.level = next;
+    this.hud.showBanner(`${t(this.lang, "levelUp")} ${next.id}`);
   }
 
   #gameOver() {
@@ -229,8 +259,10 @@ export class Game {
     return {
       lives: this.lives ?? START_LIVES,
       feet: this.feet ?? 0,
+      displayDistance: toDisplayDistance(this.lang, this.feet ?? 0),
       teeth: this.teeth ?? 0,
-      cycleLeft: CYCLE_SECONDS - (this.cycleElapsed ?? 0),
+      levelId: this.level?.id ?? 1,
+      levelNameKey: this.level?.nameKey ?? "level1",
       braking: this.mode === "play" && this.player.braking,
       stoke: this.stoke ?? 0,
       flow: this.flow ?? 0,

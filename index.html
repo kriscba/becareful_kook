@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Becareful kook!!</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='48' font-size='42'>🌊</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="./assets/index-yNOe0keS.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D6VZfy-5.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game"></canvas>
+
+      <div id="hud" class="overlay hidden">
+        <div class="hud-top">
+          <div class="hud-lives">
+            <span class="hud-label" data-i18n="lives">Lives</span>
+            <div id="lives" class="lives"></div>
+          </div>
+          <div class="hud-stats">
+            <div class="stat">
+              <span class="stat-icon" data-stat-icon="board"></span>
+              <div class="stat-copy">
+                <span id="feet">0</span>
+                <small id="unit">ft</small>
+              </div>
+            </div>
+            <div class="stat">
+              <span class="stat-icon" data-stat-icon="tooth"></span>
+              <div class="stat-copy">
+                <span id="teeth">0</span>
+              </div>
+            </div>
+            <div class="stat">
+              <span class="stat-icon" data-stat-icon="tube"></span>
+              <div class="stat-copy">
+                <span id="tubes">0</span>
+              </div>
+            </div>
+            <div class="stat">
+              <span class="stat-icon" data-stat-icon="wave"></span>
+              <div class="stat-copy">
+                <span id="level-num">1</span>
+                <small id="level-name" data-i18n="level1">Whitewater</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="brake-hint" class="brake-hint hidden">↓</div>
+        <div id="buffs" class="buffs"></div>
+      </div>
+
+      <div id="speech" class="speech hidden">
+        <span id="speech-icon" class="speech-icon hidden"></span>
+        <span id="speech-text">Becareful kook!!</span>
+      </div>
+      <div id="banner" class="banner hidden">TUBE RIDE</div>
+
+      <div id="hit-flash" class="hit-flash"></div>
+
+      <div id="menu" class="screen">
+        <div class="panel">
+          <p class="eyebrow">SURF ARCADE</p>
+          <h1>Becareful kook!!</h1>
+          <p class="subtitle" data-i18n="subtitle">
+            Dodge kooks, sharks and rocks. Ride the barrel.
+          </p>
+          <div class="lang-row">
+            <span data-i18n="language">Language</span>
+            <div class="lang-btns">
+              <button type="button" data-lang="en" class="lang on">EN</button>
+              <button type="button" data-lang="es" class="lang">ES</button>
+              <button type="button" data-lang="pt" class="lang">PT</button>
+            </div>
+          </div>
+          <ul class="howto">
+            <li data-i18n="controlsMove">Left / Right — dodge</li>
+            <li data-i18n="controlsJump">Up — jump over rocks</li>
+            <li data-i18n="controlsBrake">Down — brake (hold from the start to ride the tube)</li>
+            <li data-i18n="controlsPause">Click — pause / resume</li>
+          </ul>
+          <button type="button" id="play" class="cta" data-i18n="play">DROP IN</button>
+        </div>
+      </div>
+
+      <div id="pause" class="screen hidden">
+        <div class="panel">
+          <h1 data-i18n="paused">PAUSED</h1>
+          <p class="subtitle" data-i18n="clickResume">Click to keep riding</p>
+          <div class="lang-row">
+            <span data-i18n="language">Language</span>
+            <div class="lang-btns">
+              <button type="button" data-lang="en" class="lang on">EN</button>
+              <button type="button" data-lang="es" class="lang">ES</button>
+              <button type="button" data-lang="pt" class="lang">PT</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="gameover" class="screen hidden">
+        <div class="panel">
+          <h1 data-i18n="gameOver">Ocean wins!</h1>
+          <p id="go-hospital" class="go-hospital" data-i18n="hospitalWaits">Hospital waits for you</p>
+          <p id="go-caption" class="go-caption"></p>
+          <div id="go-art" class="go-art"></div>
+          <div class="summary">
+            <div>
+              <span class="stat-icon" data-stat-icon="board"></span>
+              <strong id="go-feet">0</strong>
+              <span data-i18n="distance">Distance</span>
+            </div>
+            <div>
+              <span class="stat-icon" data-stat-icon="tooth"></span>
+              <strong id="go-teeth">0</strong>
+              <span data-i18n="teeth">Megalodon</span>
+            </div>
+            <div>
+              <span class="stat-icon" data-stat-icon="tube"></span>
+              <strong id="go-tubes">0</strong>
+              <span data-i18n="tubes">Tubes</span>
+            </div>
+          </div>
+          <button type="button" id="restart" class="cta" data-i18n="restart">PADDLE BACK</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-import { MAX_LIVES, WAVE_SVG } from "./constants.js";
+import { BOARD_SVG, MAX_LIVES, TOOTH_SVG, TUBE_SVG, WAVE_SVG } from "./constants.js";
 import { ROCK_GO_SVG, SHARK_GO_SVG, KOOK_GO_SVG } from "./illustrations.js";
 import { formatDistance, t, unitLabel } from "../i18n.js";
 
@@ -8,6 +8,7 @@ export class HUD {
     this.feet = document.getElementById("feet");
     this.unit = document.getElementById("unit");
     this.teeth = document.getElementById("teeth");
+    this.tubes = document.getElementById("tubes");
     this.levelNum = document.getElementById("level-num");
     this.levelName = document.getElementById("level-name");
     this.hud = document.getElementById("hud");
@@ -27,6 +28,10 @@ export class HUD {
     this.goArt = document.getElementById("go-art");
     this.goCaption = document.getElementById("go-caption");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
+    const icons = { board: BOARD_SVG, tooth: TOOTH_SVG, tube: TUBE_SVG, wave: WAVE_SVG };
+    document.querySelectorAll("[data-stat-icon]").forEach((el) => {
+      el.innerHTML = icons[el.dataset.statIcon] || "";
+    });
   }
 
   setLang(lang) {
@@ -83,6 +88,7 @@ export class HUD {
     this.feet.textContent = String(Math.floor(state.displayDistance));
     this.unit.textContent = unitLabel(this.lang);
     this.teeth.textContent = String(state.teeth);
+    if (this.tubes) this.tubes.textContent = String(state.tubes ?? 0);
     this.levelNum.textContent = String(state.levelId);
     this.levelName.textContent = t(this.lang, state.levelNameKey);
     this.#renderLives(state.lives);

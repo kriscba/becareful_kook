@@ -8,7 +8,7 @@ import {
   MOVE_ACCEL,
   MOVE_FRICTION,
 } from "./constants.js";
-import { createPlayerMesh } from "./models.js";
+import { createPlayerMesh, waveHeight, waveSlope } from "./models.js";
 
 export class Player {
   constructor() {
@@ -93,13 +93,16 @@ export class Player {
   }
 
   headWorld() {
-    const v = new THREE.Vector3(this.x, this.y + 1.85, this.z);
+    const v = new THREE.Vector3(this.x, waveHeight(this.x) + this.y + 1.85, this.z);
     return v;
   }
 
   #sync(time = 0) {
     const bob = this.grounded ? Math.sin(time * 9) * 0.03 : 0;
-    this.mesh.position.set(this.x, this.y + bob, this.z);
+    const surface = waveHeight(this.x);
+    const faceTilt = Math.atan(waveSlope(this.x));
+    this.mesh.position.set(this.x, surface + this.y + bob, this.z);
+    this.mesh.rotation.z = -faceTilt;
     const board = this.mesh.getObjectByName("board");
     const rider = this.mesh.getObjectByName("rider");
     if (board) {

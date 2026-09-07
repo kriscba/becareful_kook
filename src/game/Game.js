@@ -25,6 +25,7 @@ import { Input } from "./input.js";
 import { ObstacleSpawner } from "./obstacles.js";
 import { Player } from "./player.js";
 import { World } from "./world.js";
+import { waveHeight } from "./models.js";
 
 export class Game {
   constructor(canvas) {
@@ -97,16 +98,21 @@ export class Game {
       this.start();
     });
     this.hud.langBtns.forEach((btn) => {
+      btn.addEventListener("pointerdown", (e) => e.stopPropagation());
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         this.lang = btn.dataset.lang;
         this.hud.setLang(this.lang);
+        if (this.mode === "play" || this.mode === "paused") {
+          this.hud.update(this.#hudState());
+        }
       });
     });
     this.canvas.addEventListener("pointerdown", () => {
       if (this.mode === "play") this.#pause();
     });
-    this.hud.pause.addEventListener("pointerdown", () => {
+    this.hud.pause.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("[data-lang], button, .lang-row")) return;
       if (this.mode === "paused") this.#resume();
     });
   }
@@ -264,6 +270,7 @@ export class Game {
       feet: this.feet ?? 0,
       displayDistance: toDisplayDistance(this.lang, this.feet ?? 0),
       teeth: this.teeth ?? 0,
+      tubes: this.tubes ?? 0,
       levelId: this.level?.id ?? 1,
       levelNameKey: this.level?.nameKey ?? "level1",
       braking: this.mode === "play" && this.player.braking,
@@ -273,11 +280,16 @@ export class Game {
   }
 
   #camera() {
-    const target = new THREE.Vector3(this.player.x * 0.35, 1.45 + this.player.y * 0.2, -8);
+    const surface = waveHeight(this.player.x);
+    const target = new THREE.Vector3(
+      this.player.x * 0.2 + 1.5,
+      surface + 1.55 + this.player.y * 0.2,
+      -8
+    );
     const desired = new THREE.Vector3(
-      this.player.x * 0.28,
-      3.9,
-      9.4
+      this.player.x * 0.22 - 1.5,
+      surface + 4.15,
+      10.2
     );
     if (this._shake > 0) {
       desired.x += (Math.random() - 0.5) * this._shake * 0.35;

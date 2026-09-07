@@ -27,16 +27,30 @@
           </div>
           <div class="hud-stats">
             <div class="stat">
-              <span id="feet">0</span>
-              <small id="unit">ft</small>
+              <span class="stat-icon" data-stat-icon="board"></span>
+              <div class="stat-copy">
+                <span id="feet">0</span>
+                <small id="unit">ft</small>
+              </div>
             </div>
             <div class="stat">
-              <span id="teeth">0</span>
-              <small data-i18n="teeth">Teeth</small>
+              <span class="stat-icon" data-stat-icon="tooth"></span>
+              <div class="stat-copy">
+                <span id="teeth">0</span>
+              </div>
             </div>
             <div class="stat">
-              <span id="level-num">1</span>
-              <small id="level-name" data-i18n="level1">Whitewater</small>
+              <span class="stat-icon" data-stat-icon="tube"></span>
+              <div class="stat-copy">
+                <span id="tubes">0</span>
+              </div>
+            </div>
+            <div class="stat">
+              <span class="stat-icon" data-stat-icon="wave"></span>
+              <div class="stat-copy">
+                <span id="level-num">1</span>
+                <small id="level-name" data-i18n="level1">Whitewater</small>
+              </div>
             </div>
           </div>
         </div>
@@ -81,6 +95,14 @@
         <div class="panel">
           <h1 data-i18n="paused">PAUSED</h1>
           <p class="subtitle" data-i18n="clickResume">Click to keep riding</p>
+          <div class="lang-row">
+            <span data-i18n="language">Language</span>
+            <div class="lang-btns">
+              <button type="button" data-lang="en" class="lang on">EN</button>
+              <button type="button" data-lang="es" class="lang">ES</button>
+              <button type="button" data-lang="pt" class="lang">PT</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -88,18 +110,21 @@
         <div class="panel">
           <h1 data-i18n="gameOver">Ocean wins!</h1>
           <p id="go-hospital" class="go-hospital" data-i18n="hospitalWaits">Hospital waits for you</p>
-          <div id="go-art" class="go-art"></div>
           <p id="go-caption" class="go-caption"></p>
+          <div id="go-art" class="go-art"></div>
           <div class="summary">
             <div>
+              <span class="stat-icon" data-stat-icon="board"></span>
               <strong id="go-feet">0</strong>
               <span data-i18n="distance">Distance</span>
             </div>
             <div>
+              <span class="stat-icon" data-stat-icon="tooth"></span>
               <strong id="go-teeth">0</strong>
               <span data-i18n="teeth">Megalodon</span>
             </div>
             <div>
+              <span class="stat-icon" data-stat-icon="tube"></span>
               <strong id="go-tubes">0</strong>
               <span data-i18n="tubes">Tubes</span>
             </div>

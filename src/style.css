@@ -87,27 +87,46 @@ body,
 
 .hud-stats {
   display: flex;
-  gap: 18px;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .stat {
-  min-width: 88px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
   text-align: right;
   background: var(--panel);
   border: 2px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
-  padding: 8px 12px 10px;
+  padding: 6px 10px 7px 8px;
   backdrop-filter: blur(8px);
 }
 
-.stat span {
+.stat-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+}
+
+.stat-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.stat-copy span {
   display: block;
   font-family: "Bungee", sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.1;
 }
 
-.stat small {
+.stat-copy small {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 10px;
@@ -174,8 +193,8 @@ body,
 }
 
 .speech-icon svg {
-  width: 28px;
-  height: 34px;
+  width: 32px;
+  height: 40px;
   display: block;
 }
 
@@ -218,6 +237,16 @@ body,
 }
 
 #pause {
+  cursor: pointer;
+}
+
+#pause .lang-row {
+  margin-top: 4px;
+  margin-bottom: 0;
+  cursor: default;
+}
+
+#pause .lang {
   cursor: pointer;
 }
 
@@ -320,6 +349,8 @@ h1 {
   opacity: 0.85;
   margin: -4px 0 10px;
 }
+
+.go-art {
   width: min(100%, 340px);
   margin: 4px auto 8px;
   background: rgba(255, 255, 255, 0.08);
@@ -335,10 +366,8 @@ h1 {
 
 .go-caption {
   font-weight: 800;
-  margin: 0 0 6px;
+  margin: 0 auto 12px;
   max-width: 36em;
-  margin-left: auto;
-  margin-right: auto;
   line-height: 1.35;
 }
 
@@ -352,7 +381,17 @@ h1 {
 .summary div {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 14px;
-  padding: 12px 8px;
+  padding: 10px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.summary .stat-icon {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
 }
 
 .summary strong {
@@ -402,11 +441,17 @@ h1 {
     gap: 8px;
   }
   .stat {
-    min-width: 70px;
-    padding: 6px 8px;
+    min-width: 0;
+    padding: 5px 7px;
+    gap: 6px;
   }
-  .stat span {
-    font-size: 16px;
+  .stat-icon {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+  .stat-copy span {
+    font-size: 15px;
   }
   .wave-life {
     width: 32px;

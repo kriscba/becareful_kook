@@ -313,11 +313,34 @@ h1 {
   box-shadow: 0 3px 0 #c45a22;
 }
 
+.go-art {
+  width: min(100%, 340px);
+  margin: 4px auto 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.go-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.go-caption {
+  font-weight: 800;
+  margin: 0 0 6px;
+  max-width: 36em;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.35;
+}
+
 .summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin: 18px 0 22px;
+  margin: 12px 0 22px;
 }
 
 .summary div {

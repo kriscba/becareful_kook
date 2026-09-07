@@ -46,8 +46,17 @@ export class ObstacleSpawner {
     for (const item of this.items) {
       item.z += scrollSpeed * dt;
       item.mesh.position.z = item.z;
-      this.#animate(item, dt);
+      this.#animate(item, dt, player);
       if (item.type === "tube") this.#trackTube(item, player);
+
+      if (!item.resolved && item.type === "tube") {
+        const dx = Math.abs(player.x - item.x);
+        const inBarrel = Math.abs(item.z) < 2.6 && dx < 2.15;
+        if (inBarrel) {
+          item.resolved = true;
+          events.onTube(true);
+        }
+      }
 
       if (!item.resolved && Math.abs(item.z) < item.size.d * 0.55) {
         this.#collide(item, player, events);
@@ -85,7 +94,7 @@ export class ObstacleSpawner {
   }
 
   #pickType(inPack) {
-    if (!inPack && !this.lastWasTube && Math.random() < 0.12) {
+    if (!inPack && !this.lastWasTube && Math.random() < 0.2) {
       this.lastWasTube = true;
       return "tube";
     }
@@ -115,7 +124,7 @@ export class ObstacleSpawner {
     });
   }
 
-  #animate(item, dt) {
+  #animate(item, dt, player) {
     if (item.type === "shark") {
       item.mesh.position.y = 0.15 + Math.sin(item.z * 0.2) * 0.12;
       item.mesh.rotation.z = Math.sin(item.z * 0.15) * 0.08;
@@ -130,7 +139,7 @@ export class ObstacleSpawner {
       if (claws) claws.rotation.z = Math.sin(item.z * 0.2) * 0.08;
       const body = item.mesh.getObjectByName("waveBody");
       if (body?.material) {
-        const valid = item.brakeValid && item.approached;
+        const valid = Math.abs(player.x - item.x) < 2.15 && item.z > -30;
         body.material.emissive.set(valid ? "#1dbf6e" : "#1d6f9a");
         body.material.color.set(valid ? "#c8ffd8" : "#d6f3ff");
       }
@@ -181,10 +190,5 @@ export class ObstacleSpawner {
       events.onSharkDodge(feet);
     }
     if (item.type === "kook") events.onKookDodge();
-    if (item.type === "tube") {
-      const centered = dx < 1.15;
-      const riding = item.brakeValid && centered && player.grounded;
-      events.onTube(riding);
-    }
   }
 }

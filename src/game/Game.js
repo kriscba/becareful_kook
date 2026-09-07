@@ -52,6 +52,7 @@ export class Game {
     this._shake = 0;
     this.level = getLevel(0);
     this.pendingLife = 0;
+    this.deathCause = "rock";
     this.#resize();
     window.addEventListener("resize", () => this.#resize());
   }
@@ -78,6 +79,7 @@ export class Game {
     this.travel = 0;
     this.level = getLevel(0);
     this.pendingLife = 0;
+    this.deathCause = "rock";
     this.player.reset();
     this.spawner.reset();
     this.hud.hidePause();
@@ -156,7 +158,7 @@ export class Game {
     this.player.update(dt, this.input, this.time);
     this.world.update(this.time, scroll, dt);
     this.spawner.update(dt, scroll, this.travel, this.player, {
-      onHazard: () => this.#hurt(),
+      onHazard: (item) => this.#hurt(item.type),
       onKookBump: (item) => this.player.bumpFrom(item.x),
       onKookDodge: () => this.#kookSpeech(),
       onSharkDodge: (ft) => this.#sharkDodge(ft),
@@ -190,9 +192,10 @@ export class Game {
     this.hud.showPlay();
   }
 
-  #hurt() {
+  #hurt(cause = "rock") {
     if (this.player.invuln > 0) return;
     this.lives -= 1;
+    this.deathCause = cause === "shark" ? "shark" : "rock";
     this.player.hit();
     this.player.invuln = INVULN_SECONDS;
     this.hud.hitFlash();
@@ -252,6 +255,7 @@ export class Game {
       feet: this.feet,
       teeth: this.teeth,
       tubes: this.tubes,
+      cause: this.deathCause,
     });
   }
 

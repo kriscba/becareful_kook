@@ -1,4 +1,4 @@
-const TOUCH_DEAD = 0.14;
+const TOUCH_DEAD = 0.06;
 const JUMP_ZONE = 0.14;
 const BRAKE_ZONE = 0.86;
 
@@ -88,9 +88,8 @@ export class Input {
       if (p.startNy - p.ny > 0.16) up = true;
     }
     if (last) {
-      axis = (last.nx - 0.5) * 2;
-      if (Math.abs(axis) < TOUCH_DEAD) axis = 0;
-      else axis = Math.max(-1, Math.min(1, axis));
+      if (last.nx < 0.5 - TOUCH_DEAD) axis = -1;
+      else if (last.nx > 0.5 + TOUCH_DEAD) axis = 1;
     }
     const keyDir = (this._keys.right ? 1 : 0) - (this._keys.left ? 1 : 0);
     this.axis = keyDir !== 0 ? keyDir : axis;

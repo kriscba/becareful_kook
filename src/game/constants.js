@@ -16,8 +16,8 @@ export const GRAVITY = 24;
 export const MOVE_ACCEL = 68;
 export const MOVE_FRICTION = 16;
 export const MAX_MOVE = 17;
-export const TOUCH_MOVE_SCALE = 0.8;
-export const TOUCH_MAX_MOVE_SCALE = 0.8;
+export const TOUCH_MOVE_SCALE = 1;
+export const TOUCH_MAX_MOVE_SCALE = 1;
 export const LIP_BOOST_SECONDS = 5;
 export const LIP_BOOST_MUL = 1.5;
 

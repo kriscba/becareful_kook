@@ -159,7 +159,6 @@ export class Game {
     this.world.update(this.time, scroll, dt);
     this.spawner.update(dt, scroll, this.travel, this.player, {
       onHazard: (item) => this.#hurt(item.type),
-      onKookBump: (item) => this.player.bumpFrom(item.x),
       onKookDodge: () => this.#kookSpeech(),
       onSharkDodge: (ft) => this.#sharkDodge(ft),
       onTube: (ok) => this.#tube(ok),
@@ -195,7 +194,7 @@ export class Game {
   #hurt(cause = "rock") {
     if (this.player.invuln > 0) return;
     this.lives -= 1;
-    this.deathCause = cause === "shark" ? "shark" : "rock";
+    this.deathCause = ["shark", "kook"].includes(cause) ? cause : "rock";
     this.player.hit();
     this.player.invuln = INVULN_SECONDS;
     this.hud.hitFlash();
@@ -274,7 +273,7 @@ export class Game {
   }
 
   #camera() {
-    const target = new THREE.Vector3(this.player.x * 0.35, 1.2 + this.player.y * 0.2, -8);
+    const target = new THREE.Vector3(this.player.x * 0.35, 1.45 + this.player.y * 0.2, -8);
     const desired = new THREE.Vector3(
       this.player.x * 0.28,
       3.9,

@@ -93,7 +93,7 @@ export class Player {
   }
 
   headWorld() {
-    const v = new THREE.Vector3(this.x, this.y + 1.55, this.z);
+    const v = new THREE.Vector3(this.x, this.y + 1.85, this.z);
     return v;
   }
 

@@ -91,39 +91,52 @@ export function createPlayerMesh() {
   root.name = "player";
 
   const boardGroup = createFishBoard("#ffd166", "#ef476f");
+  const skin = toon("#f4a261");
 
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.55, 8, 16), toon("#06d6a0"));
-  body.position.y = 0.72;
+  const footL = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 8), skin);
+  footL.scale.set(1, 0.55, 1.35);
+  footL.position.set(-0.11, 0.12, 0.04);
+  const footR = footL.clone();
+  footR.position.x = 0.11;
+  const legL = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.42, 6, 12), skin);
+  legL.position.set(-0.11, 0.38, 0);
+  addShadow(legL);
+  const legR = legL.clone();
+  legR.position.x = 0.11;
+
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.48, 8, 16), toon("#06d6a0"));
+  body.position.y = 0.98;
+  body.name = "torso";
   addShadow(body);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.23, 20, 16), toon("#f4a261"));
-  head.position.y = 1.22;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.23, 20, 16), skin);
+  head.position.y = 1.48;
   addShadow(head);
   const hair = new THREE.Mesh(new THREE.SphereGeometry(0.21, 16, 12), toon("#3d2914"));
-  hair.position.set(0, 1.35, -0.02);
+  hair.position.set(0, 1.61, -0.02);
   const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 10), toon("#1b1b1b"));
-  eyeL.position.set(-0.08, 1.26, 0.18);
+  eyeL.position.set(-0.08, 1.52, 0.18);
   const eyeR = eyeL.clone();
   eyeR.position.x = 0.08;
 
   const armL = new THREE.Group();
   armL.name = "armL";
-  armL.position.set(-0.32, 0.95, 0);
-  const armLMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 6, 12), toon("#f4a261"));
+  armL.position.set(-0.32, 1.12, 0);
+  const armLMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 6, 12), skin);
   armLMesh.position.y = -0.18;
-  armL.rotation.z = 0.45;
+  armL.rotation.z = 0.28;
   armL.add(armLMesh);
 
   const armR = new THREE.Group();
   armR.name = "armR";
-  armR.position.set(0.32, 0.95, 0);
-  const armRMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 6, 12), toon("#f4a261"));
+  armR.position.set(0.32, 1.12, 0);
+  const armRMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.32, 6, 12), skin);
   armRMesh.position.y = -0.18;
-  armR.rotation.z = -0.45;
+  armR.rotation.z = -0.28;
   armR.add(armRMesh, createShakaHand());
 
   const rider = new THREE.Group();
   rider.name = "rider";
-  rider.add(body, head, hair, eyeL, eyeR, armL, armR);
+  rider.add(footL, footR, legL, legR, body, head, hair, eyeL, eyeR, armL, armR);
 
   const shadow = new THREE.Mesh(
     new THREE.CircleGeometry(0.55, 16),
@@ -142,8 +155,7 @@ export function createKookMesh() {
   root.name = "kook";
   const deck = root.getObjectByName("deck");
   if (deck) deck.material = toon("#ef476f");
-  const rider = root.getObjectByName("rider");
-  const body = rider?.children[0];
+  const body = root.getObjectByName("torso");
   if (body) body.material = toon("#ffd166");
   const shaka = root.getObjectByName("shaka");
   if (shaka) shaka.visible = false;

@@ -26,6 +26,35 @@ export const ROCK_GO_SVG = `
 </svg>
 `;
 
+export const KOOK_GO_SVG = `
+<svg viewBox="0 0 320 200" role="img" aria-label="Kook wipeout">
+  <ellipse cx="160" cy="178" rx="120" ry="14" fill="#06283a" opacity=".28"/>
+  <path d="M0 158c50-12 90 6 160 0 70-6 110 10 160 2v40H0z" fill="#0d6a96"/>
+  <rect x="48" y="128" width="90" height="14" rx="7" fill="#ffd166"/>
+  <rect x="88" y="130" width="8" height="10" fill="#ef476f"/>
+  <ellipse cx="92" cy="104" rx="18" ry="26" fill="#06d6a0"/>
+  <circle cx="94" cy="70" r="16" fill="#f4a261"/>
+  <circle cx="94" cy="64" r="14" fill="#3d2914"/>
+  <circle cx="89" cy="72" r="3" fill="#1b1b1b"/>
+  <circle cx="101" cy="72" r="3" fill="#1b1b1b"/>
+  <path d="M88 82c5 5 12 4 16 0" stroke="#1b1b1b" stroke-width="2" fill="none"/>
+  <path d="M74 96c-12 8-14 22-6 28" fill="none" stroke="#f4a261" stroke-width="7" stroke-linecap="round"/>
+  <rect x="168" y="122" width="92" height="14" rx="7" fill="#ef476f" transform="rotate(18 214 129)"/>
+  <ellipse cx="214" cy="108" rx="18" ry="24" fill="#ffd166" transform="rotate(18 214 108)"/>
+  <circle cx="226" cy="78" r="16" fill="#f4a261"/>
+  <circle cx="228" cy="72" r="14" fill="#6b3e16"/>
+  <circle cx="222" cy="80" r="3" fill="#1b1b1b"/>
+  <circle cx="234" cy="78" r="3" fill="#1b1b1b"/>
+  <path d="M220 88c6-2 12 2 14 6" stroke="#1b1b1b" stroke-width="2" fill="none"/>
+  <path d="M198 100c-10-10-4-22 6-20" fill="none" stroke="#f4a261" stroke-width="7" stroke-linecap="round"/>
+  <path d="M150 92l18 10-8 8 20 2-18 12 4-16z" fill="#ffd166"/>
+  <circle cx="156" cy="58" r="10" fill="#2ecc71"/>
+  <ellipse cx="152" cy="58" rx="4" ry="6" fill="#1e8449"/>
+  <ellipse cx="160" cy="58" rx="4" ry="6" fill="#1e8449"/>
+  <circle cx="156" cy="58" r="2.4" fill="#1b1b1b"/>
+</svg>
+`;
+
 export const SHARK_GO_SVG = `
 <svg viewBox="0 0 320 200" role="img" aria-label="Shark wipeout">
   <ellipse cx="160" cy="178" rx="120" ry="14" fill="#06283a" opacity=".28"/>

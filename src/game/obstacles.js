@@ -94,7 +94,7 @@ export class ObstacleSpawner {
   }
 
   #pickType(inPack) {
-    if (!inPack && !this.lastWasTube && Math.random() < 0.2) {
+    if (!inPack && !this.lastWasTube && Math.random() < 0.07) {
       this.lastWasTube = true;
       return "tube";
     }
@@ -178,7 +178,7 @@ export class ObstacleSpawner {
     if (item.type === "kook") {
       item.hit = true;
       item.resolved = true;
-      events.onKookBump(item);
+      events.onHazard(item);
     }
   }
 

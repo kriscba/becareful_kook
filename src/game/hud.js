@@ -1,5 +1,5 @@
 import { MAX_LIVES, WAVE_SVG } from "./constants.js";
-import { ROCK_GO_SVG, SHARK_GO_SVG } from "./illustrations.js";
+import { ROCK_GO_SVG, SHARK_GO_SVG, KOOK_GO_SVG } from "./illustrations.js";
 import { formatDistance, t, unitLabel } from "../i18n.js";
 
 export class HUD {
@@ -69,12 +69,14 @@ export class HUD {
     this.goFeet.textContent = formatDistance(this.lang, stats.feet, 0);
     this.goTeeth.textContent = String(stats.teeth);
     this.goTubes.textContent = String(stats.tubes);
-    const shark = stats.cause === "shark";
-    this.goArt.innerHTML = shark ? SHARK_GO_SVG : ROCK_GO_SVG;
-    this.goArt.classList.toggle("shark", shark);
-    this.goCaption.textContent = t(this.lang, shark ? "goShark" : "goRock");
+    const arts = { shark: SHARK_GO_SVG, kook: KOOK_GO_SVG, rock: ROCK_GO_SVG };
+    const captions = { shark: "goShark", kook: "goKook", rock: "goRock" };
+    this.goArt.innerHTML = arts[stats.cause] || ROCK_GO_SVG;
+    this.goCaption.textContent = t(this.lang, captions[stats.cause] || "goRock");
     const title = this.gameover.querySelector("h1");
     if (title) title.textContent = t(this.lang, "gameOver");
+    const hospital = this.gameover.querySelector("#go-hospital");
+    if (hospital) hospital.textContent = t(this.lang, "hospitalWaits");
   }
 
   update(state) {

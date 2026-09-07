@@ -5,7 +5,9 @@ import {
   SPAWN_Z,
   TUBE_APPROACH_Z,
 } from "./constants.js";
-import { createKookMesh, createRockMesh, createSharkMesh, createTubeMesh } from "./models.js";
+import { createKookMesh, createRockMesh, createSharkMesh, createTubeMesh, waveHeight, waveSlope } from "./models.js";
+
+const BASE_Y = { rock: 0.28, shark: 0, kook: 0, tube: 1.85 };
 
 const FACTORIES = {
   rock: createRockMesh,
@@ -107,7 +109,7 @@ export class ObstacleSpawner {
 
   #spawn(type, x) {
     const mesh = FACTORIES[type]();
-    mesh.position.set(x, type === "tube" ? 1.85 : 0, SPAWN_Z);
+    mesh.position.set(x, waveHeight(x) + (BASE_Y[type] ?? 0), SPAWN_Z);
     this.scene.add(mesh);
     const size = COLLIDERS[type];
     this.items.push({
@@ -125,9 +127,15 @@ export class ObstacleSpawner {
   }
 
   #animate(item, dt, player) {
+    const faceTilt = -Math.atan(waveSlope(item.x));
+    const base = waveHeight(item.x) + (BASE_Y[item.type] ?? 0);
+    item.mesh.rotation.z = faceTilt;
+
     if (item.type === "shark") {
-      item.mesh.position.y = 0.15 + Math.sin(item.z * 0.2) * 0.12;
-      item.mesh.rotation.z = Math.sin(item.z * 0.15) * 0.08;
+      item.mesh.position.y = base + 0.15 + Math.sin(item.z * 0.2) * 0.12;
+      item.mesh.rotation.z = faceTilt + Math.sin(item.z * 0.15) * 0.08;
+    } else {
+      item.mesh.position.y = base;
     }
     if (item.type === "kook") {
       const rider = item.mesh.getObjectByName("rider");

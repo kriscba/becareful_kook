@@ -1,14 +1,15 @@
 import * as THREE from "three";
-import { createClouds, createSun, createWater, createWaveWall } from "./models.js";
+import { createClouds, createFoamLip, createSun, createWater, createWaveWall } from "./models.js";
 
 export class World {
   constructor(scene) {
     this.scene = scene;
     this.water = createWater();
     this.wall = createWaveWall();
+    this.foam = createFoamLip();
     this.clouds = createClouds();
     this.sun = createSun();
-    scene.add(this.water, this.wall, this.clouds, this.sun);
+    scene.add(this.water, this.wall, this.foam, this.clouds, this.sun);
 
     const hemi = new THREE.HemisphereLight("#bfe9ff", "#0b4f78", 1.2);
     const sunLight = new THREE.DirectionalLight("#fff1c9", 1.45);

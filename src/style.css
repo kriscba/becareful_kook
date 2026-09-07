@@ -221,6 +221,16 @@ body,
   cursor: pointer;
 }
 
+#pause .lang-row {
+  margin-top: 4px;
+  margin-bottom: 0;
+  cursor: default;
+}
+
+#pause .lang {
+  cursor: pointer;
+}
+
 .panel {
   width: min(560px, calc(100% - 32px));
   background: var(--panel);

@@ -335,52 +335,71 @@ export function createTubeMesh() {
   return root;
 }
 
+export function waveHeight(x) {
+  const t = Math.max(0, Math.min(1.12, (x + 5.8) / 12.2));
+  return 0.18 + t * t * 4.6;
+}
+
+export function waveSlope(x) {
+  return (waveHeight(x + 0.25) - waveHeight(x - 0.25)) / 0.5;
+}
+
 export function createWater() {
-  const geo = new THREE.PlaneGeometry(48, 220, 50, 90);
+  const geo = new THREE.PlaneGeometry(26, 220, 70, 90);
+  geo.rotateX(-Math.PI / 2);
+  const pos = geo.attributes.position;
+  for (let i = 0; i < pos.count; i += 1) {
+    const x = pos.getX(i);
+    pos.setY(i, waveHeight(x));
+  }
+  geo.computeVertexNormals();
+
   const uniforms = {
     uTime: { value: 0 },
     uOffset: { value: 0 },
   };
   const mat = new THREE.ShaderMaterial({
     uniforms,
-    transparent: true,
+    side: THREE.DoubleSide,
     vertexShader: `
       uniform float uTime;
       uniform float uOffset;
       varying vec2 vUv;
-      varying float vWave;
+      varying float vH;
       void main() {
         vUv = uv;
         vec3 p = position;
-        float z = p.y + uOffset;
-        vWave = sin(p.x * 0.45 + uTime * 2.2) * 0.16 + sin(z * 0.18 + uTime) * 0.1;
-        p.z += vWave;
+        float ripple = sin(p.x * 0.55 + uTime * 2.4) * 0.07 + sin((p.z + uOffset) * 0.22 + uTime) * 0.05;
+        p.y += ripple;
+        vH = p.y;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
       }
     `,
     fragmentShader: `
       varying vec2 vUv;
-      varying float vWave;
+      varying float vH;
       void main() {
-        vec3 deep = vec3(0.05, 0.35, 0.58);
-        vec3 lite = vec3(0.22, 0.78, 0.86);
-        vec3 col = mix(deep, lite, vUv.x * 0.45 + vWave * 0.8 + 0.35);
-        float foam = smoothstep(0.72, 0.92, vUv.x);
-        col = mix(col, vec3(0.93, 0.98, 1.0), foam * 0.85);
-        gl_FragColor = vec4(col, 0.96);
+        vec3 trough = vec3(0.04, 0.28, 0.48);
+        vec3 face = vec3(0.12, 0.72, 0.86);
+        vec3 lip = vec3(0.92, 0.98, 1.0);
+        float t = clamp(vUv.x, 0.0, 1.0);
+        vec3 col = mix(trough, face, smoothstep(0.18, 0.62, t));
+        col = mix(col, lip, smoothstep(0.72, 0.96, t));
+        float lines = 0.08 * sin((vUv.y + vH) * 48.0);
+        col += lines * vec3(0.12, 0.18, 0.22);
+        gl_FragColor = vec4(col, 1.0);
       }
     `,
   });
   const mesh = new THREE.Mesh(geo, mat);
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.position.set(2.5, 0, -40);
+  mesh.position.set(0, 0, -40);
   mesh.receiveShadow = true;
   mesh.name = "water";
   return mesh;
 }
 
 export function createWaveWall() {
-  const geo = new THREE.PlaneGeometry(200, 11, 80, 18);
+  const geo = new THREE.PlaneGeometry(220, 7.5, 80, 16);
   const uniforms = {
     uTime: { value: 0 },
     uOffset: { value: 0 },
@@ -395,17 +414,17 @@ export function createWaveWall() {
       void main() {
         vUv = uv;
         vec3 p = position;
-        float curl = smoothstep(0.35, 1.0, uv.y);
-        p.z += sin(uv.x * 22.0 + uTime * 3.0 + uOffset) * 0.28 * curl;
-        p.z -= curl * 1.15;
+        float curl = smoothstep(0.25, 1.0, uv.y);
+        p.z += sin(uv.x * 20.0 + uTime * 3.2 + uOffset) * 0.32 * curl;
+        p.z -= curl * 2.1;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
       }
     `,
     fragmentShader: `
       varying vec2 vUv;
       void main() {
-        vec3 base = mix(vec3(0.07, 0.38, 0.62), vec3(0.45, 0.88, 0.98), vUv.y);
-        float lip = smoothstep(0.78, 1.0, vUv.y);
+        vec3 base = mix(vec3(0.08, 0.42, 0.66), vec3(0.55, 0.9, 1.0), vUv.y);
+        float lip = smoothstep(0.7, 1.0, vUv.y);
         base = mix(base, vec3(1.0), lip);
         gl_FragColor = vec4(base, 1.0);
       }
@@ -413,8 +432,20 @@ export function createWaveWall() {
   });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.rotation.y = -Math.PI / 2;
-  mesh.rotation.z = 0.18;
-  mesh.position.set(7.6, 4.4, -50);
+  mesh.rotation.z = 0.55;
+  const lipX = 8.4;
+  mesh.position.set(lipX, waveHeight(lipX) + 2.4, -50);
+  return mesh;
+}
+
+export function createFoamLip() {
+  const geo = new THREE.CylinderGeometry(0.62, 0.95, 220, 10, 1);
+  geo.rotateX(Math.PI / 2);
+  const mat = new THREE.MeshLambertMaterial({ color: "#f8fdff" });
+  const mesh = new THREE.Mesh(geo, mat);
+  const x = 7.15;
+  mesh.position.set(x, waveHeight(x) + 0.45, -40);
+  mesh.rotation.z = -Math.atan(waveSlope(x));
   return mesh;
 }
 

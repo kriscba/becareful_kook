@@ -39,6 +39,10 @@ export const STRINGS = {
     braking: "BRAKING",
     distance: "Distance",
     bonusFeet: "+800 ft",
+    offTheLip: "OFF THE LIP",
+    lipBoost: "LIP x1.5",
+    cutback: "CUTBACK",
+    cutbackBoost: "CUTBACK x1.5",
   },
   es: {
     subtitle: "Esquivá kooks, tiburones y rocas. Metete en el tubo.",
@@ -80,6 +84,10 @@ export const STRINGS = {
     braking: "FRENANDO",
     distance: "Distancia",
     bonusFeet: "+800 ft",
+    offTheLip: "OFF THE LIP",
+    lipBoost: "LIP x1.5",
+    cutback: "CUTBACK",
+    cutbackBoost: "CUTBACK x1.5",
   },
   pt: {
     subtitle: "Desvie de haoles, tubarões e pedras. Entre no tubo.",
@@ -121,6 +129,10 @@ export const STRINGS = {
     braking: "FREANDO",
     distance: "Distância",
     bonusFeet: "+800 ft",
+    offTheLip: "OFF THE LIP",
+    lipBoost: "LIP x1.5",
+    cutback: "CUTBACK",
+    cutbackBoost: "CUTBACK x1.5",
   },
 };
 

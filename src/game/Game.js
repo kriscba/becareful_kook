@@ -8,6 +8,7 @@ import {
   HAKA_SECONDS,
   INVULN_SECONDS,
   LIFE_BOOST,
+  LIP_BOOST_MUL,
   MAX_LIVES,
   MAX_TIME_SPEED,
   MIN_TIME_SPEED,
@@ -162,6 +163,9 @@ export class Game {
     this.#checkLevel();
 
     this.player.update(dt, this.input, this.time);
+    const maneuver = this.player.consumeManeuver();
+    if (maneuver === "lip") this.hud.showBanner(t(this.lang, "offTheLip"));
+    if (maneuver === "cutback") this.hud.showBanner(t(this.lang, "cutback"));
     this.world.update(this.time, scroll, dt);
     this.spawner.update(dt, scroll, this.travel, this.player, {
       onHazard: (item) => this.#hurt(item.type),
@@ -182,7 +186,8 @@ export class Game {
     const lifeBoost = LIFE_BOOST[this.lives] ?? 1;
     const levelBoost = this.level?.speed ?? 1;
     const brake = this.player.braking ? BRAKE_FACTOR : 1;
-    return timeSpeed * lifeBoost * levelBoost * brake;
+    const lip = this.player.lipBoost > 0 ? LIP_BOOST_MUL : 1;
+    return timeSpeed * lifeBoost * levelBoost * brake * lip;
   }
 
   #pause() {
@@ -276,6 +281,8 @@ export class Game {
       braking: this.mode === "play" && this.player.braking,
       stoke: this.stoke ?? 0,
       flow: this.flow ?? 0,
+      lipBoost: this.player?.lipBoost ?? 0,
+      boostKind: this.player?.boostKind,
     };
   }
 

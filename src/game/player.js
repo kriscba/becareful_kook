@@ -108,7 +108,7 @@ export class Player {
       const accel = MOVE_ACCEL * (touch ? TOUCH_MOVE_SCALE : 1);
       const cap = MAX_MOVE * (touch ? TOUCH_MAX_MOVE_SCALE : 1);
       if (dir !== 0) this.vx += dir * accel * dt;
-      else this.vx = THREE.MathUtils.damp(this.vx, 0, MOVE_FRICTION * (touch ? 1.35 : 1), dt);
+      else this.vx = THREE.MathUtils.damp(this.vx, 0, MOVE_FRICTION, dt);
       this.vx = THREE.MathUtils.clamp(this.vx, -cap, cap);
       this.x = THREE.MathUtils.clamp(this.x + this.vx * dt, MIN_X, MAX_X);
     }

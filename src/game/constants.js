@@ -16,6 +16,8 @@ export const GRAVITY = 24;
 export const MOVE_ACCEL = 68;
 export const MOVE_FRICTION = 16;
 export const MAX_MOVE = 17;
+export const LIP_BOOST_SECONDS = 5;
+export const LIP_BOOST_MUL = 1.5;
 
 export const SPAWN_Z = -78;
 export const DESPAWN_Z = 16;

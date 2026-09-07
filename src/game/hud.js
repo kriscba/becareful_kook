@@ -139,6 +139,10 @@ export class HUD {
     const bits = [];
     if (state.stoke > 0) bits.push(`<div class="buff">${t(this.lang, "stoke")}</div>`);
     if (state.flow > 0) bits.push(`<div class="buff">${t(this.lang, "flow")}</div>`);
+    if (state.lipBoost > 0) {
+      const key = state.boostKind === "cutback" ? "cutbackBoost" : "lipBoost";
+      bits.push(`<div class="buff">${t(this.lang, key)}</div>`);
+    }
     this.buffs.innerHTML = bits.join("");
   }
 }

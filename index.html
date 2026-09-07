@@ -2,10 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Becareful kook!!</title>
     <link
       rel="icon"
@@ -17,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="./assets/index-5tmANw4j.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DhODdNQA.css">
+    <script type="module" crossorigin src="./assets/index-yNOe0keS.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D6VZfy-5.css">
   </head>
   <body>
     <div id="app">
@@ -30,15 +27,6 @@
             <span class="hud-label" data-i18n="lives">Lives</span>
             <div id="lives" class="lives"></div>
           </div>
-          <button
-            type="button"
-            id="pause-btn"
-            class="pause-btn"
-            data-i18n-aria="pauseBtn"
-            aria-label="Pause"
-          >
-            <span class="pause-icon" aria-hidden="true"></span>
-          </button>
           <div class="hud-stats">
             <div class="stat">
               <span class="stat-icon" data-stat-icon="board"></span>
@@ -96,10 +84,10 @@
             </div>
           </div>
           <ul class="howto">
-            <li data-i18n="controlsMove">← → or slide left / right</li>
-            <li data-i18n="controlsJump">↑ or tap the top — jump rocks</li>
-            <li data-i18n="controlsBrake">↓ or hold the bottom — brake for the tube</li>
-            <li data-i18n="controlsPause">❚❚ / Esc — pause</li>
+            <li data-i18n="controlsMove">Left / Right — dodge</li>
+            <li data-i18n="controlsJump">Up — jump over rocks</li>
+            <li data-i18n="controlsBrake">Down — brake (hold from the start to ride the tube)</li>
+            <li data-i18n="controlsPause">Click — pause / resume</li>
           </ul>
           <button type="button" id="play" class="cta" data-i18n="play">DROP IN</button>
         </div>
@@ -108,7 +96,7 @@
       <div id="pause" class="screen hidden">
         <div class="panel">
           <h1 data-i18n="paused">PAUSED</h1>
-          <p class="subtitle" data-i18n="clickResume">Tap to keep riding</p>
+          <p class="subtitle" data-i18n="clickResume">Click to keep riding</p>
           <div class="lang-row">
             <span data-i18n="language">Language</span>
             <div class="lang-btns">

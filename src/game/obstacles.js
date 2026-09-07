@@ -27,14 +27,14 @@ export class ObstacleSpawner {
   constructor(scene) {
     this.scene = scene;
     this.items = [];
-    this.nextAt = 12;
+    this.nextAt = 22;
     this.lastWasTube = false;
   }
 
   reset() {
     for (const item of this.items) this.scene.remove(item.mesh);
     this.items = [];
-    this.nextAt = 12;
+    this.nextAt = 22;
     this.lastWasTube = false;
   }
 
@@ -77,10 +77,10 @@ export class ObstacleSpawner {
 
   #maybeSpawn(distance, spawnMul = 1) {
     if (distance < this.nextAt) return;
-    const gap = (16 + Math.random() * 10) * spawnMul;
+    const gap = (32 + Math.random() * 18) * spawnMul;
     this.nextAt = distance + gap;
 
-    const pack = Math.random() < 0.28 ? 2 : 1;
+    const pack = Math.random() < 0.12 ? 2 : 1;
     const usedX = [];
     for (let i = 0; i < pack; i += 1) {
       const type = this.#pickType(pack > 1);

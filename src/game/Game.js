@@ -55,16 +55,24 @@ export class Game {
     this.level = getLevel(0);
     this.pendingLife = 0;
     this.deathCause = "rock";
+    this._portrait = false;
     this.#resize();
     window.addEventListener("resize", () => this.#resize());
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => this.#resize(), 180);
+    });
+    window.visualViewport?.addEventListener("resize", () => this.#resize());
+    window.visualViewport?.addEventListener("scroll", () => this.#resize());
   }
 
   init() {
-    this.input.attach();
+    this.input.attach(this.canvas);
     this.hud.setLang(this.lang);
     this.hud.showMenu();
     this.#bindUi();
     this.clock.start();
+    this.#resize();
+    requestAnimationFrame(() => this.#resize());
     this.renderer.setAnimationLoop(() => this.#frame());
   }
 
@@ -84,6 +92,7 @@ export class Game {
     this.deathCause = "rock";
     this.player.reset();
     this.spawner.reset();
+    this.input.reset();
     this.hud.hidePause();
     this.hud.showPlay();
     this.hud.update(this.#hudState());
@@ -109,12 +118,20 @@ export class Game {
         }
       });
     });
-    this.canvas.addEventListener("pointerdown", () => {
+    this.hud.pauseBtn.addEventListener("pointerdown", (e) => e.stopPropagation());
+    this.hud.pauseBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       if (this.mode === "play") this.#pause();
     });
     this.hud.pause.addEventListener("pointerdown", (e) => {
       if (e.target.closest("[data-lang], button, .lang-row")) return;
       if (this.mode === "paused") this.#resume();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.repeat) return;
+      if (e.code !== "Escape" && e.code !== "KeyP") return;
+      if (this.mode === "play") this.#pause();
+      else if (this.mode === "paused") this.#resume();
     });
   }
 
@@ -192,6 +209,7 @@ export class Game {
 
   #pause() {
     this.mode = "paused";
+    this.input.clearPointers();
     this.hud.showPause();
   }
 
@@ -216,8 +234,9 @@ export class Game {
   #speechAtPlayer(text, ms = 1100, iconHtml = "") {
     const pos = this.player.headWorld();
     pos.project(this.camera);
-    const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
-    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+    const { w, h } = this.#viewSize();
+    const x = (pos.x * 0.5 + 0.5) * w;
+    const y = (-pos.y * 0.5 + 0.5) * h;
     this.hud.placeSpeech(x, y, text, ms, iconHtml);
   }
 
@@ -288,15 +307,16 @@ export class Game {
 
   #camera() {
     const surface = waveHeight(this.player.x);
+    const portrait = this._portrait;
     const target = new THREE.Vector3(
-      this.player.x * 0.2 + 1.5,
-      surface + 1.55 + this.player.y * 0.2,
-      -8
+      this.player.x * (portrait ? 0.12 : 0.2) + (portrait ? 0.55 : 1.5),
+      surface + (portrait ? 1.35 : 1.55) + this.player.y * 0.2,
+      portrait ? -11 : -8
     );
     const desired = new THREE.Vector3(
-      this.player.x * 0.22 - 1.5,
-      surface + 4.15,
-      10.2
+      this.player.x * (portrait ? 0.14 : 0.22) - (portrait ? 0.45 : 1.5),
+      surface + (portrait ? 5.35 : 4.15),
+      portrait ? 13.6 : 10.2
     );
     if (this._shake > 0) {
       desired.x += (Math.random() - 0.5) * this._shake * 0.35;
@@ -306,11 +326,38 @@ export class Game {
     this.camera.lookAt(target);
   }
 
+  #viewSize() {
+    const vv = window.visualViewport;
+    if (vv) {
+      return {
+        w: Math.max(1, Math.round(vv.width)),
+        h: Math.max(1, Math.round(vv.height)),
+        left: Math.round(vv.offsetLeft),
+        top: Math.round(vv.offsetTop),
+      };
+    }
+    return {
+      w: Math.max(1, window.innerWidth),
+      h: Math.max(1, window.innerHeight),
+      left: 0,
+      top: 0,
+    };
+  }
+
   #resize() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const { w, h, left, top } = this.#viewSize();
+    document.documentElement.style.setProperty("--app-w", `${w}px`);
+    document.documentElement.style.setProperty("--app-h", `${h}px`);
+    document.documentElement.style.setProperty("--app-left", `${left}px`);
+    document.documentElement.style.setProperty("--app-top", `${top}px`);
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
+    this._portrait = this.camera.aspect < 0.82;
+    const minHFov = THREE.MathUtils.degToRad(this._portrait ? 46 : 38);
+    const needed = THREE.MathUtils.radToDeg(
+      2 * Math.atan(Math.tan(minHFov / 2) / Math.max(0.35, this.camera.aspect))
+    );
+    this.camera.fov = THREE.MathUtils.clamp(this._portrait ? Math.max(62, needed) : 55, 52, 72);
     this.camera.updateProjectionMatrix();
   }
 }

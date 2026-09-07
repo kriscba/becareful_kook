@@ -15,6 +15,7 @@ export class HUD {
     this.menu = document.getElementById("menu");
     this.gameover = document.getElementById("gameover");
     this.pause = document.getElementById("pause");
+    this.pauseBtn = document.getElementById("pause-btn");
     this.speech = document.getElementById("speech");
     this.speechIcon = document.getElementById("speech-icon");
     this.speechText = document.getElementById("speech-text");
@@ -37,6 +38,9 @@ export class HUD {
   setLang(lang) {
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       el.textContent = t(lang, el.dataset.i18n);
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+      el.setAttribute("aria-label", t(lang, el.dataset.i18nAria));
     });
     this.langBtns.forEach((btn) => {
       btn.classList.toggle("on", btn.dataset.lang === lang);
@@ -109,8 +113,29 @@ export class HUD {
     this.speech.classList.remove("hidden");
     this.speech.style.left = `${x}px`;
     this.speech.style.top = `${y}px`;
+    this.#clampSpeech(x, y);
     clearTimeout(this._speechTimer);
     this._speechTimer = setTimeout(() => this.speech.classList.add("hidden"), ms);
+  }
+
+  #clampSpeech(x, y) {
+    const el = this.speech;
+    const r = el.getBoundingClientRect();
+    const app = document.getElementById("app")?.getBoundingClientRect() ?? {
+      left: 0,
+      top: 0,
+      right: window.innerWidth,
+      bottom: window.innerHeight,
+    };
+    const pad = 10;
+    let dx = 0;
+    let dy = 0;
+    if (r.left < app.left + pad) dx = app.left + pad - r.left;
+    else if (r.right > app.right - pad) dx = app.right - pad - r.right;
+    if (r.top < app.top + pad) dy = app.top + pad - r.top;
+    else if (r.bottom > app.bottom - pad) dy = app.bottom - pad - r.bottom;
+    el.style.left = `${x + dx}px`;
+    el.style.top = `${y + dy}px`;
   }
 
   showBanner(text) {

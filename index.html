@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Becareful kook!!</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='48' font-size='42'>🌊</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game"></canvas>
+
+      <div id="hud" class="overlay hidden">
+        <div class="hud-top">
+          <div class="hud-lives">
+            <span class="hud-label" data-i18n="lives">Lives</span>
+            <div id="lives" class="lives"></div>
+          </div>
+          <div class="hud-stats">
+            <div class="stat">
+              <span id="feet">0</span>
+              <small data-i18n="feet">ft</small>
+            </div>
+            <div class="stat">
+              <span id="teeth">0</span>
+              <small data-i18n="teeth">Megalodon</small>
+            </div>
+            <div class="stat">
+              <span id="cycle">5:00</span>
+              <small data-i18n="cycle">Set</small>
+            </div>
+          </div>
+        </div>
+        <div id="brake-hint" class="brake-hint hidden">↓</div>
+        <div id="buffs" class="buffs"></div>
+      </div>
+
+      <div id="speech" class="speech hidden">Becareful kook!!</div>
+      <div id="tooth-popup" class="tooth-popup hidden">
+        <svg viewBox="0 0 64 80" aria-hidden="true">
+          <path
+            d="M32 6 C18 6 10 20 12 36 L32 76 L52 36 C54 20 46 6 32 6Z"
+            fill="#f4f0e6"
+            stroke="#c8b48a"
+            stroke-width="3"
+          />
+          <path d="M24 28 Q32 22 40 28" fill="none" stroke="#d9c9a0" stroke-width="2" />
+        </svg>
+        <span id="tooth-ft">2.4 ft</span>
+      </div>
+      <div id="banner" class="banner hidden">TUBE RIDE</div>
+
+      <div id="hit-flash" class="hit-flash"></div>
+
+      <div id="menu" class="screen">
+        <div class="panel">
+          <p class="eyebrow">SURF ARCADE</p>
+          <h1>Becareful kook!!</h1>
+          <p class="subtitle" data-i18n="subtitle">
+            Dodge kooks, sharks and rocks. Ride the barrel.
+          </p>
+          <div class="lang-row">
+            <span data-i18n="language">Language</span>
+            <div class="lang-btns">
+              <button type="button" data-lang="en" class="lang on">EN</button>
+              <button type="button" data-lang="es" class="lang">ES</button>
+              <button type="button" data-lang="pt" class="lang">PT</button>
+            </div>
+          </div>
+          <ul class="howto">
+            <li data-i18n="controlsMove">Left / Right — dodge</li>
+            <li data-i18n="controlsJump">Up — jump over rocks</li>
+            <li data-i18n="controlsBrake">Down — brake (hold from the start to ride the tube)</li>
+            <li data-i18n="controlsPause">Click — pause / resume</li>
+          </ul>
+          <button type="button" id="play" class="cta" data-i18n="play">DROP IN</button>
+        </div>
+      </div>
+
+      <div id="pause" class="screen hidden">
+        <div class="panel">
+          <h1 data-i18n="paused">PAUSED</h1>
+          <p class="subtitle" data-i18n="clickResume">Click to keep riding</p>
+        </div>
+      </div>
+
+      <div id="gameover" class="screen hidden">
+        <div class="panel">
+          <h1 data-i18n="gameOver">Wiped out!</h1>
+          <div class="summary">
+            <div>
+              <strong id="go-feet">0</strong>
+              <span data-i18n="distance">Distance</span>
+            </div>
+            <div>
+              <strong id="go-teeth">0</strong>
+              <span data-i18n="teeth">Megalodon</span>
+            </div>
+            <div>
+              <strong id="go-tubes">0</strong>
+              <span data-i18n="tubes">Tubes</span>
+            </div>
+          </div>
+          <button type="button" id="restart" class="cta" data-i18n="restart">PADDLE BACK</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -224,114 +224,146 @@ export function createSharkMesh() {
   return root;
 }
 
-function createJapaneseWaveTexture() {
-  const c = document.createElement("canvas");
-  c.width = 512;
-  c.height = 512;
-  const ctx = c.getContext("2d");
-  const g = ctx.createLinearGradient(0, 512, 0, 0);
-  g.addColorStop(0, "#0b3a66");
-  g.addColorStop(0.45, "#1a7bb8");
-  g.addColorStop(0.78, "#7ec8e8");
-  g.addColorStop(1, "#f4fbff");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 512, 512);
+function barrelPoint(t, radius, cx = 1.32, cy = 1.88) {
+  const ang = -0.38 * Math.PI + t * 1.38 * Math.PI;
+  return {
+    x: cx + Math.cos(ang) * radius * 1.12,
+    y: Math.max(0.02, cy + Math.sin(ang) * radius * 0.96),
+  };
+}
 
-  ctx.strokeStyle = "rgba(8, 28, 58, 0.45)";
-  ctx.lineWidth = 3;
-  for (let i = 0; i < 18; i += 1) {
-    ctx.beginPath();
-    const y = 40 + i * 26;
-    ctx.moveTo(0, y);
-    for (let x = 0; x <= 512; x += 16) {
-      ctx.lineTo(x, y + Math.sin(x * 0.04 + i) * 10);
-    }
-    ctx.stroke();
+function createBarrelShape(rOut, rIn) {
+  const shape = new THREE.Shape();
+  const n = 52;
+  const first = barrelPoint(0, rOut);
+  shape.moveTo(first.x, first.y);
+  for (let i = 1; i <= n; i += 1) {
+    const p = barrelPoint(i / n, rOut);
+    shape.lineTo(p.x, p.y);
   }
-
-  ctx.fillStyle = "#f7fbff";
-  ctx.strokeStyle = "#9ad0ea";
-  ctx.lineWidth = 3;
-  for (let i = 0; i < 12; i += 1) {
-    const x = 18 + i * 42;
-    ctx.beginPath();
-    ctx.moveTo(x, 70);
-    ctx.bezierCurveTo(x + 8, -8, x + 36, -6, x + 30, 78);
-    ctx.bezierCurveTo(x + 22, 28, x + 8, 36, x, 70);
-    ctx.fill();
-    ctx.stroke();
+  for (let i = n; i >= 0; i -= 1) {
+    const p = barrelPoint(i / n, rIn);
+    shape.lineTo(p.x, p.y);
   }
+  shape.closePath();
+  return shape;
+}
 
-  ctx.strokeStyle = "rgba(255,255,255,0.65)";
-  ctx.lineWidth = 6;
-  ctx.beginPath();
-  ctx.arc(256, 280, 150, Math.PI * 0.15, Math.PI * 1.55);
-  ctx.stroke();
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  return tex;
+function createWaterShader() {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uReady: { value: 0 },
+    },
+    side: THREE.DoubleSide,
+    transparent: false,
+    vertexShader: `
+      uniform float uTime;
+      varying vec3 vPos;
+      varying vec3 vN;
+      void main() {
+        vPos = position;
+        vN = normalize(normalMatrix * normal);
+        vec3 p = position;
+        p += normal * sin(position.y * 3.6 + position.z * 1.1 + uTime * 2.6) * 0.04;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      uniform float uReady;
+      varying vec3 vPos;
+      varying vec3 vN;
+      void main() {
+        vec3 deep = vec3(0.04, 0.32, 0.5);
+        vec3 face = vec3(0.16, 0.74, 0.86);
+        vec3 room = vec3(0.05, 0.5, 0.36);
+        vec3 foam = vec3(0.96, 0.99, 1.0);
+        float inner = smoothstep(-0.15, 0.7, -vN.x);
+        vec3 col = mix(face, deep, inner);
+        col = mix(col, room, inner * 0.62);
+        float lip = smoothstep(2.7, 3.6, vPos.y) * smoothstep(0.6, 2.4, vPos.x);
+        float lines = 0.09 * sin(vPos.y * 8.5 + vPos.z * 1.8 + uTime * 2.2);
+        col += lines * vec3(0.07, 0.14, 0.18);
+        col = mix(col, foam, lip);
+        if (uReady > 0.5) {
+          col = mix(col, vec3(0.28, 0.92, 0.58), 0.22);
+        }
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `,
+  });
 }
 
 export function createTubeMesh() {
   const root = new THREE.Group();
-  const tex = createJapaneseWaveTexture();
-  const waveMat = new THREE.MeshLambertMaterial({
-    map: tex,
-    color: "#ffffff",
-    side: THREE.DoubleSide,
-    emissive: "#0d4f78",
-    emissiveIntensity: 0.12,
-  });
-  waveMat.name = "waveBodyMat";
+  const depth = 8.4;
+  const waterMat = createWaterShader();
 
-  const curl = new THREE.Mesh(
-    new THREE.TorusGeometry(2.15, 0.82, 20, 48, Math.PI * 1.48),
-    waveMat
-  );
-  curl.rotation.z = -0.18;
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(2.2, 3.6, depth * 0.92), waterMat);
+  wall.position.set(2.05, 1.55, 0);
+  wall.rotation.z = -0.42;
+
+  const shellGeo = new THREE.ExtrudeGeometry(createBarrelShape(2.55, 1.18), {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: 0.28,
+    bevelSize: 0.2,
+    bevelSegments: 3,
+    curveSegments: 16,
+  });
+  shellGeo.translate(0, 0, -depth / 2);
+  shellGeo.computeVertexNormals();
+  const curl = new THREE.Mesh(shellGeo, waterMat);
   curl.name = "waveBody";
 
-  const inner = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.85, 1.85, 2.6, 24, 1, true),
-    new THREE.MeshLambertMaterial({
-      color: "#0d4d7a",
-      transparent: true,
-      opacity: 0.42,
-      side: THREE.DoubleSide,
-      map: tex,
-    })
+  const cave = new THREE.Mesh(
+    new THREE.SphereGeometry(1.35, 18, 14, 0, Math.PI * 2, 0, Math.PI * 0.72),
+    new THREE.MeshLambertMaterial({ color: "#042e28", side: THREE.BackSide })
   );
-  inner.rotation.x = Math.PI / 2;
+  cave.scale.set(1.15, 1.05, 2.6);
+  cave.position.set(0.85, 1.7, 0);
+  cave.rotation.z = -0.2;
 
-  const claws = new THREE.Group();
-  claws.name = "foamClaws";
-  const foamMat = toon("#f7fbff");
+  const foam = new THREE.Group();
+  foam.name = "foamClaws";
+  const lip = barrelPoint(0.48, 2.62);
+  const foamCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(lip.x, lip.y - 0.05, -3.6),
+    new THREE.Vector3(lip.x + 0.2, lip.y + 0.28, 0),
+    new THREE.Vector3(lip.x, lip.y - 0.02, 3.6),
+  ]);
+  foam.add(
+    new THREE.Mesh(
+      new THREE.TubeGeometry(foamCurve, 32, 0.38, 10, false),
+      new THREE.MeshBasicMaterial({ color: "#f8fdff" })
+    )
+  );
+  const splashMat = new THREE.MeshBasicMaterial({ color: "#f4fbff" });
   for (let i = 0; i < 14; i += 1) {
-    const t = 0.1 + (i / 13) * 0.78;
-    const ang = t * Math.PI * 1.48 - 0.08;
-    const r = 2.15 + 0.9;
-    const claw = new THREE.Group();
-    const spike = new THREE.Mesh(new THREE.ConeGeometry(0.18, 0.85, 5), foamMat);
-    const tip = new THREE.Mesh(new THREE.SphereGeometry(0.12, 6, 6), foamMat);
-    tip.position.y = 0.42;
-    claw.add(spike, tip);
-    claw.position.set(Math.cos(ang) * r, Math.sin(ang) * r, (i % 3) * 0.16 - 0.16);
-    claw.lookAt(0.2, 1.6, 0);
-    claws.add(claw);
+    const p = foamCurve.getPoint(i / 13);
+    const drop = new THREE.Mesh(new THREE.SphereGeometry(0.14 + (i % 3) * 0.05, 8, 6), splashMat);
+    drop.position.set(p.x + 0.06, p.y + 0.16, p.z);
+    drop.scale.set(1.4, 0.65, 1.1);
+    foam.add(drop);
   }
 
-  const swell = new THREE.Mesh(
-    new THREE.TorusGeometry(2.05, 0.28, 8, 24, Math.PI),
-    toon("#156aa3")
+  const curtain = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.6, 2.6, 8, 10),
+    new THREE.MeshBasicMaterial({
+      color: "#bfeaf4",
+      transparent: true,
+      opacity: 0.2,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    })
   );
-  swell.rotation.x = Math.PI / 2;
-  swell.position.y = -1.55;
+  const thrown = barrelPoint(0.92, 1.85);
+  curtain.position.set(thrown.x + 0.1, thrown.y - 0.55, 0);
+  curtain.rotation.y = 0.62;
+  curtain.rotation.z = -0.5;
 
-  root.add(curl, inner, claws, swell);
-  root.position.y = 1.85;
+  root.add(wall, curl, cave, foam, curtain);
   return root;
 }
 
@@ -441,7 +473,7 @@ export function createWaveWall() {
 export function createFoamLip() {
   const geo = new THREE.CylinderGeometry(0.62, 0.95, 220, 10, 1);
   geo.rotateX(Math.PI / 2);
-  const mat = new THREE.MeshLambertMaterial({ color: "#f8fdff" });
+  const mat = new THREE.MeshBasicMaterial({ color: "#f8fdff" });
   const mesh = new THREE.Mesh(geo, mat);
   const x = 7.15;
   mesh.position.set(x, waveHeight(x) + 0.45, -40);

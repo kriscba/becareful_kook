@@ -87,27 +87,46 @@ body,
 
 .hud-stats {
   display: flex;
-  gap: 18px;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .stat {
-  min-width: 88px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
   text-align: right;
   background: var(--panel);
   border: 2px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
-  padding: 8px 12px 10px;
+  padding: 6px 10px 7px 8px;
   backdrop-filter: blur(8px);
 }
 
-.stat span {
+.stat-icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+}
+
+.stat-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.stat-copy span {
   display: block;
   font-family: "Bungee", sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.1;
 }
 
-.stat small {
+.stat-copy small {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 10px;
@@ -330,6 +349,8 @@ h1 {
   opacity: 0.85;
   margin: -4px 0 10px;
 }
+
+.go-art {
   width: min(100%, 340px);
   margin: 4px auto 8px;
   background: rgba(255, 255, 255, 0.08);
@@ -412,11 +433,17 @@ h1 {
     gap: 8px;
   }
   .stat {
-    min-width: 70px;
-    padding: 6px 8px;
+    min-width: 0;
+    padding: 5px 7px;
+    gap: 6px;
   }
-  .stat span {
-    font-size: 16px;
+  .stat-icon {
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
+  }
+  .stat-copy span {
+    font-size: 15px;
   }
   .wave-life {
     width: 32px;

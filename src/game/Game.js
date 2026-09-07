@@ -270,6 +270,7 @@ export class Game {
       feet: this.feet ?? 0,
       displayDistance: toDisplayDistance(this.lang, this.feet ?? 0),
       teeth: this.teeth ?? 0,
+      tubes: this.tubes ?? 0,
       levelId: this.level?.id ?? 1,
       levelNameKey: this.level?.nameKey ?? "level1",
       braking: this.mode === "play" && this.player.braking,

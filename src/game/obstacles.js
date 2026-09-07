@@ -7,7 +7,7 @@ import {
 } from "./constants.js";
 import { createKookMesh, createRockMesh, createSharkMesh, createTubeMesh, waveHeight, waveSlope } from "./models.js";
 
-const BASE_Y = { rock: 0.28, shark: 0, kook: 0, tube: 1.85 };
+const BASE_Y = { rock: 0.28, shark: 0, kook: 0, tube: 0 };
 
 const FACTORIES = {
   rock: createRockMesh,
@@ -144,12 +144,12 @@ export class ObstacleSpawner {
     }
     if (item.type === "tube") {
       const claws = item.mesh.getObjectByName("foamClaws");
-      if (claws) claws.rotation.z = Math.sin(item.z * 0.2) * 0.08;
+      if (claws) claws.rotation.z = Math.sin(item.z * 0.18) * 0.04;
       const body = item.mesh.getObjectByName("waveBody");
-      if (body?.material) {
+      if (body?.material?.uniforms) {
         const valid = Math.abs(player.x - item.x) < 2.15 && item.z > -30;
-        body.material.emissive.set(valid ? "#1dbf6e" : "#1d6f9a");
-        body.material.color.set(valid ? "#c8ffd8" : "#d6f3ff");
+        body.material.uniforms.uReady.value = valid ? 1 : 0;
+        body.material.uniforms.uTime.value = Math.abs(item.z) * 0.08;
       }
     }
   }

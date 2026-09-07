@@ -62,3 +62,20 @@ export const TOOTH_SVG = `
   <path d="M29 62c1.4 6 2.4 11 3 16" fill="none" stroke="#d9c7a6" stroke-width="1.6" stroke-linecap="round"/>
 </svg>
 `;
+
+export const BOARD_SVG = `
+<svg viewBox="0 0 48 48" aria-hidden="true">
+  <path d="M24 4c7.2 2.2 11.4 12.5 11.4 20S31.2 41.6 24 44C16.8 41.6 12.6 31.4 12.6 24S16.8 6.2 24 4z" fill="#ffd166" stroke="#c45a22" stroke-width="2"/>
+  <path d="M24 9.5v27" fill="none" stroke="#ef476f" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M20.2 37.5 24 44l3.8-6.5" fill="#ffd166" stroke="#c45a22" stroke-width="1.6" stroke-linejoin="round"/>
+</svg>
+`;
+
+export const TUBE_SVG = `
+<svg viewBox="0 0 48 48" aria-hidden="true">
+  <path d="M7 38c2-16 14-28 28-26 4.5.6 8 3.2 10 7.2-7.5-1-16.5 3-20.5 13.5 6.5-3.5 15.5-2.8 22 3.2-3.2 7.8-15 12.5-26.5 8.6C11.2 41.6 7.4 39.2 7 38z" fill="#1287a8"/>
+  <path d="M14 35c2.2-11.5 11-18 22-15.5" fill="none" stroke="#7be7ff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M30 11.5c6.5-2.8 13.5 1.4 15.5 8.2-4.6-1.4-10.2.6-13.8 5.8-1.8-6.2-2.4-11.4-1.7-14z" fill="#f4fbff"/>
+  <path d="M18 30c5-2 11-1 16 3" fill="none" stroke="#0b4f78" stroke-width="1.6" stroke-linecap="round" opacity=".35"/>
+</svg>
+`;

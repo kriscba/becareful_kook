@@ -1,3 +1,6 @@
+const LANG_KEY = "becareful-kook-lang";
+export const LANGS = ["en", "es", "pt"];
+
 export const STRINGS = {
   en: {
     subtitle: "Dodge kooks, sharks and rocks. Ride the barrel.",
@@ -13,8 +16,12 @@ export const STRINGS = {
     lives: "Lives",
     feet: "ft",
     meters: "m",
-    teeth: "Teeth",
+    teeth: "Megalodon",
     tubes: "Tubes",
+    goTeethOne: "{n} megalodon tooth",
+    goTeethMany: "{n} megalodon teeth",
+    goTubesOne: "{n} tube",
+    goTubesMany: "{n} tubes",
     cycle: "Set",
     level: "Level",
     level1: "Whitewater",
@@ -47,7 +54,7 @@ export const STRINGS = {
   },
   es: {
     subtitle: "Esquivá kooks, tiburones y rocas. Metete en el tubo.",
-    play: "TIRATE",
+    play: "QUIERO SURFEAR!",
     language: "Idioma",
     controlsMove: "← → o mantené el dedo y deslizá para surfear",
     controlsJump: "↑ o deslizá hacia arriba — saltar las rocas",
@@ -59,8 +66,12 @@ export const STRINGS = {
     lives: "Vidas",
     feet: "ft",
     meters: "m",
-    teeth: "Dientes",
+    teeth: "Megalodón",
     tubes: "Tubos",
+    goTeethOne: "{n} diente de megalodón",
+    goTeethMany: "{n} dientes de megalodón",
+    goTubesOne: "{n} tubo",
+    goTubesMany: "{n} tubos",
     cycle: "Serie",
     level: "Nivel",
     level1: "Espuma",
@@ -93,7 +104,7 @@ export const STRINGS = {
   },
   pt: {
     subtitle: "Desvie de haoles, tubarões e pedras. Entre no tubo.",
-    play: "DROP IN",
+    play: "BORA SURFAR!",
     language: "Idioma",
     controlsMove: "← → ou segure e arraste para surfar",
     controlsJump: "↑ ou deslize para cima — pular as pedras",
@@ -105,8 +116,12 @@ export const STRINGS = {
     lives: "Vidas",
     feet: "ft",
     meters: "m",
-    teeth: "Dentes",
+    teeth: "Megalodonte",
     tubes: "Tubos",
+    goTeethOne: "{n} dente de megalodonte",
+    goTeethMany: "{n} dentes de megalodonte",
+    goTubesOne: "{n} tubo",
+    goTubesMany: "{n} tubos",
     cycle: "Série",
     level: "Nível",
     level1: "Espuma",
@@ -121,9 +136,9 @@ export const STRINGS = {
     gameOver: "O OCEANO VENCE",
     hospitalWaits: "O hospital espera por você...",
     restart: "REMA DE VOLTA",
-    kookSpeech: "Cuidado haole!!",
-    goRock: "Vai perder umas sessões, bateu a cabeça",
-    goShark: "Sua carreira acabou, ficou sem uma perna",
+    kookSpeech: "Sai fora, haole!!",
+    goRock: "Vai perder umas sessões, você bateu a cabeça",
+    goShark: "Sua carreira acabou, você ficou sem uma perna",
     goKook: "HAHA! KOOK ATTACK!!",
     tubeRide: "TUBE RIDE",
     barrel: "BARRIL",
@@ -141,6 +156,31 @@ export const STRINGS = {
 
 export function t(lang, key) {
   return STRINGS[lang]?.[key] ?? STRINGS.en[key] ?? key;
+}
+
+export function loadLang() {
+  try {
+    const saved = localStorage.getItem(LANG_KEY);
+    if (LANGS.includes(saved)) return saved;
+  } catch {
+    /* ignore quota / private mode */
+  }
+  return "en";
+}
+
+export function saveLang(lang) {
+  const next = LANGS.includes(lang) ? lang : "en";
+  try {
+    localStorage.setItem(LANG_KEY, next);
+  } catch {
+    /* ignore quota / private mode */
+  }
+  return next;
+}
+
+export function countPhrase(lang, n, singularKey, pluralKey) {
+  const key = n === 1 ? singularKey : pluralKey;
+  return t(lang, key).replaceAll("{n}", String(n));
 }
 
 export function isMetric(lang) {

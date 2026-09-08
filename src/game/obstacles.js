@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import {
   DESPAWN_Z,
-  FEET_PER_UNIT,
   MOBILE_PACK_CHANCE,
   SPAWN_Z,
   TUBE_APPROACH_Z,
@@ -194,11 +193,7 @@ export class ObstacleSpawner {
 
   #onPass(item, player, events) {
     if (item.hit) return;
-    const dx = Math.abs(player.x - item.x);
-    if (item.type === "shark") {
-      const feet = Math.max(0.4, dx * FEET_PER_UNIT);
-      events.onSharkDodge(feet);
-    }
+    if (item.type === "shark") events.onSharkDodge();
     if (item.type === "kook") events.onKookDodge();
   }
 }

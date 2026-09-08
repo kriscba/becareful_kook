@@ -15,13 +15,12 @@ import {
   START_LIVES,
   SPEED_STEP_SECONDS,
   STOKE_SECONDS,
-  TOOTH_SVG,
   TUBE_BONUS_FEET,
   WAVE_SVG,
   MOBILE_SPAWN_GAP,
   getLevel,
 } from "./constants.js";
-import { formatDistance, t, toDisplayDistance } from "../i18n.js";
+import { loadLang, saveLang, t, toDisplayDistance } from "../i18n.js";
 import { HUD } from "./hud.js";
 import { Input } from "./input.js";
 import { ObstacleSpawner } from "./obstacles.js";
@@ -32,7 +31,7 @@ import { waveHeight } from "./models.js";
 export class Game {
   constructor(canvas) {
     this.canvas = canvas;
-    this.lang = "en";
+    this.lang = loadLang();
     this.mode = "menu";
     this.hud = new HUD();
     this.input = new Input();
@@ -113,7 +112,7 @@ export class Game {
       btn.addEventListener("pointerdown", (e) => e.stopPropagation());
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-        this.lang = btn.dataset.lang;
+        this.lang = saveLang(btn.dataset.lang);
         this.hud.setLang(this.lang);
         if (this.mode === "play" || this.mode === "paused") {
           this.hud.update(this.#hudState());
@@ -189,7 +188,7 @@ export class Game {
     this.spawner.update(dt, scroll, this.travel, this.player, {
       onHazard: (item) => this.#hurt(item.type),
       onKookDodge: () => this.#kookSpeech(),
-      onSharkDodge: (ft) => this.#sharkDodge(ft),
+      onSharkDodge: () => this.#sharkDodge(),
       onTube: (ok) => this.#tube(ok),
     }, this.level.spawn * (this.#isMobilePlay() ? MOBILE_SPAWN_GAP : 1), this.#isMobilePlay());
 
@@ -245,9 +244,8 @@ export class Game {
     this.#speechAtPlayer(t(this.lang, "kookSpeech"));
   }
 
-  #sharkDodge(ft) {
+  #sharkDodge() {
     this.teeth += 1;
-    this.#speechAtPlayer(formatDistance(this.lang, ft, 1), 1400, TOOTH_SVG);
   }
 
   #tube(ok) {

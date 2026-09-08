@@ -1,6 +1,6 @@
 import { BOARD_SVG, MAX_LIVES, TOOTH_SVG, TUBE_SVG, WAVE_SVG } from "./constants.js";
 import { ROCK_GO_SVG, SHARK_GO_SVG, KOOK_GO_SVG } from "./illustrations.js";
-import { formatDistance, t, unitLabel } from "../i18n.js";
+import { countPhrase, formatDistance, t, unitLabel } from "../i18n.js";
 
 export class HUD {
   constructor() {
@@ -30,6 +30,8 @@ export class HUD {
     this.goKook = document.getElementById("go-kook");
     this.goOcean = document.getElementById("go-ocean");
     this.goHospital = document.getElementById("go-hospital");
+    this.goTeethMsg = document.getElementById("go-teeth-msg");
+    this.goTubesMsg = document.getElementById("go-tubes-msg");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
     const icons = { board: BOARD_SVG, tooth: TOOTH_SVG, tube: TUBE_SVG, wave: WAVE_SVG };
     document.querySelectorAll("[data-stat-icon]").forEach((el) => {
@@ -48,6 +50,7 @@ export class HUD {
       btn.classList.toggle("on", btn.dataset.lang === lang);
     });
     this.lang = lang;
+    document.documentElement.lang = lang;
     if (this.unit) this.unit.textContent = unitLabel(lang);
   }
 
@@ -80,6 +83,12 @@ export class HUD {
     this.goFeet.textContent = formatDistance(this.lang, stats.feet, 0);
     this.goTeeth.textContent = String(stats.teeth);
     this.goTubes.textContent = String(stats.tubes);
+    if (this.goTeethMsg) {
+      this.goTeethMsg.textContent = countPhrase(this.lang, stats.teeth, "goTeethOne", "goTeethMany");
+    }
+    if (this.goTubesMsg) {
+      this.goTubesMsg.textContent = countPhrase(this.lang, stats.tubes, "goTubesOne", "goTubesMany");
+    }
     const arts = { shark: SHARK_GO_SVG, kook: KOOK_GO_SVG, rock: ROCK_GO_SVG };
     this.goArt.innerHTML = arts[stats.cause] || ROCK_GO_SVG;
     if (this.goKook) this.goKook.textContent = t(this.lang, "goKook");

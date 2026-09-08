@@ -435,6 +435,14 @@ h1 {
   margin: 0 0 10px;
 }
 
+.go-tally {
+  font-family: "Bungee", sans-serif;
+  letter-spacing: 0.04em;
+  font-size: clamp(13px, 3.2vw, 18px);
+  color: #ffe58a;
+  margin: 0 0 6px;
+}
+
 .go-art {
   width: min(100%, 340px);
   max-height: min(28vh, 220px);
@@ -449,6 +457,10 @@ h1 {
   width: 100%;
   height: auto;
   max-height: min(28vh, 220px);
+}
+
+.go-art + .go-tally {
+  margin-top: 8px;
 }
 
 #gameover h1 {

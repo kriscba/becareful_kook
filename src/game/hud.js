@@ -100,7 +100,7 @@ export class HUD {
     this.#buffs(state);
   }
 
-  placeSpeech(x, y, text, ms = 1100, iconHtml = "") {
+  placeSpeech(text, ms = 1100, iconHtml = "") {
     this.speechText.textContent = text;
     if (iconHtml) {
       this.speechIcon.innerHTML = iconHtml;
@@ -110,31 +110,10 @@ export class HUD {
       this.speechIcon.classList.add("hidden");
     }
     this.speech.classList.remove("hidden");
-    this.speech.style.left = `${x}px`;
-    this.speech.style.top = `${y}px`;
-    this.#clampSpeech(x, y);
+    this.speech.style.left = "";
+    this.speech.style.top = "";
     clearTimeout(this._speechTimer);
     this._speechTimer = setTimeout(() => this.speech.classList.add("hidden"), ms);
-  }
-
-  #clampSpeech(x, y) {
-    const el = this.speech;
-    const r = el.getBoundingClientRect();
-    const app = document.getElementById("app")?.getBoundingClientRect() ?? {
-      left: 0,
-      top: 0,
-      right: window.innerWidth,
-      bottom: window.innerHeight,
-    };
-    const pad = 10;
-    let dx = 0;
-    let dy = 0;
-    if (r.left < app.left + pad) dx = app.left + pad - r.left;
-    else if (r.right > app.right - pad) dx = app.right - pad - r.right;
-    if (r.top < app.top + pad) dy = app.top + pad - r.top;
-    else if (r.bottom > app.bottom - pad) dy = app.bottom - pad - r.bottom;
-    el.style.left = `${x + dx}px`;
-    el.style.top = `${y + dy}px`;
   }
 
   showBanner(text) {

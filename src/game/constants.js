@@ -18,6 +18,8 @@ export const MOVE_FRICTION = 16;
 export const MAX_MOVE = 17;
 export const TOUCH_MAX_MOVE_SCALE = 1.22;
 export const TOUCH_STEER_DAMP = 16;
+export const MOBILE_SPAWN_GAP = 1.55;
+export const MOBILE_PACK_CHANCE = 0.05;
 export const LIP_BOOST_SECONDS = 5;
 export const LIP_BOOST_MUL = 1.5;
 

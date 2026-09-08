@@ -18,6 +18,7 @@ import {
   TOOTH_SVG,
   TUBE_BONUS_FEET,
   WAVE_SVG,
+  MOBILE_SPAWN_GAP,
   getLevel,
 } from "./constants.js";
 import { formatDistance, t, toDisplayDistance } from "../i18n.js";
@@ -92,6 +93,7 @@ export class Game {
     this.deathCause = "rock";
     this.player.reset();
     this.spawner.reset();
+    if (this.#isMobilePlay()) this.spawner.nextAt = 34;
     this.input.reset();
     this.hud.hidePause();
     this.hud.showPlay();
@@ -189,10 +191,14 @@ export class Game {
       onKookDodge: () => this.#kookSpeech(),
       onSharkDodge: (ft) => this.#sharkDodge(ft),
       onTube: (ok) => this.#tube(ok),
-    }, this.level.spawn);
+    }, this.level.spawn * (this.#isMobilePlay() ? MOBILE_SPAWN_GAP : 1), this.#isMobilePlay());
 
     if (this._shake > 0) this._shake = Math.max(0, this._shake - dt * 8);
     this.hud.update(this.#hudState());
+  }
+
+  #isMobilePlay() {
+    return this._portrait || window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   }
 
   #scrollSpeed() {
@@ -232,12 +238,7 @@ export class Game {
   }
 
   #speechAtPlayer(text, ms = 1100, iconHtml = "") {
-    const pos = this.player.headWorld();
-    pos.project(this.camera);
-    const { w, h } = this.#viewSize();
-    const x = (pos.x * 0.5 + 0.5) * w;
-    const y = (-pos.y * 0.5 + 0.5) * h;
-    this.hud.placeSpeech(x, y, text, ms, iconHtml);
+    this.hud.placeSpeech(text, ms, iconHtml);
   }
 
   #kookSpeech() {

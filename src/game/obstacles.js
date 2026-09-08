@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {
   DESPAWN_Z,
   FEET_PER_UNIT,
+  MOBILE_PACK_CHANCE,
   SPAWN_Z,
   TUBE_APPROACH_Z,
 } from "./constants.js";
@@ -42,8 +43,8 @@ export class ObstacleSpawner {
     this.#spawn(type, x);
   }
 
-  update(dt, scrollSpeed, distance, player, events, spawnMul = 1) {
-    this.#maybeSpawn(distance, spawnMul);
+  update(dt, scrollSpeed, distance, player, events, spawnMul = 1, mobile = false) {
+    this.#maybeSpawn(distance, spawnMul, mobile);
     const leftover = [];
     for (const item of this.items) {
       item.z += scrollSpeed * dt;
@@ -75,12 +76,13 @@ export class ObstacleSpawner {
     this.items = leftover;
   }
 
-  #maybeSpawn(distance, spawnMul = 1) {
+  #maybeSpawn(distance, spawnMul = 1, mobile = false) {
     if (distance < this.nextAt) return;
     const gap = (32 + Math.random() * 18) * spawnMul;
     this.nextAt = distance + gap;
 
-    const pack = Math.random() < 0.12 ? 2 : 1;
+    const packChance = mobile ? MOBILE_PACK_CHANCE : 0.12;
+    const pack = Math.random() < packChance ? 2 : 1;
     const usedX = [];
     for (let i = 0; i < pack; i += 1) {
       const type = this.#pickType(pack > 1);

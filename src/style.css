@@ -231,16 +231,16 @@ body {
 
 .speech {
   position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -110%);
+  left: max(16px, env(safe-area-inset-left));
+  top: 50%;
+  transform: translateY(-50%);
   background: #fff;
   color: var(--ink);
   font-weight: 900;
   font-size: clamp(13px, 3.6vw, 18px);
   line-height: 1.2;
   padding: 8px 12px;
-  border-radius: 18px 18px 18px 6px;
+  border-radius: 18px;
   box-shadow: 0 8px 0 rgba(0, 0, 0, 0.12);
   pointer-events: none;
   white-space: normal;

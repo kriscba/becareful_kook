@@ -1,6 +1,22 @@
-const TOUCH_DEAD = 0.06;
-const JUMP_ZONE = 0.14;
-const BRAKE_ZONE = 0.86;
+const TOUCH_STICK_RANGE = 0.28;
+const TOUCH_STICK_DEAD = 0.04;
+const TOUCH_JUMP_SWIPE = 0.12;
+const TOUCH_BRAKE_SWIPE = 0.1;
+
+function isFinger(type) {
+  return type === "touch" || type === "pen";
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function analogAxis(dx) {
+  const abs = Math.abs(dx);
+  if (abs <= TOUCH_STICK_DEAD) return 0;
+  const mag = (abs - TOUCH_STICK_DEAD) / (TOUCH_STICK_RANGE - TOUCH_STICK_DEAD);
+  return Math.sign(dx) * clamp(mag, 0, 1);
+}
 
 export class Input {
   constructor() {
@@ -80,16 +96,17 @@ export class Input {
     let axis = 0;
     let up = false;
     let down = false;
-    let last = null;
+    let touching = false;
+    let primary = null;
     for (const p of this._pointers.values()) {
-      last = p;
-      if (p.ny < JUMP_ZONE) up = true;
-      else if (p.ny > BRAKE_ZONE) down = true;
-      if (p.startNy - p.ny > 0.16) up = true;
+      if (!isFinger(p.type)) continue;
+      touching = true;
+      if (!primary) primary = p;
+      if (p.startNy - p.ny > TOUCH_JUMP_SWIPE) up = true;
     }
-    if (last) {
-      if (last.nx < 0.5 - TOUCH_DEAD) axis = -1;
-      else if (last.nx > 0.5 + TOUCH_DEAD) axis = 1;
+    if (primary) {
+      axis = analogAxis(primary.nx - primary.startNx);
+      if (primary.ny - primary.startNy > TOUCH_BRAKE_SWIPE) down = true;
     }
     const keyDir = (this._keys.right ? 1 : 0) - (this._keys.left ? 1 : 0);
     this.axis = keyDir !== 0 ? keyDir : axis;
@@ -97,7 +114,7 @@ export class Input {
     this.right = this.axis > 0;
     this.up = this._keys.up || up;
     this.down = this._keys.down || down;
-    this.touching = this._pointers.size > 0 && keyDir === 0;
+    this.touching = touching && keyDir === 0;
   }
 
   #setKey(code, down, event) {
@@ -130,12 +147,17 @@ export class Input {
   }
 
   #pointerDown(e) {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (!isFinger(e.pointerType)) return;
     e.preventDefault();
     this.canvas.setPointerCapture(e.pointerId);
     const pos = this.#norm(e);
-    this._pointers.set(e.pointerId, { ...pos, startNx: pos.nx, startNy: pos.ny });
-    if (pos.ny < JUMP_ZONE) this._jumpQueued = true;
+    this._pointers.set(e.pointerId, {
+      ...pos,
+      startNx: pos.nx,
+      startNy: pos.ny,
+      jumped: false,
+      type: e.pointerType,
+    });
     this.#sync();
   }
 
@@ -143,7 +165,15 @@ export class Input {
     if (!this._pointers.has(e.pointerId)) return;
     const prev = this._pointers.get(e.pointerId);
     const pos = this.#norm(e);
-    this._pointers.set(e.pointerId, { ...pos, startNx: prev.startNx, startNy: prev.startNy });
+    const jumped = prev.jumped || prev.startNy - pos.ny > TOUCH_JUMP_SWIPE;
+    if (!prev.jumped && jumped) this._jumpQueued = true;
+    this._pointers.set(e.pointerId, {
+      ...pos,
+      startNx: prev.startNx,
+      startNy: prev.startNy,
+      jumped,
+      type: prev.type,
+    });
     this.#sync();
   }
 

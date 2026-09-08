@@ -9,7 +9,7 @@ import {
   MOVE_ACCEL,
   MOVE_FRICTION,
   TOUCH_MAX_MOVE_SCALE,
-  TOUCH_MOVE_SCALE,
+  TOUCH_STEER_DAMP,
 } from "./constants.js";
 import { createPlayerMesh, waveHeight, waveSlope } from "./models.js";
 
@@ -105,11 +105,14 @@ export class Player {
     } else {
       const dir = input.axis ?? ((input.right ? 1 : 0) - (input.left ? 1 : 0));
       const touch = Boolean(input.touching);
-      const accel = MOVE_ACCEL * (touch ? TOUCH_MOVE_SCALE : 1);
-      const cap = MAX_MOVE * (touch ? TOUCH_MAX_MOVE_SCALE : 1);
-      if (dir !== 0) this.vx += dir * accel * dt;
-      else this.vx = THREE.MathUtils.damp(this.vx, 0, MOVE_FRICTION, dt);
-      this.vx = THREE.MathUtils.clamp(this.vx, -cap, cap);
+      if (touch) {
+        const cap = MAX_MOVE * TOUCH_MAX_MOVE_SCALE;
+        this.vx = THREE.MathUtils.damp(this.vx, dir * cap, TOUCH_STEER_DAMP, dt);
+      } else {
+        if (dir !== 0) this.vx += dir * MOVE_ACCEL * dt;
+        else this.vx = THREE.MathUtils.damp(this.vx, 0, MOVE_FRICTION, dt);
+        this.vx = THREE.MathUtils.clamp(this.vx, -MAX_MOVE, MAX_MOVE);
+      }
       this.x = THREE.MathUtils.clamp(this.x + this.vx * dt, MIN_X, MAX_X);
     }
 

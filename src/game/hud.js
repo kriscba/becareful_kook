@@ -27,7 +27,9 @@ export class HUD {
     this.goTeeth = document.getElementById("go-teeth");
     this.goTubes = document.getElementById("go-tubes");
     this.goArt = document.getElementById("go-art");
-    this.goCaption = document.getElementById("go-caption");
+    this.goKook = document.getElementById("go-kook");
+    this.goOcean = document.getElementById("go-ocean");
+    this.goHospital = document.getElementById("go-hospital");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
     const icons = { board: BOARD_SVG, tooth: TOOTH_SVG, tube: TUBE_SVG, wave: WAVE_SVG };
     document.querySelectorAll("[data-stat-icon]").forEach((el) => {
@@ -79,13 +81,10 @@ export class HUD {
     this.goTeeth.textContent = String(stats.teeth);
     this.goTubes.textContent = String(stats.tubes);
     const arts = { shark: SHARK_GO_SVG, kook: KOOK_GO_SVG, rock: ROCK_GO_SVG };
-    const captions = { shark: "goShark", kook: "goKook", rock: "goRock" };
     this.goArt.innerHTML = arts[stats.cause] || ROCK_GO_SVG;
-    this.goCaption.textContent = t(this.lang, captions[stats.cause] || "goRock");
-    const title = this.gameover.querySelector("h1");
-    if (title) title.textContent = t(this.lang, "gameOver");
-    const hospital = this.gameover.querySelector("#go-hospital");
-    if (hospital) hospital.textContent = t(this.lang, "hospitalWaits");
+    if (this.goKook) this.goKook.textContent = t(this.lang, "goKook");
+    if (this.goOcean) this.goOcean.textContent = t(this.lang, "gameOver");
+    if (this.goHospital) this.goHospital.textContent = t(this.lang, "hospitalWaits");
   }
 
   update(state) {

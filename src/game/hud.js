@@ -1,7 +1,11 @@
-import { BOARD_SVG, MAX_LIVES, TOOTH_SVG, TUBE_SVG, WAVE_SVG } from "./constants.js";
-import { ROCK_GO_SVG, SHARK_GO_SVG, KOOK_GO_SVG } from "./illustrations.js";
+import { MAX_LIVES, WAVE_SVG } from "./constants.js";
 import { countPhrase, formatDistance, rankPhrase, t, unitLabel } from "../i18n.js";
 import { waveFlag, waveName } from "./waves.js";
+import goKook from "../assets/go_kook.png";
+import goRock from "../assets/go_rock.png";
+import goShark from "../assets/go_shark.png";
+
+const GO_ART = { shark: goShark, kook: goKook, rock: goRock };
 
 export class HUD {
   constructor() {
@@ -38,7 +42,7 @@ export class HUD {
     this.goTeethMsg = document.getElementById("go-teeth-msg");
     this.goTubesMsg = document.getElementById("go-tubes-msg");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
-    const icons = { board: BOARD_SVG, tooth: TOOTH_SVG, tube: TUBE_SVG, wave: WAVE_SVG };
+    const icons = { board: "📏", tooth: "🦈", tube: "🌊", wave: WAVE_SVG };
     document.querySelectorAll("[data-stat-icon]").forEach((el) => {
       el.innerHTML = icons[el.dataset.statIcon] || "";
     });
@@ -96,8 +100,12 @@ export class HUD {
     if (this.goTubesMsg) {
       this.goTubesMsg.textContent = countPhrase(this.lang, stats.tubes, "goTubesOne", "goTubesMany");
     }
-    const arts = { shark: SHARK_GO_SVG, kook: KOOK_GO_SVG, rock: ROCK_GO_SVG };
-    this.goArt.innerHTML = arts[stats.cause] || ROCK_GO_SVG;
+    const src = GO_ART[stats.cause] || goRock;
+    this.goArt.replaceChildren();
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "";
+    this.goArt.append(img);
     this.goCause = stats.cause;
     this.goTier = stats.tier || "beginner";
     this.#setGoCaption();

@@ -33,6 +33,7 @@ export class Player {
     this.spinVel = 0;
     this.lipBoost = 0;
     this.boostKind = null;
+    this.pendingBoost = null;
     this.returning = 0;
     this.lipReady = true;
     this.cutReady = true;
@@ -53,6 +54,7 @@ export class Player {
     this.spinVel = 0;
     this.lipBoost = 0;
     this.boostKind = null;
+    this.pendingBoost = null;
     this.returning = 0;
     this.lipReady = true;
     this.cutReady = true;
@@ -91,17 +93,12 @@ export class Player {
       if (this.x <= 0) {
         this.x = 0;
         this.vx = 0;
-        if (this.grounded) this.returning = 0;
+        if (this.grounded) this.#finishReturn();
       }
     } else if (this.returning > 0) {
       this.vx = THREE.MathUtils.damp(this.vx, MAX_MOVE, 18, dt);
       this.x += this.vx * dt;
-      if (this.x >= 0) {
-        this.x = 0;
-        this.vx = 0;
-        this.returning = 0;
-        this.cutLean = 0;
-      }
+      if (this.x >= 0) this.#finishReturn();
     } else {
       const dir = input.axis ?? ((input.right ? 1 : 0) - (input.left ? 1 : 0));
       const touch = Boolean(input.touching);
@@ -128,7 +125,7 @@ export class Player {
         this.grounded = true;
         this.spin = 0;
         this.spinVel = 0;
-        if (this.returning < 0 && this.x <= 0) this.returning = 0;
+        if (this.returning < 0 && this.x <= 0) this.#finishReturn();
       }
     }
 
@@ -161,6 +158,7 @@ export class Player {
     this.blink = 0;
     this.vx += this.x > 0 ? -4 : 4;
     this.returning = 0;
+    this.pendingBoost = null;
     this.cutLean = 0;
   }
 
@@ -184,13 +182,23 @@ export class Player {
   #grantBoost(kind) {
     this.lipBoost = LIP_BOOST_SECONDS;
     this.boostKind = kind;
-    this.maneuverEvent = kind;
+  }
+
+  #finishReturn() {
+    this.x = 0;
+    this.vx = 0;
+    this.returning = 0;
+    this.cutLean = 0;
+    if (!this.pendingBoost) return;
+    this.#grantBoost(this.pendingBoost);
+    this.pendingBoost = null;
   }
 
   #launchLip() {
     this.lipReady = false;
     this.returning = -1;
-    this.#grantBoost("lip");
+    this.pendingBoost = "lip";
+    this.maneuverEvent = "lip";
     this.#jump(JUMP_VELOCITY * 1.18);
     this.vx = -MAX_MOVE;
   }
@@ -198,7 +206,8 @@ export class Player {
   #launchCutback() {
     this.cutReady = false;
     this.returning = 1;
-    this.#grantBoost("cutback");
+    this.pendingBoost = "cutback";
+    this.maneuverEvent = "cutback";
     this.vx = MAX_MOVE;
   }
 

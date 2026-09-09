@@ -14,6 +14,8 @@ export const WAVES = [
     id: 1,
     tier: "beginner",
     name: loc("Waikiki Beach"),
+    country: loc("USA", "EE.UU.", "EUA"),
+    flag: "🇺🇸",
     place: loc("Hawaii, USA", "Hawái, EE.UU.", "Havaí, EUA"),
     description: loc(
       "Soft, slow wave that breaks over a shallow sand and coral bottom. Ideal for learning to stand up, with long rides.",
@@ -25,6 +27,8 @@ export const WAVES = [
     id: 2,
     tier: "beginner",
     name: loc("San Onofre"),
+    country: loc("USA", "EE.UU.", "EUA"),
+    flag: "🇺🇸",
     place: loc("California, USA", "California, EE.UU.", "Califórnia, EUA"),
     description: loc(
       "Sand bottom, small and very predictable waves. Relaxed vibe, a classic longboard spot.",
@@ -36,6 +40,8 @@ export const WAVES = [
     id: 3,
     tier: "beginner",
     name: loc("Malibu"),
+    country: loc("USA", "EE.UU.", "EUA"),
+    flag: "🇺🇸",
     place: loc("First Point, California, USA", "First Point, California, EE.UU.", "First Point, Califórnia, EUA"),
     description: loc(
       "Right-hand point break, long and orderly. Breaks with little power, perfect for practicing basic turns.",
@@ -47,6 +53,8 @@ export const WAVES = [
     id: 4,
     tier: "beginner",
     name: loc("Canggu"),
+    country: loc("Indonesia", "Indonesia", "Indonésia"),
+    flag: "🇮🇩",
     place: loc("Batu Bolong, Bali, Indonesia", "Batu Bolong, Bali, Indonesia", "Batu Bolong, Bali, Indonésia"),
     description: loc(
       "Beach break with mellow waves most of the year, good for beginners with an instructor.",
@@ -57,18 +65,35 @@ export const WAVES = [
   {
     id: 5,
     tier: "beginner",
-    name: loc("Weligama"),
-    place: loc("Sri Lanka"),
+    name: loc("Kuta Beach"),
+    country: loc("Indonesia", "Indonesia", "Indonésia"),
+    flag: "🇮🇩",
+    place: loc("Bali, Indonesia", "Bali, Indonesia", "Bali, Indonésia"),
     description: loc(
-      "Sand bottom, small and consistent waves year-round. One of the best places in the world to learn.",
-      "Fondo de arena, olas pequeñas y constantes todo el año. Uno de los mejores lugares del mundo para aprender.",
-      "Fundo de areia, ondas pequenas e constantes o ano todo. Um dos melhores lugares do mundo para aprender."
+      "Sand-bottom beach break, small and foamy waves, ideal for first surf lessons.",
+      "Beach break de fondo de arena, olas chicas y espumosas, ideal para las primeras clases de surf.",
+      "Beach break de fundo de areia, ondas pequenas e espumosas, ideal para as primeiras aulas de surf."
     ),
   },
   {
     id: 6,
     tier: "intermediate",
+    name: loc("Chicama"),
+    country: loc("Peru", "Perú", "Peru"),
+    flag: "🇵🇪",
+    place: loc("Peru", "Perú", "Peru"),
+    description: loc(
+      "The longest left-hand wave in the world (up to 2 km). A mellow, progressively building point break, ideal for logging distance and endurance.",
+      "La ola izquierda más larga del mundo (hasta 2 km). Point break mellow y de crecimiento progresivo, ideal para sumar recorrido y resistencia.",
+      "A onda esquerda mais longa do mundo (até 2 km). Point break mellow e de crescimento progressivo, ideal para somar descida e resistência."
+    ),
+  },
+  {
+    id: 7,
+    tier: "intermediate",
     name: loc("El Sunzal"),
+    country: loc("El Salvador"),
+    flag: "🇸🇻",
     place: loc("El Salvador"),
     description: loc(
       "Consistent right-hand point break, with sections to practice intermediate maneuvers.",
@@ -77,42 +102,37 @@ export const WAVES = [
     ),
   },
   {
-    id: 7,
-    tier: "intermediate",
-    name: loc("Ribeira d'Ilhas"),
-    place: loc("Ericeira, Portugal"),
-    description: loc(
-      "Fast, hollow point break that demands more board control than a basic beach break.",
-      "Point break rápido y hueco, exige más control de tabla que un beach break básico.",
-      "Point break rápido e oco, exige mais controle da prancha do que um beach break básico."
-    ),
-  },
-  {
     id: 8,
     tier: "intermediate",
-    name: loc("The Pass"),
-    place: loc("Byron Bay, Australia", "Byron Bay, Australia", "Byron Bay, Austrália"),
+    name: loc("Saquarema"),
+    country: loc("Brazil", "Brasil", "Brasil"),
+    flag: "🇧🇷",
+    place: loc("Rio de Janeiro, Brazil", "Río de Janeiro, Brasil", "Rio de Janeiro, Brasil"),
     description: loc(
-      "Long wave that builds progressively, good for working turns and generating speed.",
-      "Ola larga y de crecimiento progresivo, buena para trabajar giros y generar velocidad.",
-      "Onda longa e de crescimento progressivo, boa para trabalhar manobras e gerar velocidade."
+      "Powerful, hollow beach break, a regular stop on the world tour (WSL). Sand bottom that forms consistent barrels, demands good timing and paddling.",
+      "Beach break potente y hueco, sede fija del circuito mundial (WSL). Fondo de arena que forma tubos consistentes, exige buen timing y remada.",
+      "Beach break potente e oco, sede fixa do circuito mundial (WSL). Fundo de areia que forma tubos consistentes, exige bom timing e paddling."
     ),
   },
   {
     id: 9,
     tier: "intermediate",
-    name: loc("Huntington Beach"),
-    place: loc("California, USA", "California, EE.UU.", "Califórnia, EUA"),
+    name: loc("Playa Hermosa"),
+    country: loc("Costa Rica"),
+    flag: "🇨🇷",
+    place: loc("Guanacaste, Costa Rica"),
     description: loc(
-      'Powerful, consistent beach break ("Surf City USA"), good for gaining experience in faster waves.',
-      'Beach break potente y consistente ("Surf City USA"), bueno para ganar experiencia en olas más rápidas.',
-      'Beach break potente e consistente ("Surf City USA"), bom para ganhar experiência em ondas mais rápidas.'
+      "Powerful beach break with good shape, demands more paddling and timing than a basic spot.",
+      "Beach break potente con buena forma, exige más remada y timing que un spot básico.",
+      "Beach break potente com boa forma, exige mais paddling e timing do que um spot básico."
     ),
   },
   {
     id: 10,
     tier: "intermediate",
     name: loc("Popoyo"),
+    country: loc("Nicaragua", "Nicaragua", "Nicarágua"),
+    flag: "🇳🇮",
     place: loc("Nicaragua", "Nicaragua", "Nicarágua"),
     description: loc(
       "Reef break with powerful rights and lefts, a bit more demanding because of the force of the water.",
@@ -124,6 +144,8 @@ export const WAVES = [
     id: 11,
     tier: "advanced",
     name: loc("Uluwatu"),
+    country: loc("Indonesia", "Indonesia", "Indonésia"),
+    flag: "🇮🇩",
     place: loc("Bali, Indonesia", "Bali, Indonesia", "Bali, Indonésia"),
     description: loc(
       "Point break over reef, long and powerful waves, requires solid board skills and reading the reef.",
@@ -135,6 +157,8 @@ export const WAVES = [
     id: 12,
     tier: "advanced",
     name: loc("Supertubos"),
+    country: loc("Portugal"),
+    flag: "🇵🇹",
     place: loc("Peniche, Portugal"),
     description: loc(
       "Very hollow, powerful beach break, considered one of the best barrels in Europe.",
@@ -146,6 +170,8 @@ export const WAVES = [
     id: 13,
     tier: "advanced",
     name: loc("Snapper Rocks"),
+    country: loc("Australia", "Australia", "Austrália"),
+    flag: "🇦🇺",
     place: loc("Gold Coast, Australia", "Gold Coast, Australia", "Gold Coast, Austrália"),
     description: loc(
       "Super-long, fast point break that demands good positioning and paddling.",
@@ -157,6 +183,8 @@ export const WAVES = [
     id: 14,
     tier: "advanced",
     name: loc("Jeffreys Bay"),
+    country: loc("South Africa", "Sudáfrica", "África do Sul"),
+    flag: "🇿🇦",
     place: loc("South Africa", "Sudáfrica", "África do Sul"),
     description: loc(
       "Right-hand point break, a perfect and very fast wave, a classic on the professional tour.",
@@ -168,6 +196,8 @@ export const WAVES = [
     id: 15,
     tier: "advanced",
     name: loc("Zicatela"),
+    country: loc("Mexico", "México", "México"),
+    flag: "🇲🇽",
     place: loc("Puerto Escondido, Mexico", "Puerto Escondido, México", "Puerto Escondido, México"),
     description: loc(
       'Very powerful beach break known as the "Mexican Pipeline," with shutting barrels and a lot of force.',
@@ -178,29 +208,9 @@ export const WAVES = [
   {
     id: 16,
     tier: "pro",
-    name: loc("Pipeline"),
-    place: loc("Oahu, Hawaii, USA", "Oahu, Hawái, EE.UU.", "Oahu, Havaí, EUA"),
-    description: loc(
-      "Extremely hollow and dangerous reef break, shallow coral bottom, the birthplace of tube surfing.",
-      "Reef break extremadamente hueco y peligroso, fondo de coral poco profundo, cuna del surf de tubo.",
-      "Reef break extremamente oco e perigoso, fundo de coral raso, berço do surf de tubo."
-    ),
-  },
-  {
-    id: 17,
-    tier: "pro",
-    name: loc("Teahupo'o"),
-    place: loc("Tahiti", "Tahití", "Taiti"),
-    description: loc(
-      "One of the heaviest waves in the world, breaks over a sharp reef with thick, short barrels.",
-      "Una de las olas más pesadas del mundo, rompe sobre arrecife filoso con tubos gruesos y cortos.",
-      "Uma das ondas mais pesadas do mundo, quebra sobre recife afiado com tubos grossos e curtos."
-    ),
-  },
-  {
-    id: 18,
-    tier: "pro",
     name: loc("Nazaré"),
+    country: loc("Portugal"),
+    flag: "🇵🇹",
     place: loc("Portugal"),
     description: loc(
       "Giant wave (records of +20m) thanks to an underwater canyon, territory of big-wave surfers.",
@@ -209,9 +219,11 @@ export const WAVES = [
     ),
   },
   {
-    id: 19,
+    id: 17,
     tier: "pro",
     name: loc("Mavericks"),
+    country: loc("USA", "EE.UU.", "EUA"),
+    flag: "🇺🇸",
     place: loc("California, USA", "California, EE.UU.", "Califórnia, EUA"),
     description: loc(
       "Cold, giant, and highly technical wave, with strong currents and nearby rocks.",
@@ -220,14 +232,42 @@ export const WAVES = [
     ),
   },
   {
-    id: 20,
+    id: 18,
     tier: "pro",
     name: loc("Cloudbreak"),
+    country: loc("Fiji"),
+    flag: "🇫🇯",
     place: loc("Fiji"),
     description: loc(
       "World-class reef break, long and perfect barrels, but with a lot of exposure to the reef.",
       "Reef break de clase mundial, tubos largos y perfectos, pero con mucha exposición al arrecife.",
       "Reef break de classe mundial, tubos longos e perfeitos, mas com muita exposição ao recife."
+    ),
+  },
+  {
+    id: 19,
+    tier: "pro",
+    name: loc("Teahupo'o"),
+    country: loc("Tahiti", "Tahití", "Taiti"),
+    flag: "🇵🇫",
+    place: loc("Tahiti", "Tahití", "Taiti"),
+    description: loc(
+      "One of the heaviest waves in the world, breaks over a sharp reef with thick, short barrels.",
+      "Una de las olas más pesadas del mundo, rompe sobre arrecife filoso con tubos gruesos y cortos.",
+      "Uma das ondas mais pesadas do mundo, quebra sobre recife afiado com tubos grossos e curtos."
+    ),
+  },
+  {
+    id: 20,
+    tier: "pro",
+    name: loc("Pipeline"),
+    country: loc("Hawaii", "Hawái", "Havaí"),
+    flag: "🇺🇸",
+    place: loc("Oahu, Hawaii", "Oahu, Hawái", "Oahu, Havaí"),
+    description: loc(
+      "Extremely hollow and dangerous reef break, shallow coral bottom, the birthplace of tube surfing.",
+      "Reef break extremadamente hueco y peligroso, fondo de coral poco profundo, cuna del surf de tubo.",
+      "Reef break extremamente oco e perigoso, fundo de coral raso, berço do surf de tubo."
     ),
   },
 ];
@@ -250,6 +290,14 @@ export function waveDescription(wave, lang = "en") {
 
 export function wavePlace(wave, lang = "en") {
   return pick(wave?.place, lang);
+}
+
+export function waveCountry(wave, lang = "en") {
+  return pick(wave?.country, lang);
+}
+
+export function waveFlag(wave) {
+  return wave?.flag ?? "";
 }
 
 export function waveTierName(wave, lang = "en") {

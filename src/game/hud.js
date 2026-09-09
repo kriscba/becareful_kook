@@ -1,6 +1,7 @@
 import { BOARD_SVG, MAX_LIVES, TOOTH_SVG, TUBE_SVG, WAVE_SVG } from "./constants.js";
 import { ROCK_GO_SVG, SHARK_GO_SVG, KOOK_GO_SVG } from "./illustrations.js";
-import { countPhrase, formatDistance, t, unitLabel } from "../i18n.js";
+import { countPhrase, formatDistance, rankPhrase, t, unitLabel } from "../i18n.js";
+import { waveFlag, waveName } from "./waves.js";
 
 export class HUD {
   constructor() {
@@ -31,7 +32,9 @@ export class HUD {
     this.goCaption = document.getElementById("go-caption");
     this.goOcean = document.getElementById("go-ocean");
     this.goHospital = document.getElementById("go-hospital");
+    this.goRank = document.getElementById("go-rank");
     this.goCause = "rock";
+    this.goTier = "beginner";
     this.goTeethMsg = document.getElementById("go-teeth-msg");
     this.goTubesMsg = document.getElementById("go-tubes-msg");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
@@ -55,6 +58,7 @@ export class HUD {
     document.documentElement.lang = lang;
     if (this.unit) this.unit.textContent = unitLabel(lang);
     this.#setGoCaption();
+    this.#setGoRank();
   }
 
   showMenu() {
@@ -95,7 +99,9 @@ export class HUD {
     const arts = { shark: SHARK_GO_SVG, kook: KOOK_GO_SVG, rock: ROCK_GO_SVG };
     this.goArt.innerHTML = arts[stats.cause] || ROCK_GO_SVG;
     this.goCause = stats.cause;
+    this.goTier = stats.tier || "beginner";
     this.#setGoCaption();
+    this.#setGoRank();
     if (this.goOcean) this.goOcean.textContent = t(this.lang, "gameOver");
     if (this.goHospital) this.goHospital.textContent = t(this.lang, "hospitalWaits");
   }
@@ -130,13 +136,35 @@ export class HUD {
   }
 
   showBanner(text) {
+    this.banner.replaceChildren();
     this.banner.textContent = text;
+    this.#flashBanner(1200);
+  }
+
+  showLevelBanner(level) {
+    const line = document.createElement("div");
+    line.className = "banner-line";
+    line.textContent = `${t(this.lang, "levelUp")} ${level.id}`;
+    const waveLine = document.createElement("div");
+    waveLine.className = "banner-wave";
+    const flag = document.createElement("span");
+    flag.className = "banner-flag";
+    flag.textContent = waveFlag(level.wave);
+    const name = document.createElement("span");
+    name.textContent = waveName(level.wave, this.lang);
+    waveLine.append(flag, name);
+    this.banner.replaceChildren(line, waveLine);
+    this.#flashBanner(1700);
+  }
+
+  #flashBanner(ms) {
     this.banner.classList.remove("hidden");
     this.banner.style.animation = "none";
     this.banner.offsetHeight;
     this.banner.style.animation = "";
+    this.banner.style.color = "black";
     clearTimeout(this._bannerTimer);
-    this._bannerTimer = setTimeout(() => this.banner.classList.add("hidden"), 1200);
+    this._bannerTimer = setTimeout(() => this.banner.classList.add("hidden"), ms);
   }
 
   hitFlash() {
@@ -148,6 +176,11 @@ export class HUD {
     const captions = { shark: "goShark", kook: "goKook", rock: "goRock" };
     if (!this.goCaption) return;
     this.goCaption.textContent = t(this.lang, captions[this.goCause] || "goRock");
+  }
+
+  #setGoRank() {
+    if (!this.goRank) return;
+    this.goRank.textContent = rankPhrase(this.lang, this.goTier);
   }
 
   #renderLives(count) {

@@ -91,6 +91,7 @@ export class Game {
     this.level = getLevel(0);
     this.pendingLife = 0;
     this.deathCause = "rock";
+    this._levelOneBanner = false;
     this.player.reset();
     this.spawner.reset();
     if (this.#isMobilePlay()) this.spawner.nextAt = 34;
@@ -193,6 +194,7 @@ export class Game {
     this.feet += scroll * dt * FEET_PER_UNIT * stokeMul;
     this.travel += scroll * dt;
     this.#checkLevel();
+    this.#maybeShowLevelOne();
 
     this.player.update(dt, this.input, this.time);
     const maneuver = this.player.consumeManeuver();
@@ -288,7 +290,14 @@ export class Game {
     const next = getLevel(this.feet);
     if (next.id === this.level.id) return;
     this.level = next;
-    this.hud.showBanner(`${t(this.lang, "levelUp")} ${next.id} · ${waveName(next.wave, this.lang)}`);
+    this._levelOneBanner = true;
+    this.hud.showLevelBanner(next);
+  }
+
+  #maybeShowLevelOne() {
+    if (this._levelOneBanner || this.cycleElapsed < 2) return;
+    this._levelOneBanner = true;
+    this.hud.showLevelBanner(this.level);
   }
 
   #gameOver() {
@@ -298,6 +307,7 @@ export class Game {
       teeth: this.teeth,
       tubes: this.tubes,
       cause: this.deathCause,
+      tier: this.level?.wave?.tier ?? "beginner",
     });
   }
 

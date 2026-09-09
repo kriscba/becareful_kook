@@ -30,8 +30,13 @@ export const STRINGS = {
     bonusLife: "+800 ft",
     hakaSurf: "🤙🤙🤙",
     gameOver: "THE OCEAN WINS",
-    hospitalWaits: "Hospital waits for you...",
-    goRock: "You cracked your head",
+    hospitalWaits: "The hospital waits for you...",
+    goRank: "You proved to be {tier}",
+    goTierBeginner: "a beginner surfer",
+    goTierIntermediate: "an intermediate surfer",
+    goTierAdvanced: "an advanced surfer",
+    goTierPro: "a pro surfer",
+    goRock: "You will miss a couple of sessions - you cracked your head",
     goShark: "Your career is over! You lost your leg",
     goKook: "HAHA! KOOK ATTACK!!",
     restart: "SURF AGAIN",
@@ -77,11 +82,16 @@ export const STRINGS = {
     hakaSurf: "🤙🤙🤙",
     gameOver: "EL MAR HA GANADO",
     hospitalWaits: "El hospital te espera...",
+    goRank: "Demostraste ser un surfista {tier}",
+    goTierBeginner: "principiante",
+    goTierIntermediate: "intermedio",
+    goTierAdvanced: "avanzado",
+    goTierPro: "pro",
     restart: "SURFEAR DE NUEVO",
     kookSpeech: "¡Cuidado kook!!",
-    goRock: "Te partiste la cabeza",
+    goRock: "Vas a perderte un par de sesiones - te has partido la cabeza",
     goShark: "Se acabó tu carrera! Perdiste una pierna",
-    goKook: "Te llevaste puesto una tortuga",
+    goKook: "JAJA! Te llevaste puesto una tortuga",
     tubeRide: "TUBAAAAZO",
     barrel: "BARRIL",
     stoke: "STOKE x2",
@@ -123,9 +133,14 @@ export const STRINGS = {
     hakaSurf: "🤙🤙🤙",
     gameOver: "O MAR GANHOU",
     hospitalWaits: "O hospital espera por você...",
+    goRank: "Você mostrou ser um surfista {tier}",
+    goTierBeginner: "iniciante",
+    goTierIntermediate: "intermediário",
+    goTierAdvanced: "avançado",
+    goTierPro: "pro",
     restart: "SURFEAR DE NOVO",
     kookSpeech: "Sai fora, haole!!",
-    goRock: "Vai perder umas sessões, você quebrou sua cabeça",
+    goRock: "Vai perder umas sessões - você quebrou sua cabeça",
     goShark: "Sua carreira acabou! Você ficou sem uma perna",
     goKook: "HAHA! KOOK ATTACK!!",
     tubeRide: "TUBAAAAÇO",
@@ -169,6 +184,18 @@ export function saveLang(lang) {
 export function countPhrase(lang, n, singularKey, pluralKey) {
   const key = n === 1 ? singularKey : pluralKey;
   return t(lang, key).replaceAll("{n}", String(n));
+}
+
+const TIER_KEYS = {
+  beginner: "goTierBeginner",
+  intermediate: "goTierIntermediate",
+  advanced: "goTierAdvanced",
+  pro: "goTierPro",
+};
+
+export function rankPhrase(lang, tier) {
+  const tierText = t(lang, TIER_KEYS[tier] || TIER_KEYS.beginner);
+  return t(lang, "goRank").replaceAll("{tier}", tierText);
 }
 
 export function isMetric(lang) {

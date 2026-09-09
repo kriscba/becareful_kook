@@ -8,7 +8,7 @@ export const SPEED_STEP_SECONDS = 10;
 export const MIN_X = -5.2;
 export const MAX_X = 5.2;
 
-export const MIN_TIME_SPEED = 38.4;
+export const MIN_TIME_SPEED = 42.24;
 export const MAX_TIME_SPEED = 76.8;
 export const BRAKE_FACTOR = 0.4;
 export const LIFE_BOOST = [0, 0.72, 0.86, 1, 1.2, 1.4];
@@ -37,10 +37,11 @@ export const FLOW_SCALE = 0.42;
 export const TUBE_BONUS_FEET = 800;
 export const HAKA_SECONDS = 1.6;
 
-const LEVEL_AT_FEET = [
+const LEVEL_AT_FEET_BASE = [
   0, 500, 1500, 3200, 5600, 7200, 9000, 11000, 13200, 15600, 18200, 21000, 24000,
   27200, 30600, 34200, 38000, 42000, 46200, 50600,
 ];
+const LEVEL_AT_FEET = LEVEL_AT_FEET_BASE.map((ft, i) => (i === 0 ? 0 : Math.round(ft * 1.2 * 4)));
 const LEVEL_SPEED_1_TO_5 = [1, 1.14, 1.28, 1.44, 1.62];
 const LEVEL_SPAWN_1_TO_5 = [1, 0.9, 0.8, 0.7, 0.6];
 

@@ -1,3 +1,5 @@
+import { WAVES } from "./waves.js";
+
 export const START_LIVES = 1;
 export const MAX_LIVES = 5;
 export const CYCLE_SECONDS = 5 * 60;
@@ -35,13 +37,20 @@ export const FLOW_SCALE = 0.42;
 export const TUBE_BONUS_FEET = 800;
 export const HAKA_SECONDS = 1.6;
 
-export const LEVELS = [
-  { id: 1, atFeet: 0, speed: 1, spawn: 1, nameKey: "level1" },
-  { id: 2, atFeet: 500, speed: 1.14, spawn: 0.9, nameKey: "level2" },
-  { id: 3, atFeet: 1500, speed: 1.28, spawn: 0.8, nameKey: "level3" },
-  { id: 4, atFeet: 3200, speed: 1.44, spawn: 0.7, nameKey: "level4" },
-  { id: 5, atFeet: 5600, speed: 1.62, spawn: 0.6, nameKey: "level5" },
+const LEVEL_AT_FEET = [
+  0, 500, 1500, 3200, 5600, 7200, 9000, 11000, 13200, 15600, 18200, 21000, 24000,
+  27200, 30600, 34200, 38000, 42000, 46200, 50600,
 ];
+const LEVEL_SPEED_1_TO_5 = [1, 1.14, 1.28, 1.44, 1.62];
+const LEVEL_SPAWN_1_TO_5 = [1, 0.9, 0.8, 0.7, 0.6];
+
+export const LEVELS = LEVEL_AT_FEET.map((atFeet, i) => {
+  const wave = WAVES[i];
+  const id = wave.id;
+  const speed = id <= 5 ? LEVEL_SPEED_1_TO_5[i] : +(1.62 + (id - 5) * 0.06).toFixed(2);
+  const spawn = id <= 5 ? LEVEL_SPAWN_1_TO_5[i] : +Math.max(0.3, 0.6 - (id - 5) * 0.02).toFixed(2);
+  return { id, atFeet, speed, spawn, wave };
+});
 
 export function getLevel(feet) {
   let current = LEVELS[0];

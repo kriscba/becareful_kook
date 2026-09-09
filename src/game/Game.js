@@ -21,6 +21,7 @@ import {
   getLevel,
 } from "./constants.js";
 import { loadLang, saveLang, t, toDisplayDistance } from "../i18n.js";
+import { waveDescription, waveName } from "./waves.js";
 import { HUD } from "./hud.js";
 import { Input } from "./input.js";
 import { ObstacleSpawner } from "./obstacles.js";
@@ -97,6 +98,7 @@ export class Game {
     this.hud.hidePause();
     this.hud.showPlay();
     this.hud.update(this.#hudState());
+    document.activeElement?.blur?.();
   }
 
   #bindUi() {
@@ -124,15 +126,27 @@ export class Game {
       e.stopPropagation();
       if (this.mode === "play") this.#pause();
     });
+    this.hud.replayBtn.addEventListener("pointerdown", (e) => e.stopPropagation());
+    this.hud.replayBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (this.mode === "play" || this.mode === "paused") this.start();
+    });
     this.hud.pause.addEventListener("pointerdown", (e) => {
       if (e.target.closest("[data-lang], button, .lang-row")) return;
       if (this.mode === "paused") this.#resume();
     });
+    this.canvas.addEventListener("pointerup", (e) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      if (this.mode === "play") this.#pause();
+    });
     window.addEventListener("keydown", (e) => {
       if (e.repeat) return;
-      if (e.code !== "Escape" && e.code !== "KeyP") return;
+      const pauseKey = e.code === "Escape" || e.code === "KeyP" || e.code === "Space";
+      if (!pauseKey) return;
+      if (this.mode !== "play" && this.mode !== "paused") return;
+      if (e.code === "Space") e.preventDefault();
       if (this.mode === "play") this.#pause();
-      else if (this.mode === "paused") this.#resume();
+      else this.#resume();
     });
   }
 
@@ -274,7 +288,7 @@ export class Game {
     const next = getLevel(this.feet);
     if (next.id === this.level.id) return;
     this.level = next;
-    this.hud.showBanner(`${t(this.lang, "levelUp")} ${next.id}`);
+    this.hud.showBanner(`${t(this.lang, "levelUp")} ${next.id} · ${waveName(next.wave, this.lang)}`);
   }
 
   #gameOver() {
@@ -295,7 +309,8 @@ export class Game {
       teeth: this.teeth ?? 0,
       tubes: this.tubes ?? 0,
       levelId: this.level?.id ?? 1,
-      levelNameKey: this.level?.nameKey ?? "level1",
+      levelName: waveName(this.level?.wave, this.lang),
+      levelDesc: waveDescription(this.level?.wave, this.lang),
       braking: this.mode === "play" && this.player.braking,
       stoke: this.stoke ?? 0,
       flow: this.flow ?? 0,

@@ -16,6 +16,7 @@ export class HUD {
     this.gameover = document.getElementById("gameover");
     this.pause = document.getElementById("pause");
     this.pauseBtn = document.getElementById("pause-btn");
+    this.replayBtn = document.getElementById("replay-btn");
     this.speech = document.getElementById("speech");
     this.speechIcon = document.getElementById("speech-icon");
     this.speechText = document.getElementById("speech-text");
@@ -105,7 +106,7 @@ export class HUD {
     this.teeth.textContent = String(state.teeth);
     if (this.tubes) this.tubes.textContent = String(state.tubes ?? 0);
     this.levelNum.textContent = String(state.levelId);
-    this.levelName.textContent = t(this.lang, state.levelNameKey);
+    this.levelName.textContent = state.levelName ?? "";
     this.#renderLives(state.lives);
     this.brake.classList.toggle("hidden", !state.braking);
     this.brake.textContent = t(this.lang, "braking");

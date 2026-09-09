@@ -181,6 +181,9 @@ body {
   flex: 0 0 36px;
   display: grid;
   place-items: center;
+  font-size: 22px;
+  line-height: 1;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
 }
 
 .stat-icon svg {
@@ -497,11 +500,12 @@ h1 {
   overflow: hidden;
 }
 
-.go-art svg {
+.go-art img {
   display: block;
   width: 100%;
   height: auto;
   max-height: min(28vh, 220px);
+  object-fit: contain;
 }
 
 .go-art + .go-tally {
@@ -537,6 +541,7 @@ h1 {
   width: 40px;
   height: 40px;
   flex-basis: 40px;
+  font-size: 28px;
 }
 
 .summary strong {
@@ -634,6 +639,7 @@ h1 {
     width: 22px;
     height: 22px;
     flex-basis: 22px;
+    font-size: 16px;
   }
 
   .stat-copy span {
@@ -711,6 +717,7 @@ h1 {
     width: 28px;
     height: 28px;
     flex-basis: 28px;
+    font-size: 20px;
   }
 
   .banner {
@@ -734,7 +741,7 @@ h1 {
     max-height: min(22vh, 150px);
   }
 
-  .go-art svg {
+  .go-art img {
     max-height: min(22vh, 150px);
   }
 
@@ -756,7 +763,7 @@ h1 {
     max-height: 96px;
   }
 
-  .go-art svg {
+  .go-art img {
     max-height: 96px;
   }
 

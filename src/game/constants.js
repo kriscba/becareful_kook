@@ -1,4 +1,4 @@
-export const START_LIVES = 3;
+export const START_LIVES = 1;
 export const MAX_LIVES = 5;
 export const CYCLE_SECONDS = 5 * 60;
 export const SPEED_STEP_SECONDS = 10;

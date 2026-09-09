@@ -27,9 +27,10 @@ export class HUD {
     this.goTeeth = document.getElementById("go-teeth");
     this.goTubes = document.getElementById("go-tubes");
     this.goArt = document.getElementById("go-art");
-    this.goKook = document.getElementById("go-kook");
+    this.goCaption = document.getElementById("go-caption");
     this.goOcean = document.getElementById("go-ocean");
     this.goHospital = document.getElementById("go-hospital");
+    this.goCause = "rock";
     this.goTeethMsg = document.getElementById("go-teeth-msg");
     this.goTubesMsg = document.getElementById("go-tubes-msg");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
@@ -52,6 +53,7 @@ export class HUD {
     this.lang = lang;
     document.documentElement.lang = lang;
     if (this.unit) this.unit.textContent = unitLabel(lang);
+    this.#setGoCaption();
   }
 
   showMenu() {
@@ -91,7 +93,8 @@ export class HUD {
     }
     const arts = { shark: SHARK_GO_SVG, kook: KOOK_GO_SVG, rock: ROCK_GO_SVG };
     this.goArt.innerHTML = arts[stats.cause] || ROCK_GO_SVG;
-    if (this.goKook) this.goKook.textContent = t(this.lang, "goKook");
+    this.goCause = stats.cause;
+    this.#setGoCaption();
     if (this.goOcean) this.goOcean.textContent = t(this.lang, "gameOver");
     if (this.goHospital) this.goHospital.textContent = t(this.lang, "hospitalWaits");
   }
@@ -138,6 +141,12 @@ export class HUD {
   hitFlash() {
     this.flash.classList.add("on");
     setTimeout(() => this.flash.classList.remove("on"), 140);
+  }
+
+  #setGoCaption() {
+    const captions = { shark: "goShark", kook: "goKook", rock: "goRock" };
+    if (!this.goCaption) return;
+    this.goCaption.textContent = t(this.lang, captions[this.goCause] || "goRock");
   }
 
   #renderLives(count) {

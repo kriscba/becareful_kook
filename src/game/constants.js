@@ -44,13 +44,18 @@ const LEVEL_AT_FEET_BASE = [
 const LEVEL_AT_FEET = LEVEL_AT_FEET_BASE.map((ft, i) => (i === 0 ? 0 : Math.round(ft * 1.2 * 4)));
 const LEVEL_SPEED_1_TO_5 = [1, 1.14, 1.28, 1.44, 1.62];
 const LEVEL_SPAWN_1_TO_5 = [1, 0.9, 0.8, 0.7, 0.6];
+const LAST_STAGE_DELTA =
+  LEVEL_AT_FEET.length > 1
+    ? LEVEL_AT_FEET[LEVEL_AT_FEET.length - 1] - LEVEL_AT_FEET[LEVEL_AT_FEET.length - 2]
+    : 2400;
 
 export const LEVELS = LEVEL_AT_FEET.map((atFeet, i) => {
   const wave = WAVES[i];
   const id = wave.id;
   const speed = id <= 5 ? LEVEL_SPEED_1_TO_5[i] : +(1.62 + (id - 5) * 0.06).toFixed(2);
   const spawn = id <= 5 ? LEVEL_SPAWN_1_TO_5[i] : +Math.max(0.3, 0.6 - (id - 5) * 0.02).toFixed(2);
-  return { id, atFeet, speed, spawn, wave };
+  const goalFeet = LEVEL_AT_FEET[i + 1] ?? atFeet + LAST_STAGE_DELTA;
+  return { id, atFeet, goalFeet, speed, spawn, wave };
 });
 
 export function getLevel(feet) {
@@ -59,6 +64,16 @@ export function getLevel(feet) {
     if (feet >= level.atFeet) current = level;
   }
   return current;
+}
+
+export function stageGoal(level) {
+  return level?.goalFeet ?? LEVELS[0].goalFeet;
+}
+
+export function nextLevel(level) {
+  const i = LEVELS.findIndex((entry) => entry.id === (level?.id ?? 1));
+  if (i < 0 || i >= LEVELS.length - 1) return null;
+  return LEVELS[i + 1];
 }
 
 export const WAVE_SVG = `

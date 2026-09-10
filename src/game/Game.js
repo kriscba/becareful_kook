@@ -7,6 +7,7 @@ import {
   FLOW_SECONDS,
   HAKA_SECONDS,
   INVULN_SECONDS,
+  LEVELS,
   LIFE_BOOST,
   LIP_BOOST_MUL,
   MAX_LIVES,
@@ -18,7 +19,8 @@ import {
   TUBE_BONUS_FEET,
   WAVE_SVG,
   MOBILE_SPAWN_GAP,
-  getLevel,
+  nextLevel,
+  stageGoal,
 } from "./constants.js";
 import { loadLang, saveLang, t, toDisplayDistance } from "../i18n.js";
 import { waveDescription, waveName } from "./waves.js";
@@ -53,7 +55,8 @@ export class Game {
     this.spawner = new ObstacleSpawner(this.scene);
 
     this._shake = 0;
-    this.level = getLevel(0);
+    this.level = LEVELS[0];
+    this.#resetStageTally();
     this.pendingLife = 0;
     this.deathCause = "rock";
     this._portrait = false;
@@ -88,10 +91,11 @@ export class Game {
     this.flow = 0;
     this.timeScale = 1;
     this.travel = 0;
-    this.level = getLevel(0);
+    this.level = LEVELS[0];
     this.pendingLife = 0;
     this.deathCause = "rock";
     this._levelOneBanner = false;
+    this.#resetStageTally();
     this.player.reset();
     this.spawner.reset();
     if (this.#isMobilePlay()) this.spawner.nextAt = 34;
@@ -111,6 +115,10 @@ export class Game {
       e.stopPropagation();
       this.start();
     });
+    document.getElementById("stage-ok").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (this.mode === "stageclear") this.#confirmStageClear();
+    });
     this.hud.langBtns.forEach((btn) => {
       btn.addEventListener("pointerdown", (e) => e.stopPropagation());
       btn.addEventListener("click", (e) => {
@@ -119,6 +127,12 @@ export class Game {
         this.hud.setLang(this.lang);
         if (this.mode === "play" || this.mode === "paused") {
           this.hud.update(this.#hudState());
+        }
+        if (this.mode === "stageclear") {
+          this.hud.showStageClear(this.level, {
+            final: !nextLevel(this.level),
+            ...this.#stageClearStats(),
+          });
         }
       });
     });
@@ -142,6 +156,14 @@ export class Game {
     });
     window.addEventListener("keydown", (e) => {
       if (e.repeat) return;
+      if (this.mode === "stageclear") {
+        if (e.code === "Space") e.preventDefault();
+        if (e.code === "Enter" || e.code === "NumpadEnter") {
+          e.preventDefault();
+          this.#confirmStageClear();
+        }
+        return;
+      }
       const pauseKey = e.code === "Escape" || e.code === "KeyP" || e.code === "Space";
       if (!pauseKey) return;
       if (this.mode !== "play" && this.mode !== "paused") return;
@@ -183,6 +205,7 @@ export class Game {
         this.#grantTubeLife();
       }
     }
+    if (this.mode !== "play") return;
 
     const dt = rawDt * this.timeScale;
     this.input.beginFrame();
@@ -194,6 +217,7 @@ export class Game {
     this.feet += scroll * dt * FEET_PER_UNIT * stokeMul;
     this.travel += scroll * dt;
     this.#checkLevel();
+    if (this.mode !== "play") return;
     this.#maybeShowLevelOne();
 
     this.player.update(dt, this.input, this.time);
@@ -205,6 +229,8 @@ export class Game {
       onHazard: (item) => this.#hurt(item.type),
       onKookDodge: () => this.#kookSpeech(),
       onSharkDodge: () => this.#sharkDodge(),
+      onRockDodge: () => this.#rockDodge(),
+      onSignDodge: () => this.#signDodge(),
       onTube: (ok) => this.#tube(ok),
     }, this.level.spawn * (this.#isMobilePlay() ? MOBILE_SPAWN_GAP : 1), this.#isMobilePlay());
 
@@ -244,7 +270,7 @@ export class Game {
   #hurt(cause = "rock") {
     if (this.player.invuln > 0) return;
     this.lives -= 1;
-    this.deathCause = ["shark", "kook"].includes(cause) ? cause : "rock";
+    this.deathCause = ["shark", "kook", "sign"].includes(cause) ? cause : "rock";
     this.player.hit();
     this.player.invuln = INVULN_SECONDS;
     this.hud.hitFlash();
@@ -257,16 +283,27 @@ export class Game {
   }
 
   #kookSpeech() {
+    this.stageKooks += 1;
     this.#speechAtPlayer(t(this.lang, "kookSpeech"));
   }
 
   #sharkDodge() {
     this.teeth += 1;
+    this.stageTeeth += 1;
+  }
+
+  #rockDodge() {
+    this.stageRocks += 1;
+  }
+
+  #signDodge() {
+    this.stageSigns += 1;
   }
 
   #tube(ok) {
     if (!ok) return;
     this.tubes += 1;
+    this.stageTubes += 1;
     this.hud.showBanner(t(this.lang, "tubeRide"));
     this.player.celebrateHaka(HAKA_SECONDS);
     this.#speechAtPlayer(t(this.lang, "hakaSurf"), HAKA_SECONDS * 1000);
@@ -283,15 +320,78 @@ export class Game {
     } else {
       this.feet += TUBE_BONUS_FEET;
       this.#speechAtPlayer(t(this.lang, "bonusLife"), 1200, WAVE_SVG);
+      this.#checkLevel();
     }
   }
 
   #checkLevel() {
-    const next = getLevel(this.feet);
-    if (next.id === this.level.id) return;
-    this.level = next;
+    if (this.mode !== "play") return;
+    if (this.feet < stageGoal(this.level)) return;
+    this.#stageClear();
+  }
+
+  #stageClear() {
+    this.mode = "stageclear";
+    this.input.clearPointers();
     this._levelOneBanner = true;
-    this.hud.showLevelBanner(next);
+    this.hud.showStageClear(this.level, {
+      final: !nextLevel(this.level),
+      ...this.#stageClearStats(),
+    });
+  }
+
+  #confirmStageClear() {
+    if (this.mode !== "stageclear") return;
+    if (nextLevel(this.level)) this.#beginNextStage();
+    else this.start();
+  }
+
+  #beginNextStage() {
+    const next = nextLevel(this.level);
+    if (!next) {
+      this.start();
+      return;
+    }
+    this.level = next;
+    this.cycleElapsed = 0;
+    this.stoke = 0;
+    this.flow = 0;
+    this.timeScale = 1;
+    this.pendingLife = 0;
+    this.travel = 0;
+    this._levelOneBanner = true;
+    this.#resetStageTally();
+    this.player.reset();
+    this.spawner.reset();
+    if (this.#isMobilePlay()) this.spawner.nextAt = 34;
+    this.input.reset();
+    this.mode = "play";
+    this.clock.getDelta();
+    this.hud.hidePause();
+    this.hud.showPlay();
+    this.hud.update(this.#hudState());
+    this.hud.showLevelBanner(this.level);
+    document.activeElement?.blur?.();
+  }
+
+  #resetStageTally() {
+    this.stageTeeth = 0;
+    this.stageTubes = 0;
+    this.stageKooks = 0;
+    this.stageRocks = 0;
+    this.stageSigns = 0;
+  }
+
+  #stageClearStats() {
+    const atFeet = this.level?.atFeet ?? 0;
+    return {
+      goalDistance: Math.max(0, stageGoal(this.level) - atFeet),
+      teeth: this.stageTeeth ?? 0,
+      tubes: this.stageTubes ?? 0,
+      kooks: this.stageKooks ?? 0,
+      rocks: this.stageRocks ?? 0,
+      signs: this.stageSigns ?? 0,
+    };
   }
 
   #maybeShowLevelOne() {

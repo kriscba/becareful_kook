@@ -3,11 +3,11 @@ export const LANGS = ["en", "es", "pt"];
 
 export const STRINGS = {
   en: {
-    subtitle: "Dodge kooks, sharks and rocks. Ride the barrel.",
+    subtitle: "Dodge kooks, sharks, rocks and warning signs. Ride the barrel.",
     play: "DROP IN",
     language: "Language",
     controlsMove: "← → or hold and drag to steer",
-    controlsJump: "↑ or swipe up — jump rocks",
+    controlsJump: "↑ or swipe up — jump rocks and signs",
     controlsBrake: "↓ or swipe down and hold — brake for the tube",
     controlsPause: "❚❚ / Esc / Space / Click — pause",
     paused: "PAUSED",
@@ -29,16 +29,21 @@ export const STRINGS = {
     extraLife: "+1 Life",
     bonusLife: "+800 ft",
     hakaSurf: "🤙🤙🤙",
-    gameOver: "THE OCEAN WINS",
+    gameOver: "YOU'RE HURT",
+    goOverRock: "You're hurt",
+    goOverShark: "You're finished",
+    goOverKook: "Lack of skill",
+    goOverSign: "You're blind",
     hospitalWaits: "The hospital waits for you...",
     goRank: "You proved to be {tier}",
     goTierBeginner: "a beginner surfer",
     goTierIntermediate: "an intermediate surfer",
     goTierAdvanced: "an advanced surfer",
     goTierPro: "a pro surfer",
-    goRock: "You will miss a couple of sessions - you cracked your head",
-    goShark: "Your career is over! You lost your leg",
-    goKook: "KOOK ATTACK!!",
+    goRock: "You cracked your head!",
+    goShark: "You lost a leg!",
+    goKook: "You hit a kook!",
+    goSign: "You broke your collarbone!",
     restart: "SURF AGAIN",
     kookSpeech: "Becareful kook!!",
     tubeRide: "TUBE RIDE",
@@ -52,13 +57,29 @@ export const STRINGS = {
     lipBoost: "LIP x1.5",
     cutback: "CUTBACK",
     cutbackBoost: "CUTBACK x1.5",
+    stageWon: "YOU WON THE {place} STAGE",
+    stageWonFinal: "YOU WON",
+    stageOk: "OK",
+    stageGoals: "Objectives cleared",
+    stageGoalRide: "You covered {n}",
+    stageGoalSurvive: "You stayed on the board",
+    stageGoalSharkOne: "You dodged {n} shark",
+    stageGoalSharkMany: "You dodged {n} sharks",
+    stageGoalKookOne: "You dodged {n} kook",
+    stageGoalKookMany: "You dodged {n} kooks",
+    stageGoalRockOne: "You cleared {n} rock",
+    stageGoalRockMany: "You cleared {n} rocks",
+    stageGoalSignOne: "You cleared {n} shark warning",
+    stageGoalSignMany: "You cleared {n} shark warnings",
+    stageGoalTubeOne: "You rode {n} tube",
+    stageGoalTubeMany: "You rode {n} tubes",
   },
   es: {
-    subtitle: "Esquivá kooks, tiburones y rocas. Metete en el tubo.",
+    subtitle: "Esquivá kooks, tiburones, rocas y carteles. Metete en el tubo.",
     play: "QUIERO SURFEAR!",
     language: "Idioma",
     controlsMove: "← → o mantené el dedo y deslizá para surfear",
-    controlsJump: "↑ o deslizá hacia arriba — saltar las rocas",
+    controlsJump: "↑ o deslizá hacia arriba — saltar las rocas y los carteles",
     controlsBrake: "↓ o deslizá hacia abajo y mantené — frená para el tubo",
     controlsPause: "❚❚ / Esc / Espacio / Click — pausa",
     paused: "PAUSA",
@@ -80,7 +101,11 @@ export const STRINGS = {
     extraLife: "+1 Vida",
     bonusLife: "+244 m",
     hakaSurf: "🤙🤙🤙",
-    gameOver: "EL MAR HA GANADO",
+    gameOver: "ESTÁS LASTIMADO",
+    goOverRock: "Estás lastimado",
+    goOverShark: "Estás acabado",
+    goOverKook: "Falta habilidad",
+    goOverSign: "Estás ciego",
     hospitalWaits: "El hospital te espera...",
     goRank: "Demostraste ser un surfista {tier}",
     goTierBeginner: "principiante",
@@ -89,9 +114,10 @@ export const STRINGS = {
     goTierPro: "pro",
     restart: "SURFEAR DE NUEVO",
     kookSpeech: "¡Cuidado kook!!",
-    goRock: "Vas a perderte un par de sesiones - te has partido la cabeza",
-    goShark: "Se acabó tu carrera! Perdiste una pierna",
-    goKook: "JAJA! Te llevaste puesto una tortuga",
+    goRock: "¡Te has partido la cabeza!",
+    goShark: "¡Perdiste una pierna!",
+    goKook: "¡Chocaste un kook!",
+    goSign: "¡Te has quebrado la clavícula!",
     tubeRide: "TUBAAAAZO",
     barrel: "BARRIL",
     stoke: "STOKE x2",
@@ -103,13 +129,29 @@ export const STRINGS = {
     lipBoost: "LIP x1.5",
     cutback: "CUTBACK",
     cutbackBoost: "CUTBACK x1.5",
+    stageWon: "GANASTE LA ETAPA DE {place}",
+    stageWonFinal: "GANASTE",
+    stageOk: "OK",
+    stageGoals: "Objetivos cumplidos",
+    stageGoalRide: "Recorriste {n}",
+    stageGoalSurvive: "Te mantuviste en la tabla",
+    stageGoalSharkOne: "Esquivaste {n} tiburón",
+    stageGoalSharkMany: "Esquivaste {n} tiburones",
+    stageGoalKookOne: "Esquivaste {n} kook",
+    stageGoalKookMany: "Esquivaste {n} kooks",
+    stageGoalRockOne: "Pasaste {n} roca",
+    stageGoalRockMany: "Pasaste {n} rocas",
+    stageGoalSignOne: "Pasaste {n} cartel de tiburón",
+    stageGoalSignMany: "Pasaste {n} carteles de tiburón",
+    stageGoalTubeOne: "Te metiste en {n} tubo",
+    stageGoalTubeMany: "Te metiste en {n} tubos",
   },
   pt: {
-    subtitle: "Desvie de haoles, tubarões e pedras. Entre no tubo.",
+    subtitle: "Desvie de haoles, tubarões, pedras e placas. Entre no tubo.",
     play: "BORA SURFAR!",
     language: "Idioma",
     controlsMove: "← → ou segure e arraste para surfar",
-    controlsJump: "↑ ou deslize para cima — pular as pedras",
+    controlsJump: "↑ ou deslize para cima — pular as pedras e as placas",
     controlsBrake: "↓ ou deslize para baixo e segure — freie para o tubo",
     controlsPause: "❚❚ / Esc / Espaço / Clique — pausa",
     paused: "PAUSA",
@@ -131,7 +173,11 @@ export const STRINGS = {
     extraLife: "+1 Vida",
     bonusLife: "+244 m",
     hakaSurf: "🤙🤙🤙",
-    gameOver: "O MAR GANHOU",
+    gameOver: "VOCÊ ESTÁ MACHUCADO",
+    goOverRock: "Você está machucado",
+    goOverShark: "Você está acabado",
+    goOverKook: "Falta habilidade",
+    goOverSign: "Você está cego",
     hospitalWaits: "O hospital espera por você...",
     goRank: "Você mostrou ser um surfista {tier}",
     goTierBeginner: "iniciante",
@@ -140,9 +186,10 @@ export const STRINGS = {
     goTierPro: "pro",
     restart: "SURFEAR DE NOVO",
     kookSpeech: "Sai fora, haole!!",
-    goRock: "Vai perder umas sessões - você quebrou sua cabeça",
-    goShark: "Sua carreira acabou! Você ficou sem uma perna",
-    goKook: "VOCE FOI ATACADO POR UM HAOLE!!",
+    goRock: "Você quebrou a cabeça!",
+    goShark: "Você perdeu uma perna!",
+    goKook: "Você bateu num haole!",
+    goSign: "Você quebrou a clavícula!",
     tubeRide: "TUBAAAAÇO",
     barrel: "BARRIL",
     stoke: "STOKE x2",
@@ -154,6 +201,22 @@ export const STRINGS = {
     lipBoost: "LIP x1.5",
     cutback: "CUTBACK",
     cutbackBoost: "CUTBACK x1.5",
+    stageWon: "VOCÊ GANHOU A ETAPA DE {place}",
+    stageWonFinal: "VOCÊ GANHOU",
+    stageOk: "OK",
+    stageGoals: "Objetivos cumpridos",
+    stageGoalRide: "Você percorreu {n}",
+    stageGoalSurvive: "Você ficou na prancha",
+    stageGoalSharkOne: "Você desviou de {n} tubarão",
+    stageGoalSharkMany: "Você desviou de {n} tubarões",
+    stageGoalKookOne: "Você desviou de {n} haole",
+    stageGoalKookMany: "Você desviou de {n} haoles",
+    stageGoalRockOne: "Você passou por {n} pedra",
+    stageGoalRockMany: "Você passou por {n} pedras",
+    stageGoalSignOne: "Você passou por {n} placa de tubarão",
+    stageGoalSignMany: "Você passou por {n} placas de tubarão",
+    stageGoalTubeOne: "Você entrou em {n} tubo",
+    stageGoalTubeMany: "Você entrou em {n} tubos",
   },
 };
 
@@ -196,6 +259,30 @@ const TIER_KEYS = {
 export function rankPhrase(lang, tier) {
   const tierText = t(lang, TIER_KEYS[tier] || TIER_KEYS.beginner);
   return t(lang, "goRank").replaceAll("{tier}", tierText);
+}
+
+export function stageWonPhrase(lang, place, final = false) {
+  const key = final ? "stageWonFinal" : "stageWon";
+  return t(lang, key).replaceAll("{place}", place ?? "");
+}
+
+export function stageGoalLines(lang, stats = {}) {
+  const goalDistance = Math.max(0, stats.goalDistance ?? 0);
+  const lines = [
+    t(lang, "stageGoalSurvive"),
+    t(lang, "stageGoalRide").replaceAll("{n}", formatDistance(lang, goalDistance, 0)),
+  ];
+  const rocks = stats.rocks ?? 0;
+  const signs = stats.signs ?? 0;
+  const teeth = stats.teeth ?? 0;
+  const kooks = stats.kooks ?? 0;
+  const tubes = stats.tubes ?? 0;
+  if (rocks > 0) lines.push(countPhrase(lang, rocks, "stageGoalRockOne", "stageGoalRockMany"));
+  if (signs > 0) lines.push(countPhrase(lang, signs, "stageGoalSignOne", "stageGoalSignMany"));
+  if (teeth > 0) lines.push(countPhrase(lang, teeth, "stageGoalSharkOne", "stageGoalSharkMany"));
+  if (kooks > 0) lines.push(countPhrase(lang, kooks, "stageGoalKookOne", "stageGoalKookMany"));
+  if (tubes > 0) lines.push(countPhrase(lang, tubes, "stageGoalTubeOne", "stageGoalTubeMany"));
+  return lines;
 }
 
 export function isMetric(lang) {

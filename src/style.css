@@ -349,6 +349,7 @@ body {
 .screen {
   position: absolute;
   inset: 0;
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -512,12 +513,67 @@ h1 {
   margin-top: 8px;
 }
 
-#gameover h1 {
+#gameover h1,
+#stageclear h1 {
   font-size: clamp(20px, 5.2vw, 36px);
   line-height: 1.15;
   max-width: 14em;
   margin-left: auto;
   margin-right: auto;
+}
+
+.sc-trophy {
+  font-size: clamp(56px, 14vw, 88px);
+  line-height: 1;
+  margin: 4px 0 8px;
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.12));
+  animation: pop 0.45s ease;
+}
+
+.sc-place {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  margin: 0 0 12px;
+  opacity: 0.9;
+}
+
+.sc-goals-title {
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0 0 8px;
+}
+
+.sc-goals {
+  list-style: none;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 16px;
+  padding: 8px 14px;
+  margin: 0 0 20px;
+}
+
+.sc-goals li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.sc-goals li + li {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sc-tick {
+  color: #ffd166;
+  font-weight: 900;
+  line-height: 1.25;
 }
 
 .summary {
@@ -699,6 +755,15 @@ h1 {
     padding: 12px 14px;
   }
 
+  .sc-trophy {
+    font-size: 52px;
+  }
+
+  .sc-place {
+    font-size: 14px;
+    margin: 0 0 16px;
+  }
+
   .go-ocean {
     font-size: clamp(14px, 4.4vw, 20px);
     margin: 0 0 6px;
@@ -757,6 +822,15 @@ h1 {
 
   .howto {
     display: none;
+  }
+
+  .sc-trophy {
+    font-size: 40px;
+    margin: 0 0 4px;
+  }
+
+  .sc-place {
+    margin: 0 0 12px;
   }
 
   .go-art {

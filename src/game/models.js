@@ -90,7 +90,7 @@ export function createPlayerMesh() {
   const root = new THREE.Group();
   root.name = "player";
 
-  const boardGroup = createFishBoard("#ffd166", "#ef476f");
+  const boardGroup = createFishBoard("#ffd166", "#e53935");
   const skin = toon("#f4a261");
 
   const footL = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 8), skin);
@@ -154,7 +154,7 @@ export function createKookMesh() {
   const root = createPlayerMesh();
   root.name = "kook";
   const deck = root.getObjectByName("deck");
-  if (deck) deck.material = toon("#ef476f");
+  if (deck) deck.material = toon("#e53935");
   const body = root.getObjectByName("torso");
   if (body) body.material = toon("#ffd166");
   const shaka = root.getObjectByName("shaka");
@@ -221,6 +221,121 @@ export function createSharkMesh() {
 
   root.add(body, fin, tail, eye, eye2, mouth);
   root.rotation.y = Math.PI;
+  return root;
+}
+
+function roundedSquareShape(size, corner) {
+  const s = new THREE.Shape();
+  const h = size / 2;
+  const r = Math.min(corner, h * 0.45);
+  s.moveTo(-h + r, -h);
+  s.lineTo(h - r, -h);
+  s.quadraticCurveTo(h, -h, h, -h + r);
+  s.lineTo(h, h - r);
+  s.quadraticCurveTo(h, h, h - r, h);
+  s.lineTo(-h + r, h);
+  s.quadraticCurveTo(-h, h, -h, h - r);
+  s.lineTo(-h, -h + r);
+  s.quadraticCurveTo(-h, -h, -h + r, -h);
+  s.closePath();
+  return s;
+}
+
+function sharkWarningFinShape() {
+  const s = new THREE.Shape();
+  s.moveTo(-0.2, -0.06);
+  s.quadraticCurveTo(-0.16, 0.16, 0.04, 0.4);
+  s.lineTo(0.3, -0.05);
+  s.quadraticCurveTo(0.08, 0.02, -0.2, -0.06);
+  s.closePath();
+  return s;
+}
+
+function makeWaveStroke(y, amp, phase) {
+  const pts = [];
+  for (let i = 0; i <= 12; i += 1) {
+    const t = i / 12;
+    pts.push(
+      new THREE.Vector3(-0.34 + t * 0.68, y + Math.sin(t * Math.PI * 2 + phase) * amp, 0)
+    );
+  }
+  return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.028, 6, false);
+}
+
+export function createSignMesh() {
+  const root = new THREE.Group();
+  root.name = "sign";
+
+  const yellow = new THREE.MeshLambertMaterial({
+    color: "#f4c430",
+    emissive: "#f4c430",
+    emissiveIntensity: 0.18,
+  });
+  const ink = toon("#141414");
+  const postMat = toon("#5b4636");
+  const rust = toon("#8a5a32");
+
+  const footing = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 0.12, 10), rust);
+  footing.position.y = 0.04;
+  addShadow(footing);
+
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.92, 8), postMat);
+  post.position.y = 0.52;
+  addShadow(post);
+
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.07, 8), rust);
+  collar.position.y = 0.96;
+
+  const plate = new THREE.Group();
+  plate.position.y = 1.18;
+
+  const rimGeo = new THREE.ExtrudeGeometry(roundedSquareShape(1.12, 0.12), {
+    depth: 0.14,
+    bevelEnabled: true,
+    bevelThickness: 0.025,
+    bevelSize: 0.02,
+    bevelSegments: 2,
+  });
+  rimGeo.translate(0, 0, -0.07);
+  const rim = new THREE.Mesh(rimGeo, ink);
+  rim.rotation.z = Math.PI / 4;
+  addShadow(rim);
+
+  const faceGeo = new THREE.ExtrudeGeometry(roundedSquareShape(0.92, 0.1), {
+    depth: 0.16,
+    bevelEnabled: true,
+    bevelThickness: 0.02,
+    bevelSize: 0.018,
+    bevelSegments: 2,
+  });
+  faceGeo.translate(0, 0, -0.05);
+  const face = new THREE.Mesh(faceGeo, yellow);
+  face.rotation.z = Math.PI / 4;
+  addShadow(face);
+
+  const icon = new THREE.Group();
+  icon.position.z = 0.12;
+
+  const finGeo = new THREE.ExtrudeGeometry(sharkWarningFinShape(), {
+    depth: 0.07,
+    bevelEnabled: true,
+    bevelThickness: 0.012,
+    bevelSize: 0.01,
+    bevelSegments: 1,
+  });
+  finGeo.translate(0, 0, -0.035);
+  const finMark = new THREE.Mesh(finGeo, ink);
+  finMark.position.set(-0.02, 0.08, 0);
+  icon.add(finMark);
+
+  icon.add(
+    new THREE.Mesh(makeWaveStroke(-0.12, 0.045, 0.2), ink),
+    new THREE.Mesh(makeWaveStroke(-0.22, 0.04, 1.1), ink),
+    new THREE.Mesh(makeWaveStroke(-0.32, 0.035, 0.5), ink)
+  );
+
+  plate.add(rim, face, icon);
+  root.add(footing, post, collar, plate);
   return root;
 }
 

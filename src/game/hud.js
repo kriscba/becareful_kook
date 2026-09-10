@@ -1,11 +1,12 @@
 import { MAX_LIVES, WAVE_SVG } from "./constants.js";
-import { countPhrase, formatDistance, rankPhrase, t, unitLabel } from "../i18n.js";
-import { waveFlag, waveName } from "./waves.js";
+import { countPhrase, formatDistance, rankPhrase, stageGoalLines, stageWonPhrase, t, unitLabel } from "../i18n.js";
+import { waveFlag, waveName, wavePlace } from "./waves.js";
 import goKook from "../assets/go_kook.png";
 import goRock from "../assets/go_rock.png";
 import goShark from "../assets/go_shark.png";
+import goSign from "../assets/go_sign.png";
 
-const GO_ART = { shark: goShark, kook: goKook, rock: goRock };
+const GO_ART = { shark: goShark, kook: goKook, rock: goRock, sign: goSign };
 
 export class HUD {
   constructor() {
@@ -19,7 +20,16 @@ export class HUD {
     this.hud = document.getElementById("hud");
     this.menu = document.getElementById("menu");
     this.gameover = document.getElementById("gameover");
+    this.stageclear = document.getElementById("stageclear");
+    this.scTitle = document.getElementById("sc-title");
+    this.scFlag = document.getElementById("sc-flag");
+    this.scSpot = document.getElementById("sc-spot");
+    this.scOk = document.getElementById("stage-ok");
+    this.scGoals = document.getElementById("sc-goals");
     this.pause = document.getElementById("pause");
+    this.scLevel = null;
+    this.scFinal = false;
+    this.scStats = null;
     this.pauseBtn = document.getElementById("pause-btn");
     this.replayBtn = document.getElementById("replay-btn");
     this.speech = document.getElementById("speech");
@@ -62,12 +72,15 @@ export class HUD {
     document.documentElement.lang = lang;
     if (this.unit) this.unit.textContent = unitLabel(lang);
     this.#setGoCaption();
+    this.#setGoOcean();
     this.#setGoRank();
+    this.#setStageClearCopy();
   }
 
   showMenu() {
     this.menu.classList.remove("hidden");
     this.gameover.classList.add("hidden");
+    this.stageclear?.classList.add("hidden");
     this.pause.classList.add("hidden");
     this.hud.classList.add("hidden");
   }
@@ -75,6 +88,7 @@ export class HUD {
   showPlay() {
     this.menu.classList.add("hidden");
     this.gameover.classList.add("hidden");
+    this.stageclear?.classList.add("hidden");
     this.pause.classList.add("hidden");
     this.hud.classList.remove("hidden");
   }
@@ -87,9 +101,31 @@ export class HUD {
     this.pause.classList.add("hidden");
   }
 
+  showStageClear(level, { final = false, ...stats } = {}) {
+    this.scLevel = level;
+    this.scFinal = final;
+    this.scStats = stats;
+    this.hud.classList.add("hidden");
+    this.pause.classList.add("hidden");
+    this.menu.classList.add("hidden");
+    this.gameover.classList.add("hidden");
+    this.stageclear?.classList.remove("hidden");
+    this.#setStageClearCopy();
+    this.banner?.classList.add("hidden");
+    this.speech?.classList.add("hidden");
+    const trophy = document.getElementById("sc-trophy");
+    if (trophy) {
+      trophy.style.animation = "none";
+      trophy.offsetHeight;
+      trophy.style.animation = "";
+    }
+    this.scOk?.focus();
+  }
+
   showGameOver(stats) {
     this.hud.classList.add("hidden");
     this.pause.classList.add("hidden");
+    this.stageclear?.classList.add("hidden");
     this.gameover.classList.remove("hidden");
     this.goFeet.textContent = formatDistance(this.lang, stats.feet, 0);
     this.goTeeth.textContent = String(stats.teeth);
@@ -109,8 +145,8 @@ export class HUD {
     this.goCause = stats.cause;
     this.goTier = stats.tier || "beginner";
     this.#setGoCaption();
+    this.#setGoOcean();
     this.#setGoRank();
-    if (this.goOcean) this.goOcean.textContent = t(this.lang, "gameOver");
     if (this.goHospital) this.goHospital.textContent = t(this.lang, "hospitalWaits");
   }
 
@@ -181,14 +217,52 @@ export class HUD {
   }
 
   #setGoCaption() {
-    const captions = { shark: "goShark", kook: "goKook", rock: "goRock" };
+    const captions = { shark: "goShark", kook: "goKook", rock: "goRock", sign: "goSign" };
     if (!this.goCaption) return;
     this.goCaption.textContent = t(this.lang, captions[this.goCause] || "goRock");
+  }
+
+  #setGoOcean() {
+    const headlines = {
+      shark: "goOverShark",
+      kook: "goOverKook",
+      rock: "goOverRock",
+      sign: "goOverSign",
+    };
+    if (!this.goOcean) return;
+    this.goOcean.textContent = t(this.lang, headlines[this.goCause] || "goOverRock");
   }
 
   #setGoRank() {
     if (!this.goRank) return;
     this.goRank.textContent = rankPhrase(this.lang, this.goTier);
+  }
+
+  #setStageClearCopy() {
+    if (!this.scTitle || !this.scLevel) return;
+    const place = waveName(this.scLevel.wave, this.lang);
+    this.scTitle.textContent = stageWonPhrase(this.lang, place, this.scFinal);
+    if (this.scFlag) this.scFlag.textContent = waveFlag(this.scLevel.wave);
+    if (this.scSpot) this.scSpot.textContent = wavePlace(this.scLevel.wave, this.lang);
+    this.#renderStageGoals();
+  }
+
+  #renderStageGoals() {
+    if (!this.scGoals) return;
+    const lines = stageGoalLines(this.lang, this.scStats ?? {});
+    this.scGoals.replaceChildren(
+      ...lines.map((text) => {
+        const li = document.createElement("li");
+        const tick = document.createElement("span");
+        tick.className = "sc-tick";
+        tick.textContent = "✓";
+        tick.setAttribute("aria-hidden", "true");
+        const label = document.createElement("span");
+        label.textContent = text;
+        li.append(tick, label);
+        return li;
+      })
+    );
   }
 
   #renderLives(count) {

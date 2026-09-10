@@ -343,21 +343,21 @@ function barrelPoint(t, radius, cx = 1.32, cy = 1.88) {
   const ang = -0.38 * Math.PI + t * 1.38 * Math.PI;
   return {
     x: cx + Math.cos(ang) * radius * 1.12,
-    y: Math.max(0.02, cy + Math.sin(ang) * radius * 0.96),
+    y: cy + Math.sin(ang) * radius * 0.96,
   };
 }
 
-function createBarrelShape(rOut, rIn) {
+function createBarrelShape(rOut, rIn, t0 = 0.3, t1 = 0.98) {
   const shape = new THREE.Shape();
-  const n = 52;
-  const first = barrelPoint(0, rOut);
+  const n = 40;
+  const first = barrelPoint(t0, rOut);
   shape.moveTo(first.x, first.y);
   for (let i = 1; i <= n; i += 1) {
-    const p = barrelPoint(i / n, rOut);
+    const p = barrelPoint(t0 + (t1 - t0) * (i / n), rOut);
     shape.lineTo(p.x, p.y);
   }
   for (let i = n; i >= 0; i -= 1) {
-    const p = barrelPoint(i / n, rIn);
+    const p = barrelPoint(t0 + (t1 - t0) * (i / n), rIn);
     shape.lineTo(p.x, p.y);
   }
   shape.closePath();
@@ -415,10 +415,6 @@ export function createTubeMesh() {
   const depth = 8.4;
   const waterMat = createWaterShader();
 
-  const wall = new THREE.Mesh(new THREE.BoxGeometry(2.2, 3.6, depth * 0.92), waterMat);
-  wall.position.set(2.05, 1.55, 0);
-  wall.rotation.z = -0.42;
-
   const shellGeo = new THREE.ExtrudeGeometry(createBarrelShape(2.55, 1.18), {
     depth,
     bevelEnabled: true,
@@ -433,12 +429,12 @@ export function createTubeMesh() {
   curl.name = "waveBody";
 
   const cave = new THREE.Mesh(
-    new THREE.SphereGeometry(1.35, 18, 14, 0, Math.PI * 2, 0, Math.PI * 0.72),
+    new THREE.SphereGeometry(1.35, 18, 14, 0, Math.PI * 2, 0, Math.PI * 0.5),
     new THREE.MeshLambertMaterial({ color: "#042e28", side: THREE.BackSide })
   );
-  cave.scale.set(1.15, 1.05, 2.6);
-  cave.position.set(0.85, 1.7, 0);
-  cave.rotation.z = -0.2;
+  cave.scale.set(1.2, 0.78, 2.6);
+  cave.position.set(0.7, 2.35, 0);
+  cave.rotation.z = -0.12;
 
   const foam = new THREE.Group();
   foam.name = "foamClaws";
@@ -463,22 +459,7 @@ export function createTubeMesh() {
     foam.add(drop);
   }
 
-  const curtain = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.6, 2.6, 8, 10),
-    new THREE.MeshBasicMaterial({
-      color: "#bfeaf4",
-      transparent: true,
-      opacity: 0.2,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-    })
-  );
-  const thrown = barrelPoint(0.92, 1.85);
-  curtain.position.set(thrown.x + 0.1, thrown.y - 0.55, 0);
-  curtain.rotation.y = 0.62;
-  curtain.rotation.z = -0.5;
-
-  root.add(wall, curl, cave, foam, curtain);
+  root.add(curl, cave, foam);
   return root;
 }
 

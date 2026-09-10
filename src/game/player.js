@@ -39,6 +39,7 @@ export class Player {
     this.cutReady = true;
     this.maneuverEvent = null;
     this.cutLean = 0;
+    this.#faceForward();
   }
 
   reset() {
@@ -62,6 +63,7 @@ export class Player {
     this.cutLean = 0;
     this.mesh.visible = true;
     this.mesh.rotation.set(0, 0, 0);
+    this.#faceForward();
     this.#poseHaka(false);
     this.#sync();
   }
@@ -237,6 +239,7 @@ export class Player {
       board.rotation.x = this.braking ? 0.18 : this.grounded ? carve * 0.12 : -0.35;
     }
     if (rider) {
+      rider.rotation.y = Math.PI;
       rider.rotation.z = -this.vx * 0.03 - carve * 0.35;
       rider.position.y = this.braking ? -0.08 : this.grounded ? 0 : 0.06;
     }
@@ -250,6 +253,11 @@ export class Player {
       if (this.returning > 0) this.#poseCutback(carve);
       else this.#poseAir(!this.grounded);
     }
+  }
+
+  #faceForward() {
+    const rider = this.mesh.getObjectByName("rider");
+    if (rider) rider.rotation.y = Math.PI;
   }
 
   #poseAir(on) {

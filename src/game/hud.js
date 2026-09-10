@@ -217,20 +217,20 @@ export class HUD {
   }
 
   #setGoCaption() {
-    const captions = { shark: "goShark", kook: "goKook", rock: "goRock", sign: "goSign" };
-    if (!this.goCaption) return;
-    this.goCaption.textContent = t(this.lang, captions[this.goCause] || "goRock");
-  }
-
-  #setGoOcean() {
-    const headlines = {
+    const captions = {
       shark: "goOverShark",
       kook: "goOverKook",
       rock: "goOverRock",
       sign: "goOverSign",
     };
+    if (!this.goCaption) return;
+    this.goCaption.textContent = t(this.lang, captions[this.goCause] || "goOverRock");
+  }
+
+  #setGoOcean() {
+    const headlines = { shark: "goShark", kook: "goKook", rock: "goRock", sign: "goSign" };
     if (!this.goOcean) return;
-    this.goOcean.textContent = t(this.lang, headlines[this.goCause] || "goOverRock");
+    this.goOcean.textContent = t(this.lang, headlines[this.goCause] || "goRock");
   }
 
   #setGoRank() {

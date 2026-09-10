@@ -5,15 +5,16 @@ import {
   SPAWN_Z,
   TUBE_APPROACH_Z,
 } from "./constants.js";
-import { createKookMesh, createRockMesh, createSharkMesh, createTubeMesh, waveHeight, waveSlope } from "./models.js";
+import { createKookMesh, createRockMesh, createSharkMesh, createSignMesh, createTubeMesh, waveHeight, waveSlope } from "./models.js";
 
-const BASE_Y = { rock: 0.28, shark: 0, kook: 0, tube: 0 };
+const BASE_Y = { rock: 0.28, shark: 0, kook: 0, tube: 0, sign: 0 };
 
 const FACTORIES = {
   rock: createRockMesh,
   shark: createSharkMesh,
   kook: createKookMesh,
   tube: createTubeMesh,
+  sign: createSignMesh,
 };
 
 const COLLIDERS = {
@@ -21,6 +22,7 @@ const COLLIDERS = {
   shark: { w: 1.15, h: 2.4, d: 2.6, jumpable: false },
   kook: { w: 0.9, h: 1.5, d: 1.8, jumpable: false },
   tube: { w: 2.8, h: 3.2, d: 3.0, jumpable: false },
+  sign: { w: 1.2, h: 1.55, d: 0.55, jumpable: true },
 };
 
 export class ObstacleSpawner {
@@ -103,8 +105,9 @@ export class ObstacleSpawner {
     }
     this.lastWasTube = false;
     const roll = Math.random();
-    if (roll < 0.4) return "rock";
-    if (roll < 0.7) return "shark";
+    if (roll < 0.32) return "rock";
+    if (roll < 0.46) return "sign";
+    if (roll < 0.72) return "shark";
     return "kook";
   }
 
@@ -171,7 +174,7 @@ export class ObstacleSpawner {
     const hitZ = dz < (1.6 + item.size.d) * 0.5;
     if (!hitX || !hitZ) return;
 
-    if (item.type === "rock") {
+    if (item.type === "rock" || item.type === "sign") {
       if (dy > 0.85) return;
       item.hit = true;
       item.resolved = true;
@@ -195,5 +198,7 @@ export class ObstacleSpawner {
     if (item.hit) return;
     if (item.type === "shark") events.onSharkDodge();
     if (item.type === "kook") events.onKookDodge();
+    if (item.type === "rock") events.onRockDodge?.();
+    if (item.type === "sign") events.onSignDodge?.();
   }
 }

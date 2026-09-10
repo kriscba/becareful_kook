@@ -114,7 +114,7 @@
           <p class="eyebrow">SURF ARCADE</p>
           <h1>Becareful kook!!</h1>
           <p class="subtitle" data-i18n="subtitle">
-            Dodge kooks, sharks and rocks. Ride the barrel.
+            Dodge kooks, sharks, rocks and warning signs. Ride the barrel.
           </p>
           <div class="lang-row">
             <span data-i18n="language">Language</span>
@@ -126,7 +126,7 @@
           </div>
           <ul class="howto">
             <li data-i18n="controlsMove">← → or hold and drag to steer</li>
-            <li data-i18n="controlsJump">↑ or swipe up — jump rocks</li>
+            <li data-i18n="controlsJump">↑ or swipe up — jump rocks and signs</li>
             <li data-i18n="controlsBrake">↓ or swipe down and hold — brake for the tube</li>
             <li data-i18n="controlsPause">❚❚ / Esc / Space / Click — pause</li>
           </ul>
@@ -149,12 +149,26 @@
         </div>
       </div>
 
+      <div id="stageclear" class="screen hidden">
+        <div class="panel">
+          <div id="sc-trophy" class="sc-trophy" aria-hidden="true">🏆</div>
+          <h1 id="sc-title">YOU WON THE STAGE</h1>
+          <p id="sc-place" class="sc-place">
+            <span id="sc-flag" class="banner-flag"></span>
+            <span id="sc-spot"></span>
+          </p>
+          <p class="sc-goals-title" data-i18n="stageGoals">Objectives cleared</p>
+          <ul id="sc-goals" class="sc-goals"></ul>
+          <button type="button" id="stage-ok" class="cta" data-i18n="stageOk">OK</button>
+        </div>
+      </div>
+
       <div id="gameover" class="screen hidden">
         <div class="panel">
-          <h1 id="go-caption">You cracked your head</h1>
-          <p id="go-ocean" class="go-ocean" data-i18n="gameOver">OCEAN WINS</p>
-          <p id="go-hospital" class="go-hospital" data-i18n="hospitalWaits">Hospital waits for you...</p>
           <div id="go-art" class="go-art"></div>
+          <h1 id="go-caption">You're hurt</h1>
+          <p id="go-ocean" class="go-ocean">You cracked your head!</p>
+          <p id="go-hospital" class="go-hospital" data-i18n="hospitalWaits">Hospital waits for you...</p>
           <p id="go-rank" class="go-rank">You proved to be a beginner surfer</p>
 
           <div class="summary">

@@ -146,8 +146,9 @@ export class Game {
       e.stopPropagation();
       if (this.mode === "play" || this.mode === "paused") this.start();
     });
-    this.hud.pause.addEventListener("pointerdown", (e) => {
+    this.hud.pause.addEventListener("click", (e) => {
       if (e.target.closest("[data-lang], button, .lang-row")) return;
+      e.stopPropagation();
       if (this.mode === "paused") this.#resume();
     });
     this.canvas.addEventListener("pointerup", (e) => {

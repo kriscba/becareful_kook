@@ -15,8 +15,7 @@ export const STRINGS = {
     pauseBtn: "Pause",
     replayBtn: "Restart",
     lives: "Lives",
-    feet: "ft",
-    meters: "m",
+    feet: "fts",
     teeth: "Shark",
     tubes: "Tubes",
     goTeethOne: "{n} shark",
@@ -27,7 +26,7 @@ export const STRINGS = {
     level: "Level",
     levelUp: "LEVEL",
     extraLife: "+1 Life",
-    bonusLife: "+800 ft",
+    bonusLife: "+800 fts",
     hakaSurf: "🤙🤙🤙",
     gameOver: "YOU'RE HURT",
     goOverRock: "You're hurt",
@@ -48,29 +47,27 @@ export const STRINGS = {
     kookSpeech: "Becareful kook!!",
     tubeRide: "TUBE RIDE",
     barrel: "BARREL",
-    stoke: "STOKE x2",
+    stoke: "STOKE +25%",
     flow: "FLOW",
     braking: "BRAKING",
     distance: "Distance",
-    bonusFeet: "+800 ft",
+    bonusFeet: "+800 fts",
     offTheLip: "OFF THE LIP",
-    lipBoost: "LIP x1.5",
     cutback: "CUTBACK",
-    cutbackBoost: "CUTBACK x1.5",
     stageWon: "YOU WON THE {place} STAGE",
     stageWonFinal: "YOU WON",
     stageOk: "OK",
     stageGoals: "Objectives cleared",
     stageGoalRide: "You covered {n}",
     stageGoalSurvive: "You stayed on the board",
-    stageGoalSharkOne: "You dodged {n} shark",
-    stageGoalSharkMany: "You dodged {n} sharks",
-    stageGoalKookOne: "You dodged {n} kook",
-    stageGoalKookMany: "You dodged {n} kooks",
-    stageGoalRockOne: "You cleared {n} rock",
-    stageGoalRockMany: "You cleared {n} rocks",
-    stageGoalSignOne: "You cleared {n} shark warning",
-    stageGoalSignMany: "You cleared {n} shark warnings",
+    stageGoalSharkOne: "You avoid {n} shark",
+    stageGoalSharkMany: "You avoid {n} sharks",
+    stageGoalKookOne: "You avoid {n} kook",
+    stageGoalKookMany: "You avoid {n} kooks",
+    stageGoalRockOne: "You avoid {n} rock",
+    stageGoalRockMany: "You avoid {n} rocks",
+    stageGoalSignOne: "You avoid {n} shark warning",
+    stageGoalSignMany: "You avoid {n} shark warnings",
     stageGoalTubeOne: "You rode {n} tube",
     stageGoalTubeMany: "You rode {n} tubes",
   },
@@ -87,8 +84,7 @@ export const STRINGS = {
     pauseBtn: "Pausa",
     replayBtn: "Empezar de nuevo",
     lives: "Vidas",
-    feet: "ft",
-    meters: "m",
+    feet: "fts",
     teeth: "Tiburón",
     tubes: "Tubos",
     goTeethOne: "{n} tiburón",
@@ -99,7 +95,7 @@ export const STRINGS = {
     level: "Nivel",
     levelUp: "NIVEL",
     extraLife: "+1 Vida",
-    bonusLife: "+244 m",
+    bonusLife: "+800 fts",
     hakaSurf: "🤙🤙🤙",
     gameOver: "ESTÁS LASTIMADO",
     goOverRock: "Estás lastimado",
@@ -120,15 +116,13 @@ export const STRINGS = {
     goSign: "¡Te has quebrado la clavícula!",
     tubeRide: "TUBAAAAZO",
     barrel: "BARRIL",
-    stoke: "STOKE x2",
+    stoke: "STOKE +25%",
     flow: "FLOW",
     braking: "FRENANDO",
     distance: "Distancia",
-    bonusFeet: "+800 ft",
+    bonusFeet: "+800 fts",
     offTheLip: "OFF THE LIP",
-    lipBoost: "LIP x1.5",
     cutback: "CUTBACK",
-    cutbackBoost: "CUTBACK x1.5",
     stageWon: "GANASTE LA ETAPA DE {place}",
     stageWonFinal: "GANASTE",
     stageOk: "OK",
@@ -139,10 +133,10 @@ export const STRINGS = {
     stageGoalSharkMany: "Esquivaste {n} tiburones",
     stageGoalKookOne: "Esquivaste {n} kook",
     stageGoalKookMany: "Esquivaste {n} kooks",
-    stageGoalRockOne: "Pasaste {n} roca",
-    stageGoalRockMany: "Pasaste {n} rocas",
-    stageGoalSignOne: "Pasaste {n} cartel de tiburón",
-    stageGoalSignMany: "Pasaste {n} carteles de tiburón",
+    stageGoalRockOne: "Esquivaste {n} roca",
+    stageGoalRockMany: "Esquivaste {n} rocas",
+    stageGoalSignOne: "Esquivaste {n} cartel de tiburón",
+    stageGoalSignMany: "Esquivaste {n} carteles de tiburón",
     stageGoalTubeOne: "Te metiste en {n} tubo",
     stageGoalTubeMany: "Te metiste en {n} tubos",
   },
@@ -159,8 +153,7 @@ export const STRINGS = {
     pauseBtn: "Pausa",
     replayBtn: "Recomeçar",
     lives: "Vidas",
-    feet: "ft",
-    meters: "m",
+    feet: "fts",
     teeth: "Tubarões",
     tubes: "Tubos",
     goTeethOne: "{n} tubarão",
@@ -171,7 +164,7 @@ export const STRINGS = {
     level: "Nível",
     levelUp: "NÍVEL",
     extraLife: "+1 Vida",
-    bonusLife: "+244 m",
+    bonusLife: "+800 fts",
     hakaSurf: "🤙🤙🤙",
     gameOver: "VOCÊ ESTÁ MACHUCADO",
     goOverRock: "Você está machucado",
@@ -192,15 +185,13 @@ export const STRINGS = {
     goSign: "Você quebrou a clavícula!",
     tubeRide: "TUBAAAAÇO",
     barrel: "BARRIL",
-    stoke: "STOKE x2",
+    stoke: "STOKE +25%",
     flow: "FLOW",
     braking: "FREANDO",
     distance: "Distância",
-    bonusFeet: "+800 ft",
+    bonusFeet: "+800 fts",
     offTheLip: "OFF THE LIP",
-    lipBoost: "LIP x1.5",
     cutback: "CUTBACK",
-    cutbackBoost: "CUTBACK x1.5",
     stageWon: "VOCÊ GANHOU A ETAPA DE {place}",
     stageWonFinal: "VOCÊ GANHOU",
     stageOk: "OK",
@@ -220,22 +211,43 @@ export const STRINGS = {
   },
 };
 
+export const DEFAULT_LANG = "pt";
+
 export function t(lang, key) {
   return STRINGS[lang]?.[key] ?? STRINGS.en[key] ?? key;
 }
 
+function normalizeLang(value) {
+  const code = String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .split(/[-_]/)[0];
+  return LANGS.includes(code) ? code : null;
+}
+
+export function langFromQuery(search = typeof window !== "undefined" ? window.location.search : "") {
+  try {
+    const params = new URLSearchParams(search);
+    return normalizeLang(params.get("lang") || params.get("language"));
+  } catch {
+    return null;
+  }
+}
+
 export function loadLang() {
+  const fromQuery = langFromQuery();
+  if (fromQuery) return fromQuery;
   try {
     const saved = localStorage.getItem(LANG_KEY);
     if (LANGS.includes(saved)) return saved;
   } catch {
     /* ignore quota / private mode */
   }
-  return "en";
+  return DEFAULT_LANG;
 }
 
 export function saveLang(lang) {
-  const next = LANGS.includes(lang) ? lang : "en";
+  const next = normalizeLang(lang) ?? DEFAULT_LANG;
   try {
     localStorage.setItem(LANG_KEY, next);
   } catch {
@@ -269,34 +281,42 @@ export function stageWonPhrase(lang, place, final = false) {
 export function stageGoalLines(lang, stats = {}) {
   const goalDistance = Math.max(0, stats.goalDistance ?? 0);
   const lines = [
-    t(lang, "stageGoalSurvive"),
-    t(lang, "stageGoalRide").replaceAll("{n}", formatDistance(lang, goalDistance, 0)),
+    { icon: "survive", text: t(lang, "stageGoalSurvive") },
+    { icon: "board", text: t(lang, "stageGoalRide").replaceAll("{n}", formatDistance(lang, goalDistance, 0)) },
   ];
   const rocks = stats.rocks ?? 0;
   const signs = stats.signs ?? 0;
   const teeth = stats.teeth ?? 0;
   const kooks = stats.kooks ?? 0;
   const tubes = stats.tubes ?? 0;
-  if (rocks > 0) lines.push(countPhrase(lang, rocks, "stageGoalRockOne", "stageGoalRockMany"));
-  if (signs > 0) lines.push(countPhrase(lang, signs, "stageGoalSignOne", "stageGoalSignMany"));
-  if (teeth > 0) lines.push(countPhrase(lang, teeth, "stageGoalSharkOne", "stageGoalSharkMany"));
-  if (kooks > 0) lines.push(countPhrase(lang, kooks, "stageGoalKookOne", "stageGoalKookMany"));
-  if (tubes > 0) lines.push(countPhrase(lang, tubes, "stageGoalTubeOne", "stageGoalTubeMany"));
+  if (tubes > 0) {
+    lines.push({ icon: "tube", text: countPhrase(lang, tubes, "stageGoalTubeOne", "stageGoalTubeMany") });
+  }
+  if (teeth > 0) {
+    lines.push({ icon: "tooth", text: countPhrase(lang, teeth, "stageGoalSharkOne", "stageGoalSharkMany") });
+  }
+  if (kooks > 0) {
+    lines.push({ icon: "kook", text: countPhrase(lang, kooks, "stageGoalKookOne", "stageGoalKookMany") });
+  }
+  if (rocks > 0) {
+    lines.push({ icon: "rock", text: countPhrase(lang, rocks, "stageGoalRockOne", "stageGoalRockMany") });
+  }
+  if (signs > 0) {
+    lines.push({ icon: "sign", text: countPhrase(lang, signs, "stageGoalSignOne", "stageGoalSignMany") });
+  }
   return lines;
 }
 
-export function isMetric(lang) {
-  return lang === "es" || lang === "pt";
+export const DISTANCE_UNIT = "fts";
+
+export function unitLabel() {
+  return DISTANCE_UNIT;
 }
 
-export function unitLabel(lang) {
-  return isMetric(lang) ? "m" : "ft";
-}
-
-export function toDisplayDistance(lang, feet) {
-  return isMetric(lang) ? feet * 0.3048 : feet;
+export function toDisplayDistance(_lang, feet) {
+  return feet;
 }
 
 export function formatDistance(lang, feet, digits = 0) {
-  return `${toDisplayDistance(lang, feet).toFixed(digits)} ${unitLabel(lang)}`;
+  return `${toDisplayDistance(lang, feet).toFixed(digits)} ${unitLabel()}`;
 }

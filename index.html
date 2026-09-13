@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -28,7 +28,12 @@
       <div id="hud" class="overlay hidden">
         <div class="hud-top">
           <div class="hud-lives">
-            <span class="hud-label" data-i18n="lives">Lives</span>
+            <div class="hud-spot" aria-live="polite">
+              <span id="level-num">1</span>
+              <span id="level-flag" class="hud-spot-flag" aria-hidden="true">🇺🇸</span>
+              <span id="level-name">Waikiki Beach</span>
+            </div>
+            <span class="hud-label" data-i18n="lives">Vidas</span>
             <div id="lives" class="lives"></div>
           </div>
           <div class="hud-actions">
@@ -37,7 +42,7 @@
               id="pause-btn"
               class="hud-btn"
               data-i18n-aria="pauseBtn"
-              aria-label="Pause"
+              aria-label="Pausa"
             >
               <span class="pause-icon" aria-hidden="true"></span>
             </button>
@@ -46,7 +51,7 @@
               id="replay-btn"
               class="hud-btn"
               data-i18n-aria="replayBtn"
-              aria-label="Restart"
+              aria-label="Recomeçar"
             >
               <svg class="replay-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -73,7 +78,7 @@
               <span class="stat-icon" data-stat-icon="board"></span>
               <div class="stat-copy">
                 <span id="feet">0</span>
-                <small id="unit">ft</small>
+                <small id="unit">fts</small>
               </div>
             </div>
             <div class="stat">
@@ -86,13 +91,6 @@
               <span class="stat-icon" data-stat-icon="tube"></span>
               <div class="stat-copy">
                 <span id="tubes">0</span>
-              </div>
-            </div>
-            <div class="stat">
-              <span class="stat-icon" data-stat-icon="wave"></span>
-              <div class="stat-copy">
-                <span id="level-num">1</span>
-                <small id="level-name">Waikiki Beach</small>
               </div>
             </div>
           </div>
@@ -114,36 +112,36 @@
           <p class="eyebrow">SURF ARCADE</p>
           <h1>Becareful kook!!</h1>
           <p class="subtitle" data-i18n="subtitle">
-            Dodge kooks, sharks, rocks and warning signs. Ride the barrel.
+            Desvie de haoles, tubarões, pedras e placas. Entre no tubo.
           </p>
           <div class="lang-row">
-            <span data-i18n="language">Language</span>
+            <span data-i18n="language">Idioma</span>
             <div class="lang-btns">
-              <button type="button" data-lang="en" class="lang on">EN</button>
+              <button type="button" data-lang="en" class="lang">EN</button>
               <button type="button" data-lang="es" class="lang">ES</button>
-              <button type="button" data-lang="pt" class="lang">PT</button>
+              <button type="button" data-lang="pt" class="lang on">PT</button>
             </div>
           </div>
           <ul class="howto">
-            <li data-i18n="controlsMove">← → or hold and drag to steer</li>
-            <li data-i18n="controlsJump">↑ or swipe up — jump rocks and signs</li>
-            <li data-i18n="controlsBrake">↓ or swipe down and hold — brake for the tube</li>
-            <li data-i18n="controlsPause">❚❚ / Esc / Space / Click — pause</li>
+            <li data-i18n="controlsMove">← → ou segure e arraste para surfar</li>
+            <li data-i18n="controlsJump">↑ ou deslize para cima — pular as pedras e as placas</li>
+            <li data-i18n="controlsBrake">↓ ou deslize para baixo e segure — freie para o tubo</li>
+            <li data-i18n="controlsPause">❚❚ / Esc / Espaço / Clique — pausa</li>
           </ul>
-          <button type="button" id="play" class="cta" data-i18n="play">DROP IN</button>
+          <button type="button" id="play" class="cta" data-i18n="play">BORA SURFAR!</button>
         </div>
       </div>
 
       <div id="pause" class="screen hidden">
         <div class="panel">
-          <h1 data-i18n="paused">PAUSED</h1>
-          <p class="subtitle" data-i18n="clickResume">Tap to keep riding</p>
+          <h1 data-i18n="paused">PAUSA</h1>
+          <p class="subtitle" data-i18n="clickResume">Toque para continuar</p>
           <div class="lang-row">
-            <span data-i18n="language">Language</span>
+            <span data-i18n="language">Idioma</span>
             <div class="lang-btns">
-              <button type="button" data-lang="en" class="lang on">EN</button>
+              <button type="button" data-lang="en" class="lang">EN</button>
               <button type="button" data-lang="es" class="lang">ES</button>
-              <button type="button" data-lang="pt" class="lang">PT</button>
+              <button type="button" data-lang="pt" class="lang on">PT</button>
             </div>
           </div>
         </div>
@@ -157,7 +155,7 @@
             <span id="sc-flag" class="banner-flag"></span>
             <span id="sc-spot"></span>
           </p>
-          <p class="sc-goals-title" data-i18n="stageGoals">Objectives cleared</p>
+          <p class="sc-goals-title" data-i18n="stageGoals">Objetivos cumpridos</p>
           <ul id="sc-goals" class="sc-goals"></ul>
           <button type="button" id="stage-ok" class="cta" data-i18n="stageOk">OK</button>
         </div>
@@ -168,27 +166,27 @@
           <div id="go-art" class="go-art"></div>
           <h1 id="go-caption">You're hurt</h1>
           <p id="go-ocean" class="go-ocean">You cracked your head!</p>
-          <p id="go-hospital" class="go-hospital" data-i18n="hospitalWaits">Hospital waits for you...</p>
+          <p id="go-hospital" class="go-hospital" data-i18n="hospitalWaits">O hospital espera por você...</p>
           <p id="go-rank" class="go-rank">You proved to be a beginner surfer</p>
 
           <div class="summary">
             <div>
               <span class="stat-icon" data-stat-icon="board"></span>
               <strong id="go-feet">0</strong>
-              <span data-i18n="distance">Distance</span>
+              <span data-i18n="distance">Distância</span>
             </div>
             <div>
               <span class="stat-icon" data-stat-icon="tooth"></span>
               <strong id="go-teeth">0</strong>
-              <span data-i18n="teeth">Shark</span>
+              <span data-i18n="teeth">Tubarões</span>
             </div>
             <div>
               <span class="stat-icon" data-stat-icon="tube"></span>
               <strong id="go-tubes">0</strong>
-              <span data-i18n="tubes">Tubes</span>
+              <span data-i18n="tubes">Tubos</span>
             </div>
           </div>
-          <button type="button" id="restart" class="cta" data-i18n="restart">PADDLE BACK</button>
+          <button type="button" id="restart" class="cta" data-i18n="restart">SURFEAR DE NOVO</button>
         </div>
       </div>
     </div>

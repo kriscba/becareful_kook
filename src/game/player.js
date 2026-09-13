@@ -2,7 +2,6 @@ import * as THREE from "three";
 import {
   GRAVITY,
   JUMP_VELOCITY,
-  LIP_BOOST_SECONDS,
   MAX_MOVE,
   MAX_X,
   MIN_X,
@@ -31,9 +30,6 @@ export class Player {
     this.haka = 0;
     this.spin = 0;
     this.spinVel = 0;
-    this.lipBoost = 0;
-    this.boostKind = null;
-    this.pendingBoost = null;
     this.returning = 0;
     this.lipReady = true;
     this.cutReady = true;
@@ -53,9 +49,6 @@ export class Player {
     this.haka = 0;
     this.spin = 0;
     this.spinVel = 0;
-    this.lipBoost = 0;
-    this.boostKind = null;
-    this.pendingBoost = null;
     this.returning = 0;
     this.lipReady = true;
     this.cutReady = true;
@@ -76,8 +69,6 @@ export class Player {
 
   update(dt, input, time) {
     this.braking = input.down && this.returning === 0;
-    if (this.lipBoost > 0) this.lipBoost = Math.max(0, this.lipBoost - dt);
-    else this.boostKind = null;
 
     if (this.x < MAX_X * 0.35) this.lipReady = true;
     if (this.x > MIN_X * 0.35) this.cutReady = true;
@@ -160,7 +151,6 @@ export class Player {
     this.blink = 0;
     this.vx += this.x > 0 ? -4 : 4;
     this.returning = 0;
-    this.pendingBoost = null;
     this.cutLean = 0;
   }
 
@@ -181,25 +171,16 @@ export class Player {
     this.spinVel = (Math.PI * 2) / Math.max(0.35, air);
   }
 
-  #grantBoost(kind) {
-    this.lipBoost = LIP_BOOST_SECONDS;
-    this.boostKind = kind;
-  }
-
   #finishReturn() {
     this.x = 0;
     this.vx = 0;
     this.returning = 0;
     this.cutLean = 0;
-    if (!this.pendingBoost) return;
-    this.#grantBoost(this.pendingBoost);
-    this.pendingBoost = null;
   }
 
   #launchLip() {
     this.lipReady = false;
     this.returning = -1;
-    this.pendingBoost = "lip";
     this.maneuverEvent = "lip";
     this.#jump(JUMP_VELOCITY * 1.18);
     this.vx = -MAX_MOVE;
@@ -208,7 +189,6 @@ export class Player {
   #launchCutback() {
     this.cutReady = false;
     this.returning = 1;
-    this.pendingBoost = "cutback";
     this.maneuverEvent = "cutback";
     this.vx = MAX_MOVE;
   }

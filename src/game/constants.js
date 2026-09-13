@@ -9,7 +9,6 @@ export const MAX_X = 5.2;
 
 export const BASE_SCROLL_SPEED = 42.24 * 1.2;
 export const BRAKE_FACTOR = 0.4;
-export const LIFE_BOOST = [0, 0.72, 0.86, 1, 1.2, 1.4];
 
 export const JUMP_VELOCITY = 9.2;
 export const GRAVITY = 24;
@@ -20,8 +19,6 @@ export const TOUCH_MAX_MOVE_SCALE = 1.22;
 export const TOUCH_STEER_DAMP = 16;
 export const MOBILE_SPAWN_GAP = 1.55;
 export const MOBILE_PACK_CHANCE = 0.05;
-export const LIP_BOOST_SECONDS = 5;
-export const LIP_BOOST_MUL = 1.5;
 
 export const SPAWN_Z = -78;
 export const DESPAWN_Z = 16;

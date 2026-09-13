@@ -8,8 +8,6 @@ import {
   HAKA_SECONDS,
   INVULN_SECONDS,
   LEVELS,
-  LIFE_BOOST,
-  LIP_BOOST_MUL,
   MAX_LIVES,
   START_LIVES,
   STOKE_SECONDS,
@@ -240,12 +238,10 @@ export class Game {
   }
 
   #scrollSpeed() {
-    const lifeBoost = LIFE_BOOST[this.lives] ?? 1;
     const levelBoost = this.level?.speed ?? 1;
     const brake = this.player.braking ? BRAKE_FACTOR : 1;
-    const lip = this.player.lipBoost > 0 ? LIP_BOOST_MUL : 1;
     const stoke = this.stoke > 0 ? STOKE_SPEED_MUL : 1;
-    return BASE_SCROLL_SPEED * lifeBoost * levelBoost * brake * lip * stoke;
+    return BASE_SCROLL_SPEED * levelBoost * brake * stoke;
   }
 
   #pause() {
@@ -418,8 +414,6 @@ export class Game {
       braking: this.mode === "play" && this.player.braking,
       stoke: this.stoke ?? 0,
       flow: this.flow ?? 0,
-      lipBoost: this.player?.lipBoost ?? 0,
-      boostKind: this.player?.boostKind,
     };
   }
 

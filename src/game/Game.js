@@ -19,7 +19,7 @@ import {
   stageGoal,
 } from "./constants.js";
 import { loadLang, saveLang, t, toDisplayDistance } from "../i18n.js";
-import { waveDescription, waveName } from "./waves.js";
+import { waveDescription, waveFlag, waveName } from "./waves.js";
 import { HUD } from "./hud.js";
 import { Input } from "./input.js";
 import { ObstacleSpawner } from "./obstacles.js";
@@ -54,6 +54,7 @@ export class Game {
     this.level = LEVELS[0];
     this.#resetStageTally();
     this.pendingLife = 0;
+    this.lifeBlink = -1;
     this.deathCause = "rock";
     this._portrait = false;
     this.#resize();
@@ -89,6 +90,7 @@ export class Game {
     this.travel = 0;
     this.level = LEVELS[0];
     this.pendingLife = 0;
+    this.lifeBlink = -1;
     this.deathCause = "rock";
     this._levelOneBanner = false;
     this.#resetStageTally();
@@ -202,6 +204,10 @@ export class Game {
         this.#grantTubeLife();
       }
     }
+    if (this.lifeBlink >= 0) {
+      this.lifeBlink += rawDt;
+      if (this.lifeBlink >= INVULN_SECONDS) this.lifeBlink = -1;
+    }
     if (this.mode !== "play") return;
 
     const dt = rawDt * this.timeScale;
@@ -306,6 +312,7 @@ export class Game {
   #grantTubeLife() {
     if (this.lives < MAX_LIVES) {
       this.lives += 1;
+      this.lifeBlink = 0;
       this.#speechAtPlayer(t(this.lang, "extraLife"), 1200, WAVE_SVG);
     } else {
       this.feet += TUBE_BONUS_FEET;
@@ -348,6 +355,7 @@ export class Game {
     this.flow = 0;
     this.timeScale = 1;
     this.pendingLife = 0;
+    this.lifeBlink = -1;
     this.travel = 0;
     this._levelOneBanner = true;
     this.#resetStageTally();
@@ -404,11 +412,13 @@ export class Game {
   #hudState() {
     return {
       lives: this.lives ?? START_LIVES,
+      lifeBlink: this.lifeBlink ?? -1,
       feet: this.feet ?? 0,
       displayDistance: toDisplayDistance(this.lang, this.feet ?? 0),
       teeth: this.teeth ?? 0,
       tubes: this.tubes ?? 0,
       levelId: this.level?.id ?? 1,
+      levelFlag: waveFlag(this.level?.wave),
       levelName: waveName(this.level?.wave, this.lang),
       levelDesc: waveDescription(this.level?.wave, this.lang),
       braking: this.mode === "play" && this.player.braking,

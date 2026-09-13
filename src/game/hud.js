@@ -1,4 +1,4 @@
-import { MAX_LIVES, WAVE_SVG } from "./constants.js";
+import { INVULN_SECONDS, MAX_LIVES, WAVE_SVG } from "./constants.js";
 import { countPhrase, formatDistance, rankPhrase, stageGoalLines, stageWonPhrase, t, unitLabel } from "../i18n.js";
 import { waveFlag, waveName, wavePlace } from "./waves.js";
 import goKook from "../assets/go_kook.png";
@@ -8,6 +8,16 @@ import goSign from "../assets/go_sign.png";
 
 const GO_ART = { shark: goShark, kook: goKook, rock: goRock, sign: goSign };
 
+export const STAT_ICONS = {
+  board: "📏",
+  tooth: "🦈",
+  tube: "🌊",
+  kook: "🏄",
+  rock: "🪨",
+  sign: "⚠️",
+  survive: "🤙",
+};
+
 export class HUD {
   constructor() {
     this.lives = document.getElementById("lives");
@@ -15,6 +25,7 @@ export class HUD {
     this.unit = document.getElementById("unit");
     this.teeth = document.getElementById("teeth");
     this.tubes = document.getElementById("tubes");
+    this.levelFlag = document.getElementById("level-flag");
     this.levelNum = document.getElementById("level-num");
     this.levelName = document.getElementById("level-name");
     this.hud = document.getElementById("hud");
@@ -52,9 +63,8 @@ export class HUD {
     this.goTeethMsg = document.getElementById("go-teeth-msg");
     this.goTubesMsg = document.getElementById("go-tubes-msg");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
-    const icons = { board: "📏", tooth: "🦈", tube: "🌊", wave: WAVE_SVG };
     document.querySelectorAll("[data-stat-icon]").forEach((el) => {
-      el.innerHTML = icons[el.dataset.statIcon] || "";
+      el.innerHTML = STAT_ICONS[el.dataset.statIcon] || "";
     });
   }
 
@@ -70,7 +80,7 @@ export class HUD {
     });
     this.lang = lang;
     document.documentElement.lang = lang;
-    if (this.unit) this.unit.textContent = unitLabel(lang);
+    if (this.unit) this.unit.textContent = unitLabel();
     this.#setGoCaption();
     this.#setGoOcean();
     this.#setGoRank();
@@ -152,12 +162,17 @@ export class HUD {
 
   update(state) {
     this.feet.textContent = String(Math.floor(state.displayDistance));
-    this.unit.textContent = unitLabel(this.lang);
+    this.unit.textContent = unitLabel();
     this.teeth.textContent = String(state.teeth);
     if (this.tubes) this.tubes.textContent = String(state.tubes ?? 0);
+    if (this.levelFlag) this.levelFlag.textContent = state.levelFlag || "";
     this.levelNum.textContent = String(state.levelId);
     this.levelName.textContent = state.levelName ?? "";
-    this.#renderLives(state.lives);
+    const spot = this.levelFlag?.parentElement;
+    if (spot) {
+      spot.setAttribute("aria-label", `${state.levelId} ${state.levelName ?? ""}`.trim());
+    }
+    this.#renderLives(state.lives, state.lifeBlink);
     this.brake.classList.toggle("hidden", !state.braking);
     this.brake.textContent = t(this.lang, "braking");
     this.#buffs(state);
@@ -251,25 +266,53 @@ export class HUD {
     if (!this.scGoals) return;
     const lines = stageGoalLines(this.lang, this.scStats ?? {});
     this.scGoals.replaceChildren(
-      ...lines.map((text) => {
+      ...lines.map((item) => {
+        const text = typeof item === "string" ? item : item.text;
+        const iconKey = typeof item === "string" ? "" : item.icon;
         const li = document.createElement("li");
         const tick = document.createElement("span");
         tick.className = "sc-tick";
         tick.textContent = "✓";
         tick.setAttribute("aria-hidden", "true");
+        // li.append(tick);
+        const iconHtml = STAT_ICONS[iconKey];
+        if (iconHtml) {
+          const icon = document.createElement("span");
+          icon.className = "sc-goal-icon";
+          icon.setAttribute("aria-hidden", "true");
+          icon.innerHTML = iconHtml;
+          li.append(icon);
+        }
         const label = document.createElement("span");
         label.textContent = text;
-        li.append(tick, label);
+        li.append(label);
         return li;
       })
     );
   }
 
-  #renderLives(count) {
-    this.lives.innerHTML = Array.from({ length: MAX_LIVES }, (_, i) => {
-      const on = i < count ? "on" : "";
-      return `<span class="wave-life ${on}">${WAVE_SVG}</span>`;
-    }).join("");
+  #renderLives(count, blinkElapsed = -1) {
+    const n = Math.max(0, Math.min(MAX_LIVES, count | 0));
+    if (this.lives.childElementCount !== MAX_LIVES) {
+      this.lives.replaceChildren(
+        ...Array.from({ length: MAX_LIVES }, () => {
+          const span = document.createElement("span");
+          span.className = "wave-life";
+          span.innerHTML = WAVE_SVG;
+          return span;
+        })
+      );
+    }
+    const blinking = blinkElapsed >= 0 && blinkElapsed < INVULN_SECONDS;
+    const visible = blinking ? Math.floor(blinkElapsed * 12) % 2 === 0 : true;
+    [...this.lives.children].forEach((el, i) => {
+      const on = i < n;
+      const isGained = blinking && on && i === n - 1;
+      el.classList.toggle("on", on);
+      el.classList.toggle("blink", isGained);
+      if (isGained) el.style.opacity = visible ? "1" : "0";
+      else el.style.opacity = "";
+    });
   }
 
   #buffs(state) {

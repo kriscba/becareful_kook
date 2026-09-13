@@ -3,15 +3,12 @@ import { WAVES } from "./waves.js";
 export const START_LIVES = 1;
 export const MAX_LIVES = 5;
 export const CYCLE_SECONDS = 5 * 60;
-export const SPEED_STEP_SECONDS = 10;
 
 export const MIN_X = -5.2;
 export const MAX_X = 5.2;
 
-export const MIN_TIME_SPEED = 42.24;
-export const MAX_TIME_SPEED = 76.8;
+export const BASE_SCROLL_SPEED = 42.24 * 1.2;
 export const BRAKE_FACTOR = 0.4;
-export const LIFE_BOOST = [0, 0.72, 0.86, 1, 1.2, 1.4];
 
 export const JUMP_VELOCITY = 9.2;
 export const GRAVITY = 24;
@@ -22,8 +19,6 @@ export const TOUCH_MAX_MOVE_SCALE = 1.22;
 export const TOUCH_STEER_DAMP = 16;
 export const MOBILE_SPAWN_GAP = 1.55;
 export const MOBILE_PACK_CHANCE = 0.05;
-export const LIP_BOOST_SECONDS = 5;
-export const LIP_BOOST_MUL = 1.5;
 
 export const SPAWN_Z = -78;
 export const DESPAWN_Z = 16;
@@ -31,7 +26,8 @@ export const TUBE_APPROACH_Z = -42;
 export const FEET_PER_UNIT = 2.4;
 export const FT_TO_M = 0.3048;
 export const INVULN_SECONDS = 1.15;
-export const STOKE_SECONDS = 8;
+export const STOKE_SECONDS = 5;
+export const STOKE_SPEED_MUL = 1.25;
 export const FLOW_SECONDS = 1.15;
 export const FLOW_SCALE = 0.42;
 export const TUBE_BONUS_FEET = 800;
@@ -42,7 +38,6 @@ const LEVEL_AT_FEET_BASE = [
   27200, 30600, 34200, 38000, 42000, 46200, 50600,
 ];
 const LEVEL_AT_FEET = LEVEL_AT_FEET_BASE.map((ft, i) => (i === 0 ? 0 : Math.round(ft * 1.2 * 4)));
-const LEVEL_SPEED_1_TO_5 = [1, 1.14, 1.28, 1.44, 1.62];
 const LEVEL_SPAWN_1_TO_5 = [1, 0.9, 0.8, 0.7, 0.6];
 const LAST_STAGE_DELTA =
   LEVEL_AT_FEET.length > 1
@@ -52,7 +47,7 @@ const LAST_STAGE_DELTA =
 export const LEVELS = LEVEL_AT_FEET.map((atFeet, i) => {
   const wave = WAVES[i];
   const id = wave.id;
-  const speed = id <= 5 ? LEVEL_SPEED_1_TO_5[i] : +(1.62 + (id - 5) * 0.06).toFixed(2);
+  const speed = Math.min(1.4, +(1 + Math.floor(id / 5) * 0.1).toFixed(2));
   const spawn = id <= 5 ? LEVEL_SPAWN_1_TO_5[i] : +Math.max(0.3, 0.6 - (id - 5) * 0.02).toFixed(2);
   const goalFeet = LEVEL_AT_FEET[i + 1] ?? atFeet + LAST_STAGE_DELTA;
   return { id, atFeet, goalFeet, speed, spawn, wave };

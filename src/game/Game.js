@@ -1,21 +1,17 @@
 import * as THREE from "three";
 import {
+  BASE_SCROLL_SPEED,
   BRAKE_FACTOR,
-  CYCLE_SECONDS,
   FEET_PER_UNIT,
   FLOW_SCALE,
   FLOW_SECONDS,
   HAKA_SECONDS,
   INVULN_SECONDS,
   LEVELS,
-  LIFE_BOOST,
-  LIP_BOOST_MUL,
   MAX_LIVES,
-  MAX_TIME_SPEED,
-  MIN_TIME_SPEED,
   START_LIVES,
-  SPEED_STEP_SECONDS,
   STOKE_SECONDS,
+  STOKE_SPEED_MUL,
   TUBE_BONUS_FEET,
   WAVE_SVG,
   MOBILE_SPAWN_GAP,
@@ -23,7 +19,7 @@ import {
   stageGoal,
 } from "./constants.js";
 import { loadLang, saveLang, t, toDisplayDistance } from "../i18n.js";
-import { waveDescription, waveName } from "./waves.js";
+import { waveDescription, waveFlag, waveName } from "./waves.js";
 import { HUD } from "./hud.js";
 import { Input } from "./input.js";
 import { ObstacleSpawner } from "./obstacles.js";
@@ -58,6 +54,7 @@ export class Game {
     this.level = LEVELS[0];
     this.#resetStageTally();
     this.pendingLife = 0;
+    this.lifeBlink = -1;
     this.deathCause = "rock";
     this._portrait = false;
     this.#resize();
@@ -93,6 +90,7 @@ export class Game {
     this.travel = 0;
     this.level = LEVELS[0];
     this.pendingLife = 0;
+    this.lifeBlink = -1;
     this.deathCause = "rock";
     this._levelOneBanner = false;
     this.#resetStageTally();
@@ -206,16 +204,18 @@ export class Game {
         this.#grantTubeLife();
       }
     }
+    if (this.lifeBlink >= 0) {
+      this.lifeBlink += rawDt;
+      if (this.lifeBlink >= INVULN_SECONDS) this.lifeBlink = -1;
+    }
     if (this.mode !== "play") return;
 
     const dt = rawDt * this.timeScale;
     this.input.beginFrame();
     this.cycleElapsed += rawDt;
-    if (this.cycleElapsed >= CYCLE_SECONDS) this.cycleElapsed = 0;
 
     const scroll = this.#scrollSpeed();
-    const stokeMul = this.stoke > 0 ? 2 : 1;
-    this.feet += scroll * dt * FEET_PER_UNIT * stokeMul;
+    this.feet += scroll * dt * FEET_PER_UNIT;
     this.travel += scroll * dt;
     this.#checkLevel();
     if (this.mode !== "play") return;
@@ -244,15 +244,10 @@ export class Game {
   }
 
   #scrollSpeed() {
-    const steps = Math.floor(this.cycleElapsed / SPEED_STEP_SECONDS);
-    const maxSteps = Math.max(1, Math.floor(CYCLE_SECONDS / SPEED_STEP_SECONDS));
-    const tCycle = Math.min(steps, maxSteps) / maxSteps;
-    const timeSpeed = MIN_TIME_SPEED + (MAX_TIME_SPEED - MIN_TIME_SPEED) * tCycle;
-    const lifeBoost = LIFE_BOOST[this.lives] ?? 1;
     const levelBoost = this.level?.speed ?? 1;
     const brake = this.player.braking ? BRAKE_FACTOR : 1;
-    const lip = this.player.lipBoost > 0 ? LIP_BOOST_MUL : 1;
-    return timeSpeed * lifeBoost * levelBoost * brake * lip;
+    const stoke = this.stoke > 0 ? STOKE_SPEED_MUL : 1;
+    return BASE_SCROLL_SPEED * levelBoost * brake * stoke;
   }
 
   #pause() {
@@ -317,6 +312,7 @@ export class Game {
   #grantTubeLife() {
     if (this.lives < MAX_LIVES) {
       this.lives += 1;
+      this.lifeBlink = 0;
       this.#speechAtPlayer(t(this.lang, "extraLife"), 1200, WAVE_SVG);
     } else {
       this.feet += TUBE_BONUS_FEET;
@@ -359,6 +355,7 @@ export class Game {
     this.flow = 0;
     this.timeScale = 1;
     this.pendingLife = 0;
+    this.lifeBlink = -1;
     this.travel = 0;
     this._levelOneBanner = true;
     this.#resetStageTally();
@@ -415,18 +412,18 @@ export class Game {
   #hudState() {
     return {
       lives: this.lives ?? START_LIVES,
+      lifeBlink: this.lifeBlink ?? -1,
       feet: this.feet ?? 0,
       displayDistance: toDisplayDistance(this.lang, this.feet ?? 0),
       teeth: this.teeth ?? 0,
       tubes: this.tubes ?? 0,
       levelId: this.level?.id ?? 1,
+      levelFlag: waveFlag(this.level?.wave),
       levelName: waveName(this.level?.wave, this.lang),
       levelDesc: waveDescription(this.level?.wave, this.lang),
       braking: this.mode === "play" && this.player.braking,
       stoke: this.stoke ?? 0,
       flow: this.flow ?? 0,
-      lipBoost: this.player?.lipBoost ?? 0,
-      boostKind: this.player?.boostKind,
     };
   }
 

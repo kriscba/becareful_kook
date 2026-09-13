@@ -176,20 +176,46 @@ export function createRockMesh() {
   return root;
 }
 
-function addSharkToothArc(parent, mat, opts) {
-  const { count, y, z, radius, baseH, rotX, spread, tilt = 0.4 } = opts;
+function roundedRectShape(w, h, corner) {
+  const s = new THREE.Shape();
+  const hw = w / 2;
+  const hh = h / 2;
+  const r = Math.min(corner, hw * 0.48, hh * 0.48);
+  s.moveTo(-hw + r, -hh);
+  s.lineTo(hw - r, -hh);
+  s.quadraticCurveTo(hw, -hh, hw, -hh + r);
+  s.lineTo(hw, hh - r);
+  s.quadraticCurveTo(hw, hh, hw - r, hh);
+  s.lineTo(-hw + r, hh);
+  s.quadraticCurveTo(-hw, hh, -hw, hh - r);
+  s.lineTo(-hw, -hh + r);
+  s.quadraticCurveTo(-hw, -hh, -hw + r, -hh);
+  s.closePath();
+  return s;
+}
+
+function makeBluntMuzzle(w, h, depth, mat) {
+  const geo = new THREE.ExtrudeGeometry(roundedRectShape(w, h, Math.min(w, h) * 0.12), {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: 0.04,
+    bevelSize: 0.035,
+    bevelSegments: 2,
+  });
+  geo.translate(0, 0, -depth / 2);
+  geo.computeVertexNormals();
+  return new THREE.Mesh(geo, mat);
+}
+
+function addSharkToothRow(parent, mat, opts) {
+  const { count, y, z, width, baseH, rotX } = opts;
   for (let i = 0; i < count; i += 1) {
-    const t = count === 1 ? 0 : (i / (count - 1)) * 2 - 1;
-    const ang = t * spread;
-    const h = baseH * (1.14 - Math.abs(t) * 0.42);
-    const r = 0.034 + (1 - Math.abs(t)) * 0.028;
-    const tooth = new THREE.Mesh(new THREE.ConeGeometry(r, h, 3), mat);
-    tooth.position.set(
-      Math.sin(ang) * radius,
-      y,
-      z + (1 - Math.cos(ang)) * radius * 0.4
-    );
-    tooth.rotation.set(rotX, ang * 0.12, -ang * tilt);
+    const t = count === 1 ? 0.5 : i / (count - 1);
+    const x = (t - 0.5) * width;
+    const h = baseH * (1.08 - Math.abs(t - 0.5) * 0.4);
+    const tooth = new THREE.Mesh(new THREE.ConeGeometry(0.048, h, 3), mat);
+    tooth.position.set(x, y, z);
+    tooth.rotation.x = rotX;
     parent.add(tooth);
   }
 }
@@ -200,7 +226,6 @@ export function createSharkMesh() {
   const dorsal = toon("#6d7f8c");
   const dorsalDark = toon("#556671");
   const belly = toon("#f3eee4");
-  const gum = toon("#c94a58");
   const caveMat = toon("#2a0d12");
   const tongueMat = toon("#ff5d7a");
   const toothMat = toon("#fff6e8");
@@ -214,21 +239,12 @@ export function createSharkMesh() {
   bellyMesh.scale.set(0.8, 0.48, 1.62);
   bellyMesh.position.set(0, 0.36, 0.32);
 
-  const snout = new THREE.Mesh(new THREE.SphereGeometry(0.36, 14, 12), dorsal);
-  snout.scale.set(1.12, 0.58, 0.92);
-  snout.position.set(0, 0.92, -0.86);
+  const snout = makeBluntMuzzle(1.02, 0.38, 0.62, dorsal);
+  snout.position.set(0, 0.92, -0.82);
+  addShadow(snout);
 
-  const cheek = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), belly);
-  cheek.scale.set(1.28, 0.48, 0.72);
-  cheek.position.set(0, 0.58, -0.82);
-
-  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.14, 10, 8), dorsal);
-  nose.scale.set(1.45, 0.72, 1.2);
-  nose.position.set(0, 0.8, -1.16);
-  const nostrilL = new THREE.Mesh(new THREE.SphereGeometry(0.028, 6, 6), dorsalDark);
-  nostrilL.position.set(0.07, 0.82, -1.28);
-  const nostrilR = nostrilL.clone();
-  nostrilR.position.x = -0.07;
+  const snoutLip = makeBluntMuzzle(0.94, 0.12, 0.36, belly);
+  snoutLip.position.set(0, 0.7, -0.98);
 
   const fin = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.9, 8), dorsalDark);
   fin.position.set(0, 1.3, 0.22);
@@ -265,66 +281,42 @@ export function createSharkMesh() {
     brow.position.set(side * -0.01, 0.1, 0);
     brow.rotation.z = side * -0.45;
     g.add(white, pupil, glint, brow);
-    g.position.set(side * 0.38, 0.86, -0.78);
+    g.position.set(side * 0.34, 0.94, -1.02);
     return g;
   };
 
   const mouth = new THREE.Group();
-  mouth.position.set(0, 0.5, -1.14);
+  mouth.position.set(0, 0.48, -1.16);
+  const mouthW = 0.96;
 
-  const cave = new THREE.Mesh(new THREE.SphereGeometry(0.36, 14, 10), caveMat);
-  cave.scale.set(1.22, 1.08, 0.82);
-  cave.position.set(0, -0.02, 0.14);
+  const cave = makeBluntMuzzle(mouthW, 0.56, 0.34, caveMat);
+  cave.position.set(0, -0.04, 0.16);
 
-  const upperGum = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 8), gum);
-  upperGum.scale.set(1.4, 0.3, 0.7);
-  upperGum.position.set(0, 0.22, -0.02);
+  const tongue = makeBluntMuzzle(mouthW * 0.94, 0.24, 0.12, tongueMat);
+  tongue.position.set(0, -0.04, -0.04);
 
-  const tongue = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), tongueMat);
-  tongue.scale.set(0.92, 0.42, 1.05);
-  tongue.position.set(0, -0.04, 0.04);
+  const jaw = makeBluntMuzzle(1.02, 0.34, 0.62, belly);
+  jaw.position.set(0, -0.48, 0.34);
+  addShadow(jaw);
 
-  const jaw = new THREE.Group();
-  jaw.position.set(0, -0.28, 0.04);
-  jaw.rotation.x = -0.48;
-
-  const jawWhite = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), belly);
-  jawWhite.scale.set(1.32, 0.4, 0.9);
-  const lowerGum = new THREE.Mesh(new THREE.SphereGeometry(0.25, 10, 8), gum);
-  lowerGum.scale.set(1.36, 0.26, 0.68);
-  lowerGum.position.set(0, 0.1, -0.05);
-  jaw.add(jawWhite, lowerGum);
-
-  addSharkToothArc(mouth, toothMat, {
-    count: 11,
-    y: 0.14,
-    z: -0.12,
-    radius: 0.38,
-    baseH: 0.28,
-    rotX: Math.PI,
-    spread: 1.12,
-  });
-  addSharkToothArc(mouth, toothMat, {
+  addSharkToothRow(mouth, toothMat, {
     count: 7,
-    y: 0.1,
-    z: 0.0,
-    radius: 0.26,
+    y: 0.24,
+    z: -0.1,
+    width: 0.84,
     baseH: 0.16,
     rotX: Math.PI,
-    spread: 0.82,
-    tilt: 0.32,
   });
-  addSharkToothArc(jaw, toothMat, {
-    count: 9,
-    y: 0.16,
+  addSharkToothRow(mouth, toothMat, {
+    count: 7,
+    y: -0.3,
     z: -0.1,
-    radius: 0.34,
-    baseH: 0.22,
+    width: 0.84,
+    baseH: 0.16,
     rotX: 0,
-    spread: 1.02,
   });
 
-  mouth.add(cave, upperGum, tongue, jaw);
+  mouth.add(cave, tongue, jaw);
 
   for (let i = 0; i < 4; i += 1) {
     const gill = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.2, 0.042), dorsalDark);
@@ -340,10 +332,7 @@ export function createSharkMesh() {
     body,
     bellyMesh,
     snout,
-    cheek,
-    nose,
-    nostrilL,
-    nostrilR,
+    snoutLip,
     fin,
     pecL,
     pecR,

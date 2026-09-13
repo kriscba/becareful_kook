@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {
+  BASE_SCROLL_SPEED,
   BRAKE_FACTOR,
-  CYCLE_SECONDS,
   FEET_PER_UNIT,
   FLOW_SCALE,
   FLOW_SECONDS,
@@ -11,11 +11,9 @@ import {
   LIFE_BOOST,
   LIP_BOOST_MUL,
   MAX_LIVES,
-  MAX_TIME_SPEED,
-  MIN_TIME_SPEED,
   START_LIVES,
-  SPEED_STEP_SECONDS,
   STOKE_SECONDS,
+  STOKE_SPEED_MUL,
   TUBE_BONUS_FEET,
   WAVE_SVG,
   MOBILE_SPAWN_GAP,
@@ -211,11 +209,9 @@ export class Game {
     const dt = rawDt * this.timeScale;
     this.input.beginFrame();
     this.cycleElapsed += rawDt;
-    if (this.cycleElapsed >= CYCLE_SECONDS) this.cycleElapsed = 0;
 
     const scroll = this.#scrollSpeed();
-    const stokeMul = this.stoke > 0 ? 2 : 1;
-    this.feet += scroll * dt * FEET_PER_UNIT * stokeMul;
+    this.feet += scroll * dt * FEET_PER_UNIT;
     this.travel += scroll * dt;
     this.#checkLevel();
     if (this.mode !== "play") return;
@@ -244,15 +240,12 @@ export class Game {
   }
 
   #scrollSpeed() {
-    const steps = Math.floor(this.cycleElapsed / SPEED_STEP_SECONDS);
-    const maxSteps = Math.max(1, Math.floor(CYCLE_SECONDS / SPEED_STEP_SECONDS));
-    const tCycle = Math.min(steps, maxSteps) / maxSteps;
-    const timeSpeed = MIN_TIME_SPEED + (MAX_TIME_SPEED - MIN_TIME_SPEED) * tCycle;
     const lifeBoost = LIFE_BOOST[this.lives] ?? 1;
     const levelBoost = this.level?.speed ?? 1;
     const brake = this.player.braking ? BRAKE_FACTOR : 1;
     const lip = this.player.lipBoost > 0 ? LIP_BOOST_MUL : 1;
-    return timeSpeed * lifeBoost * levelBoost * brake * lip;
+    const stoke = this.stoke > 0 ? STOKE_SPEED_MUL : 1;
+    return BASE_SCROLL_SPEED * lifeBoost * levelBoost * brake * lip * stoke;
   }
 
   #pause() {

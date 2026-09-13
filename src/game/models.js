@@ -176,50 +176,182 @@ export function createRockMesh() {
   return root;
 }
 
+function addSharkToothArc(parent, mat, opts) {
+  const { count, y, z, radius, baseH, rotX, spread, tilt = 0.4 } = opts;
+  for (let i = 0; i < count; i += 1) {
+    const t = count === 1 ? 0 : (i / (count - 1)) * 2 - 1;
+    const ang = t * spread;
+    const h = baseH * (1.14 - Math.abs(t) * 0.42);
+    const r = 0.034 + (1 - Math.abs(t)) * 0.028;
+    const tooth = new THREE.Mesh(new THREE.ConeGeometry(r, h, 3), mat);
+    tooth.position.set(
+      Math.sin(ang) * radius,
+      y,
+      z + (1 - Math.cos(ang)) * radius * 0.4
+    );
+    tooth.rotation.set(rotX, ang * 0.12, -ang * tilt);
+    parent.add(tooth);
+  }
+}
+
 export function createSharkMesh() {
   const root = new THREE.Group();
-  const bodyMat = toon("#5d737e");
-  const body = new THREE.Mesh(new THREE.SphereGeometry(0.55, 18, 14), bodyMat);
-  body.scale.set(0.7, 0.7, 2.2);
-  body.position.y = 0.55;
+  root.name = "shark";
+  const dorsal = toon("#6d7f8c");
+  const dorsalDark = toon("#556671");
+  const belly = toon("#f3eee4");
+  const gum = toon("#c94a58");
+  const caveMat = toon("#2a0d12");
+  const tongueMat = toon("#ff5d7a");
+  const toothMat = toon("#fff6e8");
+
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.55, 18, 14), dorsal);
+  body.scale.set(0.84, 0.7, 1.72);
+  body.position.set(0, 0.58, 0.38);
   addShadow(body);
-  const fin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.7, 10), toon("#4a5d66"));
-  fin.position.set(0, 1.15, 0.1);
-  const tail = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.7, 10), bodyMat);
-  tail.rotation.x = Math.PI / 2;
-  tail.position.set(0, 0.55, 1.35);
-  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), toon("#111"));
-  eye.position.set(0.22, 0.7, -0.85);
-  const eye2 = eye.clone();
-  eye2.position.x = -0.22;
+
+  const bellyMesh = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 12), belly);
+  bellyMesh.scale.set(0.8, 0.48, 1.62);
+  bellyMesh.position.set(0, 0.36, 0.32);
+
+  const snout = new THREE.Mesh(new THREE.SphereGeometry(0.36, 14, 12), dorsal);
+  snout.scale.set(1.12, 0.58, 0.92);
+  snout.position.set(0, 0.92, -0.86);
+
+  const cheek = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), belly);
+  cheek.scale.set(1.28, 0.48, 0.72);
+  cheek.position.set(0, 0.58, -0.82);
+
+  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.14, 10, 8), dorsal);
+  nose.scale.set(1.45, 0.72, 1.2);
+  nose.position.set(0, 0.8, -1.16);
+  const nostrilL = new THREE.Mesh(new THREE.SphereGeometry(0.028, 6, 6), dorsalDark);
+  nostrilL.position.set(0.07, 0.82, -1.28);
+  const nostrilR = nostrilL.clone();
+  nostrilR.position.x = -0.07;
+
+  const fin = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.9, 8), dorsalDark);
+  fin.position.set(0, 1.3, 0.22);
+  fin.rotation.x = 0.2;
+  addShadow(fin);
+
+  const pecL = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.74, 8), dorsalDark);
+  pecL.rotation.set(0.22, 0.12, 1.22);
+  pecL.position.set(0.5, 0.38, 0.02);
+  const pecR = pecL.clone();
+  pecR.rotation.set(0.22, -0.12, -1.22);
+  pecR.position.x = -0.5;
+
+  const tail = new THREE.Group();
+  const tailUpper = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.8, 8), dorsalDark);
+  tailUpper.rotation.x = 0.7;
+  tailUpper.position.set(0, 0.34, 0.08);
+  const tailLower = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.5, 8), dorsalDark);
+  tailLower.rotation.x = 2.42;
+  tailLower.position.set(0, -0.1, 0.06);
+  tail.add(tailUpper, tailLower);
+  tail.position.set(0, 0.56, 1.4);
+
+  const makeEye = (side) => {
+    const g = new THREE.Group();
+    const white = new THREE.Mesh(new THREE.SphereGeometry(0.092, 10, 8), toon("#f7f2e8"));
+    white.scale.set(1.08, 0.9, 0.82);
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.052, 8, 8), toon("#141414"));
+    pupil.position.set(side * 0.01, -0.008, -0.052);
+    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.018, 6, 6), toon("#ffffff"));
+    glint.position.set(side * 0.024, 0.024, -0.078);
+    const brow = new THREE.Mesh(new THREE.SphereGeometry(0.082, 8, 6), dorsalDark);
+    brow.scale.set(1.2, 0.3, 0.68);
+    brow.position.set(side * -0.01, 0.1, 0);
+    brow.rotation.z = side * -0.45;
+    g.add(white, pupil, glint, brow);
+    g.position.set(side * 0.38, 0.86, -0.78);
+    return g;
+  };
 
   const mouth = new THREE.Group();
-  mouth.position.set(0, 0.42, -1.12);
-  const cavity = new THREE.Mesh(
-    new THREE.SphereGeometry(0.22, 10, 8),
-    toon("#2a1014")
-  );
-  cavity.scale.set(1.05, 0.7, 0.85);
-  const jaw = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.18, 6, 10), toon("#4a5d66"));
-  jaw.position.set(0, -0.16, -0.02);
-  jaw.rotation.x = 0.35;
-  const tongue = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 6), toon("#ff4d6d"));
-  tongue.scale.set(0.72, 0.38, 2.35);
-  tongue.position.set(0, -0.05, -0.32);
-  mouth.add(cavity, jaw, tongue);
+  mouth.position.set(0, 0.5, -1.14);
 
-  const toothMat = toon("#f7f1e1");
-  for (let i = 0; i < 7; i += 1) {
-    const upper = new THREE.Mesh(new THREE.ConeGeometry(0.048, 0.2, 5), toothMat);
-    upper.position.set(-0.2 + i * 0.066, 0.14, -0.12);
-    upper.rotation.x = Math.PI;
-    const lower = upper.clone();
-    lower.position.y = -0.12;
-    lower.rotation.x = 0;
-    mouth.add(upper, lower);
+  const cave = new THREE.Mesh(new THREE.SphereGeometry(0.36, 14, 10), caveMat);
+  cave.scale.set(1.22, 1.08, 0.82);
+  cave.position.set(0, -0.02, 0.14);
+
+  const upperGum = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 8), gum);
+  upperGum.scale.set(1.4, 0.3, 0.7);
+  upperGum.position.set(0, 0.22, -0.02);
+
+  const tongue = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), tongueMat);
+  tongue.scale.set(0.92, 0.42, 1.05);
+  tongue.position.set(0, -0.04, 0.04);
+
+  const jaw = new THREE.Group();
+  jaw.position.set(0, -0.28, 0.04);
+  jaw.rotation.x = -0.48;
+
+  const jawWhite = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), belly);
+  jawWhite.scale.set(1.32, 0.4, 0.9);
+  const lowerGum = new THREE.Mesh(new THREE.SphereGeometry(0.25, 10, 8), gum);
+  lowerGum.scale.set(1.36, 0.26, 0.68);
+  lowerGum.position.set(0, 0.1, -0.05);
+  jaw.add(jawWhite, lowerGum);
+
+  addSharkToothArc(mouth, toothMat, {
+    count: 11,
+    y: 0.14,
+    z: -0.12,
+    radius: 0.38,
+    baseH: 0.28,
+    rotX: Math.PI,
+    spread: 1.12,
+  });
+  addSharkToothArc(mouth, toothMat, {
+    count: 7,
+    y: 0.1,
+    z: 0.0,
+    radius: 0.26,
+    baseH: 0.16,
+    rotX: Math.PI,
+    spread: 0.82,
+    tilt: 0.32,
+  });
+  addSharkToothArc(jaw, toothMat, {
+    count: 9,
+    y: 0.16,
+    z: -0.1,
+    radius: 0.34,
+    baseH: 0.22,
+    rotX: 0,
+    spread: 1.02,
+  });
+
+  mouth.add(cave, upperGum, tongue, jaw);
+
+  for (let i = 0; i < 4; i += 1) {
+    const gill = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.2, 0.042), dorsalDark);
+    gill.position.set(0.35, 0.58, -0.18 + i * 0.09);
+    gill.rotation.y = 0.22;
+    const gillR = gill.clone();
+    gillR.position.x = -0.35;
+    gillR.rotation.y = -0.22;
+    root.add(gill, gillR);
   }
 
-  root.add(body, fin, tail, eye, eye2, mouth);
+  root.add(
+    body,
+    bellyMesh,
+    snout,
+    cheek,
+    nose,
+    nostrilL,
+    nostrilR,
+    fin,
+    pecL,
+    pecR,
+    tail,
+    makeEye(1),
+    makeEye(-1),
+    mouth
+  );
   root.rotation.y = Math.PI;
   return root;
 }

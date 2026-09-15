@@ -1,5 +1,6 @@
 import { INVULN_SECONDS, MAX_LIVES, WAVE_SVG } from "./constants.js";
 import { countPhrase, formatDistance, rankPhrase, stageGoalLines, stageWonPhrase, t, unitLabel } from "../i18n.js";
+import { parseHubRanking, rankingRows, rankingTitle } from "./rankings.js";
 import { waveFlag, waveName, wavePlace } from "./waves.js";
 import goKook from "../assets/go_kook.png";
 import goRock from "../assets/go_rock.png";
@@ -58,8 +59,12 @@ export class HUD {
     this.goOcean = document.getElementById("go-ocean");
     this.goHospital = document.getElementById("go-hospital");
     this.goRank = document.getElementById("go-rank");
+    this.goBoard = document.getElementById("go-board");
+    this.goHubRank = document.getElementById("go-hub-rank");
+    this.goRankings = document.getElementById("go-rankings");
     this.goCause = "rock";
     this.goTier = "beginner";
+    this.hubRanking = null;
     this.goTeethMsg = document.getElementById("go-teeth-msg");
     this.goTubesMsg = document.getElementById("go-tubes-msg");
     this.langBtns = [...document.querySelectorAll("[data-lang]")];
@@ -84,6 +89,7 @@ export class HUD {
     this.#setGoCaption();
     this.#setGoOcean();
     this.#setGoRank();
+    this.#setHubRanking();
     this.#setStageClearCopy();
   }
 
@@ -132,7 +138,15 @@ export class HUD {
     this.scOk?.focus();
   }
 
+  showHubRanking(payload, session = null) {
+    this.hubRanking = parseHubRanking(payload, session);
+    this.#setHubRanking();
+  }
+
   showGameOver(stats) {
+    this.hubRanking = null;
+    this.#setHubRanking();
+    this.menu.classList.add("hidden");
     this.hud.classList.add("hidden");
     this.pause.classList.add("hidden");
     this.stageclear?.classList.add("hidden");
@@ -251,6 +265,105 @@ export class HUD {
   #setGoRank() {
     if (!this.goRank) return;
     this.goRank.textContent = rankPhrase(this.lang, this.goTier);
+  }
+
+  #setHubRanking() {
+    if (!this.goBoard) {
+      return;
+    }
+
+    const hasGlobal = Number.isFinite(this.hubRanking?.globalRank);
+    const tables = this.hubRanking?.tables ?? [];
+    const hasTables = tables.length > 0;
+
+    if (!hasGlobal && !hasTables) {
+      this.goBoard.classList.add("hidden");
+      this.gameover?.classList.remove("has-rankings");
+      this.goRankings?.replaceChildren();
+      return;
+    }
+
+    this.goBoard.classList.remove("hidden");
+    this.gameover?.classList.toggle("has-rankings", hasTables);
+
+    if (this.goHubRank) {
+      this.goHubRank.classList.toggle("hidden", !hasGlobal);
+      if (hasGlobal) {
+        this.goHubRank.textContent = t(this.lang, "goHubRank").replaceAll(
+          "{rank}",
+          String(this.hubRanking.globalRank)
+        );
+      } else {
+        this.goHubRank.textContent = "";
+      }
+    }
+
+    if (!this.goRankings) return;
+
+    if (!hasTables) {
+      this.goRankings.replaceChildren();
+      return;
+    }
+
+    const you = t(this.lang, "goYou");
+    this.goRankings.replaceChildren(
+      ...tables.map((ranking) => this.#rankingTable(ranking, you))
+    );
+  }
+
+  #rankingTable(ranking, you) {
+    const rows = rankingRows(ranking, you);
+    const section = document.createElement("section");
+    section.className = "go-ranking";
+
+    const title = document.createElement("h2");
+    title.textContent = rankingTitle(ranking, this.lang, t);
+    section.append(title);
+
+    const table = document.createElement("table");
+    const head = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    for (const key of ["goRankCol", "goPlayerCol", "goScoreCol"]) {
+      const th = document.createElement("th");
+      th.textContent = t(this.lang, key);
+      headRow.append(th);
+    }
+    head.append(headRow);
+    table.append(head);
+
+    const body = document.createElement("tbody");
+    for (const entry of rows.top) {
+      body.append(this.#rankingRow(entry));
+    }
+    if (rows.showGap) {
+      const gap = document.createElement("tr");
+      gap.className = "go-rank-gap";
+      const cell = document.createElement("td");
+      cell.colSpan = 3;
+      cell.textContent = "···";
+      gap.append(cell);
+      body.append(gap);
+    }
+    if (rows.player) {
+      body.append(this.#rankingRow(rows.player));
+    }
+    table.append(body);
+    section.append(table);
+    return section;
+  }
+
+  #rankingRow(entry) {
+    const tr = document.createElement("tr");
+    if (entry.isPlayer) tr.classList.add("is-you");
+    const rank = document.createElement("td");
+    rank.textContent = String(entry.rank);
+    const name = document.createElement("td");
+    name.className = "go-rank-name";
+    name.textContent = entry.name;
+    const score = document.createElement("td");
+    score.textContent = String(entry.score);
+    tr.append(rank, name, score);
+    return tr;
   }
 
   #setStageClearCopy() {

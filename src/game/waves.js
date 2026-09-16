@@ -13,10 +13,11 @@ export const WAVES = [
   {
     id: 1,
     tier: "beginner",
-    name: loc("Waikiki Beach"),
-    country: loc("USA", "EE.UU.", "EUA"),
+    name: loc("Waikiki Beach, Hawaii"),
+    country: loc("Hawaii", "Hawái", "Havaí"),
     flag: "🇺🇸",
     place: loc("Hawaii, USA", "Hawái, EE.UU.", "Havaí, EUA"),
+    place: loc("Waikiki Beach, Hawaii", "Waikiki Beach, Hawái", "Waikiki Beach, Havaí"),
     description: loc(
       "Soft, slow wave that breaks over a shallow sand and coral bottom. Ideal for learning to stand up, with long rides.",
       "Ola suave y lenta que rompe sobre fondo de arena y coral poco profundo. Ideal para aprender a pararse, con largos recorridos.",
@@ -26,7 +27,7 @@ export const WAVES = [
   {
     id: 2,
     tier: "beginner",
-    name: loc("Coolangatta"),
+    name: loc("Coolangatta, Australia"),
     country: loc("Australia", "Australia", "Austrália"),
     flag: "🇦🇺",
     place: loc("Gold Coast, Australia", "Gold Coast, Australia", "Gold Coast, Austrália"),
@@ -39,7 +40,7 @@ export const WAVES = [
   {
     id: 3,
     tier: "beginner",
-    name: loc("Malibu"),
+    name: loc("Malibu, California"),
     country: loc("USA", "EE.UU.", "EUA"),
     flag: "🇺🇸",
     place: loc("First Point, California, USA", "First Point, California, EE.UU.", "First Point, Califórnia, EUA"),
@@ -52,7 +53,7 @@ export const WAVES = [
   {
     id: 4,
     tier: "beginner",
-    name: loc("Canggu"),
+    name: loc("Canggu, Bali"),
     country: loc("Indonesia", "Indonesia", "Indonésia"),
     flag: "🇮🇩",
     place: loc("Batu Bolong, Bali, Indonesia", "Batu Bolong, Bali, Indonesia", "Batu Bolong, Bali, Indonésia"),
@@ -65,7 +66,7 @@ export const WAVES = [
   {
     id: 5,
     tier: "beginner",
-    name: loc("Kuta Beach"),
+    name: loc("Kuta Beach, Bali"),
     country: loc("Indonesia", "Indonesia", "Indonésia"),
     flag: "🇮🇩",
     place: loc("Bali, Indonesia", "Bali, Indonesia", "Bali, Indonésia"),
@@ -78,7 +79,7 @@ export const WAVES = [
   {
     id: 6,
     tier: "intermediate",
-    name: loc("Chicama"),
+    name: loc("Chicama, Perú"),
     country: loc("Peru", "Perú", "Peru"),
     flag: "🇵🇪",
     place: loc("Peru", "Perú", "Peru"),
@@ -91,7 +92,7 @@ export const WAVES = [
   {
     id: 7,
     tier: "intermediate",
-    name: loc("El Sunzal"),
+    name: loc("El Sunzal, El Salvador"),
     country: loc("El Salvador"),
     flag: "🇸🇻",
     place: loc("El Salvador"),
@@ -104,7 +105,7 @@ export const WAVES = [
   {
     id: 8,
     tier: "intermediate",
-    name: loc("Saquarema"),
+    name: loc("Saquarema, Brazil"),
     country: loc("Brazil", "Brasil", "Brasil"),
     flag: "🇧🇷",
     place: loc("Rio de Janeiro, Brazil", "Río de Janeiro, Brasil", "Rio de Janeiro, Brasil"),
@@ -117,7 +118,7 @@ export const WAVES = [
   {
     id: 9,
     tier: "intermediate",
-    name: loc("Playa Hermosa"),
+    name: loc("Playa Hermosa, Costa Rica"),
     country: loc("Costa Rica"),
     flag: "🇨🇷",
     place: loc("Guanacaste, Costa Rica"),
@@ -130,7 +131,7 @@ export const WAVES = [
   {
     id: 10,
     tier: "intermediate",
-    name: loc("Popoyo"),
+    name: loc("Popoyo, Nicaragua"),
     country: loc("Nicaragua", "Nicaragua", "Nicarágua"),
     flag: "🇳🇮",
     place: loc("Nicaragua", "Nicaragua", "Nicarágua"),
@@ -143,7 +144,7 @@ export const WAVES = [
   {
     id: 11,
     tier: "advanced",
-    name: loc("Uluwatu"),
+    name: loc("Uluwatu, Bali"),
     country: loc("Indonesia", "Indonesia", "Indonésia"),
     flag: "🇮🇩",
     place: loc("Bali, Indonesia", "Bali, Indonesia", "Bali, Indonésia"),
@@ -156,7 +157,7 @@ export const WAVES = [
   {
     id: 12,
     tier: "advanced",
-    name: loc("Supertubos"),
+    name: loc("Supertubos, Portugal"),
     country: loc("Portugal"),
     flag: "🇵🇹",
     place: loc("Peniche, Portugal"),
@@ -169,7 +170,7 @@ export const WAVES = [
   {
     id: 13,
     tier: "advanced",
-    name: loc("Snapper Rocks"),
+    name: loc("Snapper Rocks, Australia"),
     country: loc("Australia", "Australia", "Austrália"),
     flag: "🇦🇺",
     place: loc("Gold Coast, Australia", "Gold Coast, Australia", "Gold Coast, Austrália"),
@@ -182,7 +183,7 @@ export const WAVES = [
   {
     id: 14,
     tier: "advanced",
-    name: loc("Jeffreys Bay"),
+    name: loc("Jeffreys Bay, South Africa"),
     country: loc("South Africa", "Sudáfrica", "África do Sul"),
     flag: "🇿🇦",
     place: loc("South Africa", "Sudáfrica", "África do Sul"),
@@ -195,7 +196,7 @@ export const WAVES = [
   {
     id: 15,
     tier: "advanced",
-    name: loc("Zicatela"),
+    name: loc("Zicatela, Mexico"),
     country: loc("Mexico", "México", "México"),
     flag: "🇲🇽",
     place: loc("Puerto Escondido, Mexico", "Puerto Escondido, México", "Puerto Escondido, México"),
@@ -208,7 +209,7 @@ export const WAVES = [
   {
     id: 16,
     tier: "pro",
-    name: loc("Nazaré"),
+    name: loc("Nazaré, Portugal"),
     country: loc("Portugal"),
     flag: "🇵🇹",
     place: loc("Portugal"),
@@ -221,7 +222,7 @@ export const WAVES = [
   {
     id: 17,
     tier: "pro",
-    name: loc("Mavericks"),
+    name: loc("Mavericks, California"),
     country: loc("USA", "EE.UU.", "EUA"),
     flag: "🇺🇸",
     place: loc("California, USA", "California, EE.UU.", "Califórnia, EUA"),
@@ -234,7 +235,7 @@ export const WAVES = [
   {
     id: 18,
     tier: "pro",
-    name: loc("Cloudbreak"),
+    name: loc("Cloudbreak, Fiji"),
     country: loc("Fiji"),
     flag: "🇫🇯",
     place: loc("Fiji"),
@@ -247,7 +248,7 @@ export const WAVES = [
   {
     id: 19,
     tier: "pro",
-    name: loc("Teahupo'o"),
+    name: loc("Teahupo'o, Tahiti"),
     country: loc("Tahiti", "Tahití", "Taiti"),
     flag: "🇵🇫",
     place: loc("Tahiti", "Tahití", "Taiti"),
@@ -260,7 +261,7 @@ export const WAVES = [
   {
     id: 20,
     tier: "pro",
-    name: loc("Pipeline"),
+    name: loc("Pipeline, Hawaii"),
     country: loc("Hawaii", "Hawái", "Havaí"),
     flag: "🇺🇸",
     place: loc("Oahu, Hawaii", "Oahu, Hawái", "Oahu, Havaí"),

@@ -84,7 +84,7 @@ export const STRINGS = {
   },
   es: {
     subtitle: "Esquivá kooks, tiburones, rocas y carteles. Metete en el tubo.",
-    play: "QUIERO SURFEAR!",
+    play: "JUGAR!",
     language: "Idioma",
     controlsMove: "← → o mantené el dedo y deslizá para surfear",
     controlsJump: "↑ o deslizá hacia arriba — saltar las rocas y los carteles",

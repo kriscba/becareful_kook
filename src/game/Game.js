@@ -57,8 +57,11 @@ export class Game {
     this.lifeBlink = -1;
     this.deathCause = "rock";
     this._portrait = false;
+    this.hubSession = null;
+    this.hubGame = null;
     this.#resize();
     window.addEventListener("resize", () => this.#resize());
+    window.addEventListener("message", (event) => this.#onHubMessage(event));
     window.addEventListener("orientationchange", () => {
       setTimeout(() => this.#resize(), 180);
     });
@@ -400,13 +403,52 @@ export class Game {
 
   #gameOver() {
     this.mode = "gameover";
+    const tier = this.level?.wave?.tier ?? "beginner";
     this.hud.showGameOver({
       feet: this.feet,
       teeth: this.teeth,
       tubes: this.tubes,
       cause: this.deathCause,
-      tier: this.level?.wave?.tier ?? "beginner",
+      tier,
     });
+    this.#reportRunToHub(tier);
+  }
+
+  #onHubMessage(event) {
+    if (event.origin !== window.location.origin) return;
+
+    const type = event.data?.type;
+
+    if (type === "BIB_GAME_INIT") {
+      this.hubSession = event.data.session ?? null;
+      this.hubGame = event.data.game ?? null;
+      return;
+    }
+
+    if (type !== "BIB_RANKING_RESULT" || this.mode !== "gameover") {
+      return;
+    }
+
+    this.hud.showHubRanking(event.data, this.hubSession);
+  }
+
+  #reportRunToHub(tier) {
+    if (window.parent === window) return;
+
+    window.parent.postMessage(
+      {
+        type: "BIB_GAME_OVER",
+        score: Math.max(0, Math.floor(this.feet)),
+        duration_ms: Math.max(0, Math.round(this.cycleElapsed * 1000)),
+        metadata: {
+          teeth: this.teeth,
+          tubes: this.tubes,
+          cause: this.deathCause,
+          tier,
+        },
+      },
+      window.location.origin
+    );
   }
 
   #hudState() {

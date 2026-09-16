@@ -508,10 +508,10 @@ h1 {
 
 .go-ocean {
   font-family: "Bungee", sans-serif;
-  font-size: clamp(16px, 3.8vw, 26px);
-  letter-spacing: 0.06em;
+  font-size: clamp(11px, 2.5vw, 15px);
+  letter-spacing: 0.05em;
   color: var(--sunset);
-  margin: -4px 0 8px;
+  margin: 0 0 6px;
 }
 
 .go-hospital {
@@ -551,7 +551,119 @@ h1 {
   margin-top: 8px;
 }
 
-#gameover h1,
+.go-caption {
+  font-size: clamp(13px, 3vw, 20px);
+  line-height: 1.2;
+  max-width: 18em;
+  margin: 4px auto 6px;
+}
+
+.go-board {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 8px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+.go-hub-rank {
+  margin: 0;
+  text-align: center;
+  font-family: "Bungee", sans-serif;
+  font-size: clamp(13px, 3vw, 18px);
+  letter-spacing: 0.04em;
+  color: #ffe58a;
+}
+
+.go-rankings {
+  display: grid;
+  gap: 12px;
+}
+
+.go-ranking + .go-ranking {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 10px;
+}
+
+.go-ranking h2 {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.78;
+  margin: 0 0 6px;
+}
+
+.go-ranking table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.go-ranking th,
+.go-ranking td {
+  padding: 4px 6px;
+  vertical-align: middle;
+}
+
+.go-ranking th {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  font-weight: 800;
+}
+
+.go-ranking th:nth-child(1),
+.go-ranking td:nth-child(1) {
+  width: 2.4em;
+  text-align: center;
+}
+
+.go-ranking th:nth-child(3),
+.go-ranking td:nth-child(3) {
+  width: 4.8em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.go-rank-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.go-ranking tr.is-you {
+  background: rgba(255, 209, 102, 0.18);
+  color: #ffe58a;
+  font-weight: 900;
+}
+
+.go-ranking tr.is-you td {
+  border-radius: 8px;
+}
+
+.go-rank-gap td {
+  text-align: center;
+  opacity: 0.45;
+  letter-spacing: 0.3em;
+  padding: 2px 6px;
+}
+
+#gameover.has-rankings .go-art {
+  max-height: min(18vh, 140px);
+}
+
+#gameover.has-rankings .go-art img {
+  max-height: min(18vh, 140px);
+}
+
 #stageclear h1 {
   font-size: clamp(20px, 5.2vw, 36px);
   line-height: 1.15;
@@ -846,9 +958,21 @@ h1 {
     margin: 0 0 16px;
   }
 
+  .go-caption {
+    font-size: clamp(12px, 3.6vw, 16px);
+  }
+
   .go-ocean {
-    font-size: clamp(14px, 4.4vw, 20px);
+    font-size: clamp(10px, 3vw, 13px);
     margin: 0 0 6px;
+  }
+
+  .go-board {
+    padding: 8px 10px;
+  }
+
+  .go-hub-rank {
+    font-size: clamp(12px, 3.4vw, 15px);
   }
 
   .summary {

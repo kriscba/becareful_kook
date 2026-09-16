@@ -26,14 +26,14 @@ export const WAVES = [
   {
     id: 2,
     tier: "beginner",
-    name: loc("San Onofre"),
-    country: loc("USA", "EE.UU.", "EUA"),
-    flag: "🇺🇸",
-    place: loc("California, USA", "California, EE.UU.", "Califórnia, EUA"),
+    name: loc("Coolangatta"),
+    country: loc("Australia", "Australia", "Austrália"),
+    flag: "🇦🇺",
+    place: loc("Gold Coast, Australia", "Gold Coast, Australia", "Gold Coast, Austrália"),
     description: loc(
-      "Sand bottom, small and very predictable waves. Relaxed vibe, a classic longboard spot.",
-      "Fondo de arena, olas pequeñas y muy predecibles. Ambiente relajado, clásico spot de longboard.",
-      "Fundo de areia, ondas pequenas e muito previsíveis. Clima relaxado, spot clássico de longboard."
+      "Famous sand-bottom point break offering long, playful rides and gentle sections. Beginner-friendly when small, iconic surf culture year-round.",
+      "Famoso point break de fondo de arena que ofrece largas y divertidas olas con secciones suaves. Amigable para principiantes cuando es pequeño, cultura surf icónica todo el año.",
+      "Famoso point break de fundo de areia, com ondas longas, divertidas, e trechos suaves. Amigável ao iniciante quando pequeno, cultura de surf icônica o ano todo."
     ),
   },
   {
